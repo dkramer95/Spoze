@@ -1,5 +1,7 @@
 package com.example.dkramer.spoze3.gl;
 
+import com.example.dkramer.spoze3.util.FPSCounter;
+
 import static android.opengl.GLES20.GL_BLEND;
 import static android.opengl.GLES20.GL_COLOR_BUFFER_BIT;
 import static android.opengl.GLES20.GL_ONE_MINUS_SRC_ALPHA;
@@ -15,6 +17,7 @@ import static android.opengl.GLES20.glEnable;
  */
 
 public class GLScene {
+    protected FPSCounter mFPSCounter;
     protected GLCamera mGLCamera;
     protected GLWorld mWorld;
 
@@ -23,12 +26,14 @@ public class GLScene {
     public GLScene(GLWorld world) {
         mGLCamera = GLCamera.getDefault();
         mWorld = world;
+        mFPSCounter = new FPSCounter();
     }
 
     public void render() {
         clearScreen();
         // update camera
         mWorld.render(mGLCamera);
+        mFPSCounter.logFrame();
     }
 
     public void refreshSize(int width, int height) {

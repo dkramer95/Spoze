@@ -78,9 +78,7 @@ public class GLSquare extends GLModel {
     public void render(GLCamera camera) {
         mGLProgram.use();
         Matrix.setIdentityM(mModelMatrix, 0);
-//        Matrix.translateM(mModelMatrix, 0, data.normalizedX, data.normalizedY, 0f);
         Matrix.rotateM(mModelMatrix, 0, angle, angle, angle, angle);
-//        Matrix.scaleM(mModelMatrix, 0, MotionData.yaw * 2f, MotionData.yaw * 2f, (1 + MotionData.yaw));
         angle += 0.5f;
 
         camera.applyToModel(mMVPMatrix, mModelMatrix);
