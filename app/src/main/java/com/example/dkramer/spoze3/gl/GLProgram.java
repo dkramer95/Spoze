@@ -1,11 +1,15 @@
 package com.example.dkramer.spoze3.gl;
 
+import java.util.HashMap;
+
 import static android.opengl.GLES20.GL_LINK_STATUS;
 import static android.opengl.GLES20.GL_VALIDATE_STATUS;
 import static android.opengl.GLES20.glAttachShader;
+import static android.opengl.GLES20.glBindAttribLocation;
 import static android.opengl.GLES20.glCreateProgram;
 import static android.opengl.GLES20.glDeleteProgram;
 import static android.opengl.GLES20.glGetProgramiv;
+import static android.opengl.GLES20.glGetUniformLocation;
 import static android.opengl.GLES20.glLinkProgram;
 import static android.opengl.GLES20.glValidateProgram;
 
@@ -23,8 +27,15 @@ public final class GLProgram {
     private GLShader mFragmentShader;
     private int mProgramId;
 
+    private HashMap<String, Integer> mAttributes;
+    private HashMap<String, Integer> mUniforms;
+    private int mAttribIndex = -1;
+
 
     private GLProgram(GLShader vertexShader, GLShader fragmentShader) {
+        mAttributes = new HashMap<>();
+        mUniforms = new HashMap<>();
+
         mVertexShader = vertexShader;
         mFragmentShader = fragmentShader;
     }
@@ -79,5 +90,28 @@ public final class GLProgram {
         glGetProgramiv(programId, GL_LINK_STATUS, linkStatus, 0);
         int result = linkStatus[0];
         return result;
+    }
+
+    public int bindAttribute(String attributeName) {
+        ++mAttribIndex;
+        mAttributes.put(attributeName, mAttribIndex);
+        glBindAttribLocation(getId(), mAttribIndex, attributeName);
+        return mAttribIndex;
+    }
+
+    public int getAttributeIndex(String attributeName) {
+        int index = mAttributes.get(attributeName);
+        return index;
+    }
+
+    public int defineUniform(String name) {
+        int uniformLocation = glGetUniformLocation(getId(), name);
+        mUniforms.put(name, uniformLocation);
+        return uniformLocation;
+    }
+
+
+    public int getId() {
+        return mProgramId;
     }
 }
