@@ -31,6 +31,14 @@ public abstract class GLWorld {
         mHeight = height;
     }
 
+    public void addModel(GLModel model) {
+        mModels.add(model);
+    }
+
+    public void removeModel(GLModel model) {
+        mModels.remove(model);
+    }
+
     public int getWidth() {
         return mWidth;
     }
@@ -39,8 +47,12 @@ public abstract class GLWorld {
         return mHeight;
     }
 
-    public void render() {
-        glClearColor(1f, 1f, 0f, 1f);
+    public void render(GLCamera camera) {
+        glClearColor(0f, 0f, 0f, 1f);
+
+        for (GLModel m : mModels) {
+            m.render(camera);
+        }
     }
 
     public GLContext getGLContext() {

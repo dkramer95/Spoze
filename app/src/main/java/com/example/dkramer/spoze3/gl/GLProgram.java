@@ -11,6 +11,7 @@ import static android.opengl.GLES20.glDeleteProgram;
 import static android.opengl.GLES20.glGetProgramiv;
 import static android.opengl.GLES20.glGetUniformLocation;
 import static android.opengl.GLES20.glLinkProgram;
+import static android.opengl.GLES20.glUseProgram;
 import static android.opengl.GLES20.glValidateProgram;
 
 /**
@@ -108,6 +109,10 @@ public final class GLProgram {
         int uniformLocation = glGetUniformLocation(getId(), name);
         mUniforms.put(name, uniformLocation);
         return uniformLocation;
+    }
+
+    public void use() {
+        glUseProgram(getId());
     }
 
 

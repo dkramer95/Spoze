@@ -21,13 +21,14 @@ public class GLScene {
 
 
     public GLScene(GLWorld world) {
-        mGLCamera = new GLCamera();
+        mGLCamera = GLCamera.getDefault();
         mWorld = world;
     }
 
     public void render() {
         clearScreen();
-        mWorld.render();
+        // update camera
+        mWorld.render(mGLCamera);
     }
 
     public void refreshSize(int width, int height) {

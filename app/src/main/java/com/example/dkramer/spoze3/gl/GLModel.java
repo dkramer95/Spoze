@@ -5,8 +5,9 @@ package com.example.dkramer.spoze3.gl;
  */
 
 public abstract class GLModel {
+    protected GLContext mGLContext;
     protected GLProgram mGLProgram;
-    protected GLVertexArray mVertexArray;
+    protected final GLVertexArray mVertexArray;
 
     // move this model into world space
     protected final float[] mModelMatrix = new float[16];
@@ -15,13 +16,17 @@ public abstract class GLModel {
     protected final float[] mMVPMatrix = new float[16];
 
 
-    public GLModel() {
+    public GLModel(GLContext glContext) {
+        mGLContext = glContext;
+        mVertexArray = new GLVertexArray(getVertexData());
         mGLProgram = createGLProgram();
     }
 
     protected abstract GLProgram createGLProgram();
 
-    public abstract void render();
+    public abstract void render(GLCamera camera);
+
+    public abstract float[] getVertexData();
 
 
     public float[] getModelMatrix() {
@@ -34,5 +39,9 @@ public abstract class GLModel {
 
     public GLVertexArray getVertexArray() {
         return mVertexArray;
+    }
+
+    public GLContext getGLContext() {
+        return mGLContext;
     }
 }
