@@ -17,5 +17,6 @@
             </intent-filter>
         </activity>
     </application>
+    <uses-feature android:glEsVersion="0x0020000" android:required="true"/>
 
 </manifest>
