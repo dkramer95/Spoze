@@ -10,11 +10,13 @@ import static android.opengl.GLES20.glClearColor;
  */
 
 public abstract class GLWorld {
+    protected GLContext mGLContext;
     protected int mWidth;
     protected int mHeight;
     protected List<GLModel> mModels;
 
-    public GLWorld() {
+    public GLWorld(GLContext glContext) {
+        mGLContext = glContext;
         mModels = new ArrayList<>();
     }
 
@@ -40,4 +42,9 @@ public abstract class GLWorld {
     public void render() {
         glClearColor(1f, 1f, 0f, 1f);
     }
+
+    public GLContext getGLContext() {
+        return mGLContext;
+    }
+
 }

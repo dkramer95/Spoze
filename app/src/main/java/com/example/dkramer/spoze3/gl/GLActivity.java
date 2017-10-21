@@ -33,8 +33,9 @@ public abstract class GLActivity extends AppCompatActivity {
      * This method initializes the main content view to be used in this activity.
      */
     protected void initViewDisplay() {
+        mGLContext = new GLContext(this);
         GLView glView = createGLView();
-        mGLContext = new GLContext(this, glView);
+        mGLContext.setGLView(glView);
         glView.init();
 
         int layoutId = getLayoutId();
