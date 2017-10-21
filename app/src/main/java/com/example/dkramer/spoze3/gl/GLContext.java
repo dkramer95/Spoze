@@ -36,6 +36,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Adapter class for regular Context class that provides additional OpenGL methods
@@ -43,11 +45,13 @@ import java.io.InputStream;
  */
 
 public final class GLContext extends Context {
+    private List<GLDeviceInfo> mDeviceInfoList;
     private GLActivity mActivity;
     private GLView mGLView;
 
     public GLContext(GLActivity activity) {
         mActivity = activity;
+        mDeviceInfoList = new ArrayList<>();
     }
 
     public GLView getGLView() {
@@ -56,6 +60,18 @@ public final class GLContext extends Context {
 
     public void setGLView(GLView glView) {
         mGLView = glView;
+    }
+
+    public void onStart() {
+        for (GLDeviceInfo i : mDeviceInfoList) {
+            i.start();
+        }
+    }
+
+    public void onStop() {
+        for (GLDeviceInfo i : mDeviceInfoList) {
+            i.stop();
+        }
     }
 
 
@@ -607,5 +623,9 @@ public final class GLContext extends Context {
     @Override
     public boolean isDeviceProtectedStorage() {
         return mActivity.isDeviceProtectedStorage();
+    }
+
+    public void addDeviceInfo(GLDeviceInfo glDeviceInfo) {
+        mDeviceInfoList.add(glDeviceInfo);
     }
 }

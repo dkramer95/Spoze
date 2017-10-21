@@ -1,5 +1,13 @@
 package com.example.dkramer.spoze3.gl;
 
+import android.opengl.Matrix;
+import android.util.Log;
+
+import com.example.dkramer.spoze3.geometry.Box;
+import com.example.dkramer.spoze3.geometry.Geometry;
+import com.example.dkramer.spoze3.geometry.Point;
+import com.example.dkramer.spoze3.geometry.Ray;
+import com.example.dkramer.spoze3.geometry.Vector;
 import com.example.dkramer.spoze3.util.FPSCounter;
 
 import static android.opengl.GLES20.GL_BLEND;
@@ -17,6 +25,8 @@ import static android.opengl.GLES20.glEnable;
  */
 
 public class GLScene {
+    protected final float[] mInvertedViewProjectionMatrix = new float[16];
+
     protected FPSCounter mFPSCounter;
     protected GLCamera mGLCamera;
     protected GLWorld mWorld;
@@ -31,9 +41,11 @@ public class GLScene {
 
     public void render() {
         clearScreen();
-        // update camera
+        // TODO update camera
         mWorld.render(mGLCamera);
         mFPSCounter.logFrame();
+
+        Matrix.invertM(mInvertedViewProjectionMatrix, 0, mGLCamera.getProjectionMatrix(), 0);
     }
 
     public void refreshSize(int width, int height) {
@@ -51,5 +63,52 @@ public class GLScene {
 
     public GLWorld getWorld() {
         return mWorld;
+    }
+
+    public void handleTouchPress(float normalizedX, float normalizedY) {
+        Ray ray = convertNormalized2DPointToRay(normalizedX, normalizedY);
+
+        // TODO check against objects in world to see if ray collides
+
+        Box box = new Box(new Point(1.0f, 1.0f, 0f), 1.0f, 1.0f);
+
+        boolean hitBox = Geometry.intersects(box, ray);
+
+        Log.i("GLScene", "Hit box? " + hitBox);
+    }
+
+    public void handleTouchDrag(float normalizedX, float normalizedY) {
+        Ray ray = convertNormalized2DPointToRay(normalizedX, normalizedY);
+        // TODO check against objects in world to see if ray collides
+    }
+
+    protected Ray convertNormalized2DPointToRay(float normalizedX, float normalizedY) {
+        // Convert normalized device coordinates into 3D world space coordinates
+        final float[] nearPointNdc = { normalizedX, normalizedY, -1, 1 };
+        final float[] farPointNdc = { normalizedX, normalizedY, 1, 1 };
+        final float[] nearPointWorld = new float[4];
+        final float[] farPointWorld = new float[4];
+
+        Matrix.multiplyMV(nearPointWorld, 0, mInvertedViewProjectionMatrix, 0, nearPointNdc, 0);
+        Matrix.multiplyMV(farPointWorld, 0, mInvertedViewProjectionMatrix, 0, farPointNdc, 0);
+
+        divideByW(nearPointWorld);
+        divideByW(farPointWorld);
+
+        Point nearPointRay =
+                new Point(nearPointWorld[0], nearPointWorld[1], nearPointWorld[2]);
+
+        Point farPointRay =
+                new Point(farPointWorld[0], farPointWorld[1], farPointWorld[2]);
+
+        Ray result = new Ray(nearPointRay, Vector.between(nearPointRay, farPointRay));
+
+        return result;
+    }
+
+    protected void divideByW(float[] vector) {
+        vector[0] /= vector[3];
+        vector[1] /= vector[3];
+        vector[2] /= vector[3];
     }
 }

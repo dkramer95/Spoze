@@ -27,6 +27,13 @@ public abstract class GLActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initViewDisplay();
+        mGLContext.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mGLContext.onStop();
     }
 
     /**
