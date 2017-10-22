@@ -33,13 +33,11 @@ public class GLTexturedSquare extends GLModel {
     private static final int TEXTURE_OFFSET = 2;
 
     private static final float[] VERTEX_DATA = {
-            //X, Y, S, T
-		   0f,    0f, 0.5f, 0.5f,
-		-0.5f, -0.8f,   0f, 0.9f,
-		 0.5f, -0.8f,   1f, 0.9f,
-		 0.5f,  0.8f,   1f, 0.1f,
-		-0.5f,  0.8f,   0f, 0.1f,
-		-0.5f, -0.8f,   0f, 0.9f,
+        // X, Y, S, T
+         1.0f, -1.0f, 1.0f, 1.0f,
+        -1.0f, -1.0f, 0.0f, 1.0f,
+        -1.0f,  1.0f, 0.0f, 0.0f,
+         1.0f,  1.0f, 0.0f, 1.0f,
     };
 
     protected int mPositionHandle;
@@ -89,7 +87,7 @@ public class GLTexturedSquare extends GLModel {
         camera.applyToModel(this);
 
         glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mMVPMatrix, 0);
-        glDrawArrays(GL_TRIANGLE_FAN, 0, 6);
+        glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
     }
 
     @Override
