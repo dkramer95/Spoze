@@ -5,4 +5,11 @@ package com.example.dkramer.spoze3.geometry;
  */
 
 public class Ray {
+    public final Point3f point;
+    public final Vector3f vector;
+
+    public Ray(Point3f point, Vector3f vector) {
+        this.point = point;
+        this.vector = vector;
+    }
 }
