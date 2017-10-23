@@ -1,19 +1,10 @@
 package com.example.dkramer.spoze3;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.util.AttributeSet;
 
-import com.example.dkramer.spoze3.gl.GLCamera;
 import com.example.dkramer.spoze3.gl.GLContext;
-import com.example.dkramer.spoze3.gl.GLModel;
-import com.example.dkramer.spoze3.gl.GLProgram;
 import com.example.dkramer.spoze3.gl.GLScene;
-import com.example.dkramer.spoze3.gl.GLTexture;
 import com.example.dkramer.spoze3.gl.GLView;
-import com.example.dkramer.spoze3.gl.GLWorld;
-import com.example.dkramer.spoze3.models.GLSquare;
-import com.example.dkramer.spoze3.models.GLTexturedSquare;
 
 /**
  * Created by dkramer on 10/20/17.
@@ -66,7 +57,7 @@ public class MyGLView extends GLView {
 //        });
 //        return scene;
 
-        GLScene scene = new GLScene(new MyGLWorld(getGLContext()));
+        GLScene scene = new GLScene(new MyGLWorld2(getGLContext()));
         return scene;
     }
 }
