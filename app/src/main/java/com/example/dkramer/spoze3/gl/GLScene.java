@@ -1,13 +1,10 @@
 package com.example.dkramer.spoze3.gl;
 
 import android.opengl.Matrix;
-import android.util.Log;
 
-import com.example.dkramer.spoze3.geometry.Box;
-import com.example.dkramer.spoze3.geometry.Geometry;
-import com.example.dkramer.spoze3.geometry.Point;
+import com.example.dkramer.spoze3.geometry.Point3f;
 import com.example.dkramer.spoze3.geometry.Ray;
-import com.example.dkramer.spoze3.geometry.Vector;
+import com.example.dkramer.spoze3.geometry.Vector3f;
 import com.example.dkramer.spoze3.util.FPSCounter;
 
 import static android.opengl.GLES20.GL_BLEND;
@@ -35,13 +32,14 @@ public class GLScene {
 
     public GLScene(GLWorld world) {
         mGLCamera = GLCamera.getDefault();
+        mGLCamera.setZoomFactor(0.5f);
         mWorld = world;
         mFPSCounter = new FPSCounter();
     }
 
     public void render() {
         clearScreen();
-        // TODO update camera
+        mGLCamera.update();
         mWorld.render(mGLCamera);
         mFPSCounter.logFrame();
 
@@ -49,7 +47,8 @@ public class GLScene {
     }
 
     public void refreshSize(int width, int height) {
-        mGLCamera.refreshSize(width, height);
+        getWorld().setSize(width, height);
+        getCamera().refreshSize(width, height);
     }
 
     protected void clearScreen() {
@@ -65,16 +64,15 @@ public class GLScene {
         return mWorld;
     }
 
+    public GLCamera getCamera() {
+        return mGLCamera;
+    }
+
     public void handleTouchPress(float normalizedX, float normalizedY) {
         Ray ray = convertNormalized2DPointToRay(normalizedX, normalizedY);
 
-        // TODO check against objects in world to see if ray collides
-
-        Box box = new Box(new Point(1.0f, 1.0f, 0f), 1.0f, 1.0f);
-
-        boolean hitBox = Geometry.intersects(box, ray);
-
-        Log.i("GLScene", "Hit box? " + hitBox);
+        // ray exists in 3D world space... we need to check to see if the box containing
+        // our model intersects with this ray
     }
 
     public void handleTouchDrag(float normalizedX, float normalizedY) {
@@ -95,13 +93,13 @@ public class GLScene {
         divideByW(nearPointWorld);
         divideByW(farPointWorld);
 
-        Point nearPointRay =
-                new Point(nearPointWorld[0], nearPointWorld[1], nearPointWorld[2]);
+        Point3f nearPointRay =
+                new Point3f(nearPointWorld[0], nearPointWorld[1], nearPointWorld[2]);
 
-        Point farPointRay =
-                new Point(farPointWorld[0], farPointWorld[1], farPointWorld[2]);
+        Point3f farPointRay =
+                new Point3f(farPointWorld[0], farPointWorld[1], farPointWorld[2]);
 
-        Ray result = new Ray(nearPointRay, Vector.between(nearPointRay, farPointRay));
+        Ray result = new Ray(nearPointRay, Vector3f.between(nearPointRay, farPointRay));
 
         return result;
     }

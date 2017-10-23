@@ -1,7 +1,5 @@
 package com.example.dkramer.spoze3.models;
 
-import android.opengl.Matrix;
-
 import com.example.dkramer.spoze3.R;
 import com.example.dkramer.spoze3.gl.GLCamera;
 import com.example.dkramer.spoze3.gl.GLContext;
@@ -72,16 +70,12 @@ public class GLSquare extends GLModel {
         return glProgram;
     }
 
-    float angle;
-
     @Override
     public void render(GLCamera camera) {
         mGLProgram.use();
-        Matrix.setIdentityM(mModelMatrix, 0);
-        Matrix.rotateM(mModelMatrix, 0, angle, angle, angle, angle);
-        angle += 0.5f;
+        applyTransformations();
 
-        camera.applyToModel(mMVPMatrix, mModelMatrix);
+        camera.applyToModel(this);
         glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mMVPMatrix, 0);
         glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
     }

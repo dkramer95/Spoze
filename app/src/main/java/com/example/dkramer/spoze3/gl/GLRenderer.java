@@ -20,6 +20,7 @@ public class GLRenderer implements GLView.Renderer {
 
     @Override
     public void onSurfaceCreated(GL10 glUnused, EGLConfig eglConfig) {
+        mScene.refreshSize(mView.getWidth(), mView.getHeight());
         mScene.getWorld().create();
     }
 

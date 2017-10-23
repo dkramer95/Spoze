@@ -1,10 +1,14 @@
 package com.example.dkramer.spoze3.models;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
 import com.example.dkramer.spoze3.R;
 import com.example.dkramer.spoze3.gl.GLCamera;
 import com.example.dkramer.spoze3.gl.GLContext;
 import com.example.dkramer.spoze3.gl.GLModel;
 import com.example.dkramer.spoze3.gl.GLProgram;
+import com.example.dkramer.spoze3.gl.GLTexture;
 import com.example.dkramer.spoze3.util.TextResourceReader;
 import com.example.dkramer.spoze3.util.TextureHelper;
 
@@ -17,6 +21,7 @@ import static android.opengl.GLES20.glDrawArrays;
 import static android.opengl.GLES20.glEnableVertexAttribArray;
 import static android.opengl.GLES20.glUniform1i;
 import static android.opengl.GLES20.glUniformMatrix4fv;
+import static com.example.dkramer.spoze3.gl.GLTexture.createFromBitmap;
 import static com.example.dkramer.spoze3.gl.GLVertexArray.BYTES_PER_FLOAT;
 
 /**
@@ -40,6 +45,8 @@ public class GLTexturedSquare extends GLModel {
          1.0f,  1.0f, 0.0f, 1.0f,
     };
 
+    protected GLTexture mTexture;
+
     protected int mPositionHandle;
     protected int mTextureHandle;
     protected int mMVPMatrixHandle;
@@ -60,8 +67,15 @@ public class GLTexturedSquare extends GLModel {
                 TextResourceReader.readTextFileFromResource(getGLContext(), R.raw.texture_fragment_shader);
 
         GLProgram glProgram = GLProgram.create(vertexShaderCode, fragmentShaderCode);
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inScaled = false;
 
-        mTextureHandle = TextureHelper.loadTexture(getGLContext(), R.drawable.texture);
+        Bitmap bmp = BitmapFactory.decodeResource(getGLContext().getResources(), R.drawable.texture, options);
+        mTexture = createFromBitmap(bmp);
+        mTextureHandle = mTexture.getTextureId();
+//        Bitmap bmp = getGLContext().getResources().
+
+//        mTextureHandle = TextureHelper.loadTexture(getGLContext(), R.drawable.texture);
         mPositionHandle = glProgram.bindAttribute("a_Position");
         mMVPMatrixHandle = glProgram.defineUniform("u_MVPMatrix");
         mTextureUniformHandle = glProgram.defineUniform("u_TextureUnit");

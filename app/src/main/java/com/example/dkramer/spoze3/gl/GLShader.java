@@ -1,11 +1,14 @@
 package com.example.dkramer.spoze3.gl;
 
+import android.util.Log;
+
 import static android.opengl.GLES20.GL_COMPILE_STATUS;
 import static android.opengl.GLES20.GL_FRAGMENT_SHADER;
 import static android.opengl.GLES20.GL_VERTEX_SHADER;
 import static android.opengl.GLES20.glCompileShader;
 import static android.opengl.GLES20.glCreateShader;
 import static android.opengl.GLES20.glDeleteShader;
+import static android.opengl.GLES20.glGetError;
 import static android.opengl.GLES20.glGetShaderiv;
 import static android.opengl.GLES20.glShaderSource;
 
@@ -43,6 +46,8 @@ public final class GLShader {
         glCompileShader(shaderObjectId);
 
         if (getCompileStatus(shaderObjectId) == GL_COMPILE_ERROR) {
+            int error = glGetError();
+            Log.e("GLShader", "Shader compile error = " + error);
             glDeleteShader(shaderObjectId);
             return null;
         }
