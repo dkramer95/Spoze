@@ -8,6 +8,7 @@ import static android.opengl.GLES20.glAttachShader;
 import static android.opengl.GLES20.glBindAttribLocation;
 import static android.opengl.GLES20.glCreateProgram;
 import static android.opengl.GLES20.glDeleteProgram;
+import static android.opengl.GLES20.glGetAttribLocation;
 import static android.opengl.GLES20.glGetProgramiv;
 import static android.opengl.GLES20.glGetUniformLocation;
 import static android.opengl.GLES20.glLinkProgram;
@@ -97,7 +98,8 @@ public final class GLProgram {
         ++mAttribIndex;
         mAttributes.put(attributeName, mAttribIndex);
         glBindAttribLocation(getId(), mAttribIndex, attributeName);
-        return mAttribIndex;
+        int handle = glGetAttribLocation(getId(), attributeName);
+        return handle;
     }
 
     public int getAttributeIndex(String attributeName) {
