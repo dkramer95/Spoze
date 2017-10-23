@@ -3,7 +3,6 @@ package com.example.dkramer.spoze3;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
-import com.example.dkramer.spoze3.R;
 import com.example.dkramer.spoze3.gl.GLCamera;
 import com.example.dkramer.spoze3.gl.GLContext;
 import com.example.dkramer.spoze3.gl.GLModel;
@@ -23,7 +22,6 @@ import static android.opengl.GLES20.GL_TRIANGLE_FAN;
 import static android.opengl.GLES20.glBindTexture;
 import static android.opengl.GLES20.glDrawArrays;
 import static android.opengl.GLES20.glGenTextures;
-import static android.opengl.GLES20.glTexParameterf;
 import static android.opengl.GLES20.glTexParameteri;
 import static android.opengl.GLES20.glUniformMatrix4fv;
 import static android.opengl.GLUtils.texImage2D;
@@ -45,7 +43,7 @@ public class MyGLWorld2 extends GLWorld {
 
 		BitmapFactory.Options options = new BitmapFactory.Options();
 		options.inScaled = false;
-		Bitmap bmp = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.texture3, options);
+		Bitmap bmp = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.texture7, options);
 		bmp = GLTexture.getFittedBitmap(bmp, getWidth(), getHeight());
 
 		final int[] textureObjectIds = new int[1];
@@ -108,11 +106,15 @@ public class MyGLWorld2 extends GLWorld {
 				return glProgram;
 			}
 
+			float angle;
+
 			@Override
 			public void render(GLCamera camera) {
 				mGLProgram.use();
 				applyTransformations();
+				camera.rotate(angle, 1f, 1f, 1f);
 				camera.applyToModel(this);
+				++angle;
 				glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mMVPMatrix, 0);
 				glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 			}

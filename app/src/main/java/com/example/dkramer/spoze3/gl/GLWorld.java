@@ -48,8 +48,6 @@ public abstract class GLWorld {
     }
 
     public void render(GLCamera camera) {
-        glClearColor(0f, 0f, 0f, 1f);
-
         for (GLModel m : mModels) {
             m.render(camera);
         }

@@ -43,7 +43,7 @@ public abstract class GLActivity extends AppCompatActivity {
         mGLContext = new GLContext(this);
         GLView glView = createGLView();
         mGLContext.setGLView(glView);
-        glView.init();
+        glView.init(getGLContext());
 
         int layoutId = getLayoutId();
 

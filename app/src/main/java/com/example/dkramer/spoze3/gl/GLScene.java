@@ -32,7 +32,7 @@ public class GLScene {
 
     public GLScene(GLWorld world) {
         mGLCamera = GLCamera.getDefault();
-        mGLCamera.setZoomFactor(0.5f);
+        mGLCamera.setZoomFactor(1f);
         mWorld = world;
         mFPSCounter = new FPSCounter();
     }

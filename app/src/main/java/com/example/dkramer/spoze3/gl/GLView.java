@@ -1,29 +1,33 @@
 package com.example.dkramer.spoze3.gl;
 
+import android.content.Context;
 import android.graphics.PixelFormat;
 import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
+
+import com.example.dkramer.spoze3.MyGLWorld2;
 
 /**
  * Created by dkramer on 10/20/17.
  */
 
-public abstract class GLView extends GLSurfaceView {
+public class GLView extends GLSurfaceView {
     protected GLContext mGLContext;
     protected GLRenderer mRenderer;
     protected GLScene mScene;
 
-    public GLView(GLContext context) {
+    public GLView(Context context) {
         super(context);
-        mGLContext = context;
+//        mGLContext = (GLContext)context;
     }
 
-    public GLView(GLContext context, AttributeSet attrs) {
+    public GLView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        mGLContext = context;
+//        mGLContext = (GLContext)context;
     }
 
-    public void init() {
+    public void init(GLContext glContext) {
+        mGLContext = glContext;
         mScene = createScene();
         mRenderer = new GLRenderer(this);
 
@@ -38,7 +42,10 @@ public abstract class GLView extends GLSurfaceView {
      * Method to be implemented that performs all the initialization work
      * to create a scene.
      */
-    public abstract GLScene createScene();
+    public GLScene createScene() {
+        GLScene scene = new GLScene(new MyGLWorld2(getGLContext()));
+        return scene;
+    }
 
     public GLScene getScene() {
         return mScene;
