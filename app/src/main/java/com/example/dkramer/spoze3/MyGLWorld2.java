@@ -12,10 +12,13 @@ import com.example.dkramer.spoze3.gl.GLTexture;
 import com.example.dkramer.spoze3.gl.GLWorld;
 import com.example.dkramer.spoze3.util.TextResourceReader;
 
+import static android.opengl.GLES20.GL_CLAMP_TO_EDGE;
 import static android.opengl.GLES20.GL_NEAREST;
 import static android.opengl.GLES20.GL_TEXTURE_2D;
 import static android.opengl.GLES20.GL_TEXTURE_MAG_FILTER;
 import static android.opengl.GLES20.GL_TEXTURE_MIN_FILTER;
+import static android.opengl.GLES20.GL_TEXTURE_WRAP_S;
+import static android.opengl.GLES20.GL_TEXTURE_WRAP_T;
 import static android.opengl.GLES20.GL_TRIANGLE_FAN;
 import static android.opengl.GLES20.glBindTexture;
 import static android.opengl.GLES20.glDrawArrays;
@@ -40,18 +43,9 @@ public class MyGLWorld2 extends GLWorld {
 	public void create() {
 		final GLContext ctx = getGLContext();
 
-		final float[] VERTEX_DATA = {
-			1.0f, -1.0f, 1.0f, 1.0f,
-
-			-1.0f, -1.0f, 0.0f, 1.0f,
-
-			-1.0f, 1.0f, 0.0f, 0.0f,
-
-			1.0f, 1.0f, 0.0f, 1.0f,
-		};
 		BitmapFactory.Options options = new BitmapFactory.Options();
 		options.inScaled = false;
-		Bitmap bmp = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.texture5, options);
+		Bitmap bmp = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.texture3, options);
 		bmp = GLTexture.getFittedBitmap(bmp, getWidth(), getHeight());
 
 		final int[] textureObjectIds = new int[1];
@@ -62,10 +56,28 @@ public class MyGLWorld2 extends GLWorld {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
 		texImage2D(GL_TEXTURE_2D, 0, bmp, 0);
-		bmp.recycle();
 
 		final int STRIDE = ((2 * 2) * BYTES_PER_FLOAT);
+
+		final float factor = Math.max(getWidth(), getHeight());
+
+		final float w = (float)bmp.getWidth() / factor;
+		final float h = (float)bmp.getHeight() / factor;
+
+		final float test = (w / h);
+
+		bmp.recycle();
+
+		final float[] VERTEX_DATA = {
+			w, -h, 1.0f, 1.0f,
+			-w, -h, 0.0f, 1.0f,
+			-w, h, 0.0f, 0.0f,
+			w, h, 1.0f, 0.0f,
+		};
 
 
 		addModel(new GLModel(ctx) {
