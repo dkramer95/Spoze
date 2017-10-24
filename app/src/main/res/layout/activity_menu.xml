@@ -30,19 +30,6 @@
             tools:layout_editor_absoluteY="0dp"/>
 
         <Button
-            android:id="@+id/importArtworkButton"
-            style="@android:style/Widget.DeviceDefault.Light.Button"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_margin="15dp"
-            android:layout_weight="1"
-            android:background="@drawable/ripple_effect"
-            android:fontFamily="sans-serif"
-            android:text="@string/artwork_button"
-            android:textColor="@android:color/white"
-            android:textSize="22sp"/>
-
-        <Button
             android:id="@+id/visualizeButton"
             style="@android:style/Widget.DeviceDefault.Light.Button"
             android:layout_width="match_parent"
@@ -55,34 +42,6 @@
             android:text="@string/visualize_button"
             android:textColor="@android:color/white"
             android:textSize="22sp"/>
-
-        <Button
-            android:id="@+id/debugModeButton"
-            style="@android:style/Widget.DeviceDefault.Light.Button"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_margin="15dp"
-            android:layout_weight="1"
-            android:background="@drawable/ripple_effect"
-            android:fontFamily="sans-serif"
-            android:onClick="debugButtonClicked"
-            android:text="@string/debug_button"
-            android:textColor="@android:color/white"
-            android:textSize="22sp" />
-
-        <Button
-            android:id="@+id/testButton"
-            style="@android:style/Widget.DeviceDefault.Light.Button"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_margin="15dp"
-            android:layout_weight="1"
-            android:background="@drawable/ripple_effect"
-            android:fontFamily="sans-serif"
-            android:onClick="testButtonClicked"
-            android:text="@string/test_button"
-            android:textColor="@android:color/white"
-            android:textSize="22sp" />
 
         <Button
             android:id="@+id/helpAboutButton"

@@ -34,6 +34,7 @@ public class ImportBitmapActivity extends AppCompatActivity {
 			intent.setData(data.getData());
 			startActivity(intent);
 		}
+		finish();
 	}
 
 	protected void openGallery() {
