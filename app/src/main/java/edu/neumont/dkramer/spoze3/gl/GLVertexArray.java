@@ -18,6 +18,9 @@ public class GLVertexArray {
     protected float[] mData;
     protected final FloatBuffer mBuffer;
 
+
+
+
     protected GLVertexArray(float[] data) {
         mData = data;
         mBuffer = ByteBuffer

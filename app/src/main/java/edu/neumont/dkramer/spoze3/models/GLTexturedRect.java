@@ -50,6 +50,8 @@ public abstract class GLTexturedRect extends GLModel {
         super(ctx);
     }
 
+
+
     public static GLTexturedRect createFromResource(GLContext ctx, int resourceId, int maxWidth, int maxHeight) {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inScaled = false;

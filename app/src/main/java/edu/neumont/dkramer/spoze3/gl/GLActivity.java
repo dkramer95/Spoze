@@ -41,25 +41,35 @@ public abstract class GLActivity extends AppCompatActivity {
      */
     protected void initViewDisplay() {
         mGLContext = new GLContext(this);
-        GLView glView = createGLView();
-        mGLContext.setGLView(glView);
-        glView.init(getGLContext());
-
+        GLView glView = null;
         int layoutId = getLayoutId();
 
-        if (layoutId == NULL_LAYOUT) {
-            setContentView(getGLContext().getGLView());
-        } else {
+        // glView will be created from layout
+        if (layoutId != NULL_LAYOUT) {
+            // set layout so glView can inflate
             setContentView(layoutId);
+            // subclasses should overwrite this method to return GLView from their layout
+            glView = createGLView();
+        } else {
+            glView = createGLView();
+            setContentView(glView);
         }
+        // create the scene that subclasses define
+        glView.setScene(createGLScene());
+        glView.init(mGLContext);
     }
 
     /**
-     * Method to be implemented that creates our GLView that will be
-     * the primary GLView that draws the scene to the screen.
+     * Method to be implemented that creates a GLScene that will be actively
+     * rendered.
      * @return
      */
-    protected abstract GLView createGLView();
+    protected abstract GLScene createGLScene();
+
+    protected GLView createGLView() {
+        GLView glView = new GLView(getGLContext());
+        return glView;
+    }
 
     /**
      * Method that should be overwritten by subclasses if they wish to use a layout as defined

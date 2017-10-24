@@ -38,16 +38,13 @@ public class VisualizationActivity extends GLCameraActivity {
             Toast.makeText(this, "Failed to open image", Toast.LENGTH_LONG).show();
             finish();
         } else {
-            // create our view!!
             mBitmap = bmp;
-            createGLView();
         }
     }
 
     @Override
-    protected GLView createGLView() {
+    protected GLScene createGLScene() {
         final GLContext ctx = getGLContext();
-
         GLScene scene = new GLScene(new GLWorld(ctx) {
             float angle = 0f;
             @Override
@@ -62,10 +59,6 @@ public class VisualizationActivity extends GLCameraActivity {
                 super.render(camera);
             }
         });
-        //TODO fix view scene initialization... had to move these out of the ctor of the GLView
-        mTestView.setScene(scene);
-		mTestView.init(getGLContext());
-		mGLContext.onStart();
-	    return null;
+        return scene;
     }
 }

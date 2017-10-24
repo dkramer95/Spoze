@@ -20,8 +20,9 @@ import edu.neumont.dkramer.spoze3.camera.Camera;
 
 public abstract class GLCameraActivity extends GLActivity {
 	protected Camera mCamera;
-	protected GLView mTestView;
 	protected SurfaceView mCameraPreview;
+
+
 
 	@Override
 	protected void onStop() {
@@ -32,20 +33,18 @@ public abstract class GLCameraActivity extends GLActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.test_layout);
-		mTestView = findViewById(R.id.glView2);
-//		mTestView.init(getGLContext());
 		init();
-//		mGLContext.onStart();
 	}
 
 	@Override
 	protected int getLayoutId() {
-		return R.layout.test_layout;
+		return R.layout.gl_camera_layout;
 	}
 
-	protected void initViewDisplay() {
-		mGLContext = new GLContext(this);
+	@Override
+	protected GLView createGLView() {
+		GLView glView = findViewById(R.id.glView);
+		return glView;
 	}
 
 	protected void init() {

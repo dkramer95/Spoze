@@ -13,6 +13,8 @@ public abstract class GLWorld {
     protected int mHeight;
     protected List<GLModel> mModels;
 
+
+
     public GLWorld(GLContext glContext) {
         mGLContext = glContext;
         mModels = new ArrayList<>();
