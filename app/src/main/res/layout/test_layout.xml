@@ -15,7 +15,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
-    <com.example.dkramer.spoze3.gl.GLView
+    <edu.neumont.dkramer.spoze3.gl.GLView
         android:id="@+id/glView2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="edu.neumont.dkramer.spoze3.MenuActivity">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/main_header_selector"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/titleTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="25dp"
+            android:text="@string/app_title"
+            android:textAlignment="center"
+            android:textColor="@android:color/white"
+            android:textSize="30sp"
+            tools:layout_editor_absoluteX="8dp"
+            tools:layout_editor_absoluteY="0dp"/>
+
+        <Button
+            android:id="@+id/importArtworkButton"
+            style="@android:style/Widget.DeviceDefault.Light.Button"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_margin="15dp"
+            android:layout_weight="1"
+            android:background="@drawable/ripple_effect"
+            android:fontFamily="sans-serif"
+            android:text="@string/artwork_button"
+            android:textColor="@android:color/white"
+            android:textSize="22sp"/>
+
+        <Button
+            android:id="@+id/visualizeButton"
+            style="@android:style/Widget.DeviceDefault.Light.Button"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_margin="15dp"
+            android:layout_weight="1"
+            android:background="@drawable/ripple_effect"
+            android:fontFamily="sans-serif"
+            android:onClick="visualizeButtonClicked"
+            android:text="@string/visualize_button"
+            android:textColor="@android:color/white"
+            android:textSize="22sp"/>
+
+        <Button
+            android:id="@+id/debugModeButton"
+            style="@android:style/Widget.DeviceDefault.Light.Button"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_margin="15dp"
+            android:layout_weight="1"
+            android:background="@drawable/ripple_effect"
+            android:fontFamily="sans-serif"
+            android:onClick="debugButtonClicked"
+            android:text="@string/debug_button"
+            android:textColor="@android:color/white"
+            android:textSize="22sp" />
+
+        <Button
+            android:id="@+id/testButton"
+            style="@android:style/Widget.DeviceDefault.Light.Button"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_margin="15dp"
+            android:layout_weight="1"
+            android:background="@drawable/ripple_effect"
+            android:fontFamily="sans-serif"
+            android:onClick="testButtonClicked"
+            android:text="@string/test_button"
+            android:textColor="@android:color/white"
+            android:textSize="22sp" />
+
+        <Button
+            android:id="@+id/helpAboutButton"
+            style="@android:style/Widget.DeviceDefault.Light.Button"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_margin="15dp"
+            android:layout_weight="1"
+            android:background="@drawable/ripple_effect"
+            android:fontFamily="sans-serif"
+            android:text="@string/help_button"
+            android:textColor="@android:color/white"
+            android:textSize="22sp"/>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.29"/>
+
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>
