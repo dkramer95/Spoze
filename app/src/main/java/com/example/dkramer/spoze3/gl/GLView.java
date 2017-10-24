@@ -5,7 +5,7 @@ import android.graphics.PixelFormat;
 import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
 
-import com.example.dkramer.spoze3.MyGLWorld2;
+import com.example.dkramer.spoze3.MyGLWorld;
 
 /**
  * Created by dkramer on 10/20/17.
@@ -43,7 +43,7 @@ public class GLView extends GLSurfaceView {
      * @return
      */
     public GLScene createScene() {
-        GLScene scene = new GLScene(new MyGLWorld2(getGLContext()));
+        GLScene scene = new GLScene(new MyGLWorld(getGLContext()));
         return scene;
     }
 

@@ -4,7 +4,6 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.hardware.camera2.CameraAccessException;
-import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -12,13 +11,8 @@ import android.support.v4.content.ContextCompat;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import com.example.dkramer.spoze3.MyGLView;
 import com.example.dkramer.spoze3.R;
-import com.example.dkramer.spoze3.TestGLView2;
 import com.example.dkramer.spoze3.camera.Camera;
-
-import javax.microedition.khronos.egl.EGLConfig;
-import javax.microedition.khronos.opengles.GL10;
 
 /**
  * Created by dkramer on 10/23/17.
@@ -48,17 +42,10 @@ public abstract class GLCameraActivity extends GLActivity {
 	@Override
 	protected int getLayoutId() {
 		return R.layout.test_layout;
-//		return R.layout.activity_camera_opengl;
 	}
 
 	protected void initViewDisplay() {
 		mGLContext = new GLContext(this);
-//		setContentView(getLayoutId());
-
-//		GLView glView = (GLView)findViewById(R.id.glView);
-//		glView.init();
-//		mGLContext.setGLView(glView);
-
 	}
 
 	protected void init() {
