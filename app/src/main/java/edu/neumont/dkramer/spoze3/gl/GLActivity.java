@@ -66,6 +66,13 @@ public abstract class GLActivity extends AppCompatActivity {
      */
     protected abstract GLScene createGLScene();
 
+    /**
+     * This method should be overwritten only if subclasses are using a GLView as
+     * part of their layout XML file. This method should then return that GLView
+     * through accessing it by findViewById()... This method is called after the
+     * content view has been set, so it should guarantee a non-null GLView
+     * @return GLView
+     */
     protected GLView createGLView() {
         GLView glView = new GLView(getGLContext());
         return glView;
