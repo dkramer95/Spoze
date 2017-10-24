@@ -26,7 +26,7 @@ public class GLView extends GLSurfaceView {
 
     public void init(GLContext glContext) {
         mGLContext = glContext;
-        mScene = createScene();
+//        mScene = createScene();
         mRenderer = new GLRenderer(this);
 
         setEGLContextClientVersion(2);
@@ -57,5 +57,9 @@ public class GLView extends GLSurfaceView {
 
     public GLContext getGLContext() {
         return mGLContext;
+    }
+
+    public void setScene(GLScene scene) {
+        mScene = scene;
     }
 }

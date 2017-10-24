@@ -1,13 +1,21 @@
 package com.example.dkramer.spoze3;
 
-import com.example.dkramer.spoze3.gl.GLActivity;
-import com.example.dkramer.spoze3.gl.GLCameraActivity;
-import com.example.dkramer.spoze3.gl.GLView;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 
-public class MainActivity extends GLCameraActivity {
+import com.example.dkramer.spoze3.util.ImportBitmapActivity;
 
-    @Override
-    protected GLView createGLView() {
-        return new MyGLView(getGLContext());
-    }
+/**
+ * Created by dkramer on 10/24/17.
+ */
+
+public class MainActivity extends AppCompatActivity {
+	@Override
+	protected void onCreate(@Nullable Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		Intent intent = new Intent(this, ImportBitmapActivity.class);
+		startActivity(intent);
+	}
 }

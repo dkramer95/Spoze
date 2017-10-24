@@ -34,9 +34,9 @@ public abstract class GLCameraActivity extends GLActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.test_layout);
 		mTestView = findViewById(R.id.glView2);
-		mTestView.init(getGLContext());
+//		mTestView.init(getGLContext());
 		init();
-		mGLContext.onStart();
+//		mGLContext.onStart();
 	}
 
 	@Override
