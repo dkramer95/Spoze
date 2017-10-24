@@ -41,25 +41,8 @@ public abstract class GLCameraActivity extends GLActivity {
 		setContentView(R.layout.test_layout);
 		mTestView = findViewById(R.id.glView2);
 		mTestView.init(getGLContext());
-		openCameraPreview();
-//		mTestView.setRenderer(new GLSurfaceView.Renderer() {
-//			@Override
-//			public void onSurfaceCreated(GL10 gl10, EGLConfig eglConfig) {
-//
-//			}
-//
-//			@Override
-//			public void onSurfaceChanged(GL10 gl10, int i, int i1) {
-//
-//			}
-//
-//			@Override
-//			public void onDrawFrame(GL10 gl10) {
-//
-//			}
-//		});
-//		init();
-//		openCameraPreview();
+		init();
+		mGLContext.onStart();
 	}
 
 	@Override

@@ -36,6 +36,7 @@ public class GLCamera {
         camera.mEye = new Point3f(0.0f, 0.0f, 1.0f);
         camera.mLook = new Point3f(0.0f, 1.0f, -100.0f);
         camera.mUp = new Vector3f(0.0f, 1.0f, 0.0f);
+        camera.setZoomFactor(1f);
 
         camera.updateViewMatrix();
         return camera;

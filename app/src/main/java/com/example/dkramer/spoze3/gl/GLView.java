@@ -18,12 +18,10 @@ public class GLView extends GLSurfaceView {
 
     public GLView(Context context) {
         super(context);
-//        mGLContext = (GLContext)context;
     }
 
     public GLView(Context context, AttributeSet attrs) {
         super(context, attrs);
-//        mGLContext = (GLContext)context;
     }
 
     public void init(GLContext glContext) {
@@ -39,8 +37,10 @@ public class GLView extends GLSurfaceView {
     }
 
     /**
-     * Method to be implemented that performs all the initialization work
-     * to create a scene.
+     * Method that should be overwritten by subclasses. This would be abstract,
+     * but in order for it to work with a layout XML file, this class cannot
+     * be abstract
+     * @return
      */
     public GLScene createScene() {
         GLScene scene = new GLScene(new MyGLWorld2(getGLContext()));

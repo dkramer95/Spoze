@@ -41,9 +41,11 @@ public class MyGLWorld2 extends GLWorld {
 	public void create() {
 		final GLContext ctx = getGLContext();
 
+		//TODO clean this code up... THIS CODE WORKS THOUGH, SO BE CAREFUL!!!!
+
 		BitmapFactory.Options options = new BitmapFactory.Options();
 		options.inScaled = false;
-		Bitmap bmp = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.texture7, options);
+		Bitmap bmp = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.texture8, options);
 		bmp = GLTexture.getFittedBitmap(bmp, getWidth(), getHeight());
 
 		final int[] textureObjectIds = new int[1];
@@ -59,6 +61,7 @@ public class MyGLWorld2 extends GLWorld {
 
 		texImage2D(GL_TEXTURE_2D, 0, bmp, 0);
 
+		//TODO fix magic numbers in the stride
 		final int STRIDE = ((2 * 2) * BYTES_PER_FLOAT);
 
 		final float factor = Math.max(getWidth(), getHeight());
@@ -66,17 +69,15 @@ public class MyGLWorld2 extends GLWorld {
 		final float w = (float)bmp.getWidth() / factor;
 		final float h = (float)bmp.getHeight() / factor;
 
-		final float test = (w / h);
-
 		bmp.recycle();
 
+		// TODO -- (w and h) not known until bitmap is loaded... create utility to handle creating this
 		final float[] VERTEX_DATA = {
 			w, -h, 1.0f, 1.0f,
 			-w, -h, 0.0f, 1.0f,
 			-w, h, 0.0f, 0.0f,
 			w, h, 1.0f, 0.0f,
 		};
-
 
 		addModel(new GLModel(ctx) {
 			int mPositionHandle;
