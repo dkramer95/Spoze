@@ -40,7 +40,7 @@ public abstract class GLActivity extends AppCompatActivity {
      * This method initializes the main content view to be used in this activity.
      */
     protected void initViewDisplay() {
-        mGLContext = new GLContext(this);
+        mGLContext = createGLContext();
         GLView glView = null;
         int layoutId = getLayoutId();
 
@@ -57,6 +57,16 @@ public abstract class GLActivity extends AppCompatActivity {
         // create the scene that subclasses define
         glView.setScene(createGLScene());
         glView.init(mGLContext);
+    }
+
+    /**
+     * This method should be overwritten only if subclasses intend to do additional
+     * setup for a GLContext, such as adding additional GLDeviceInfo tracking.
+     * @return
+     */
+    protected GLContext createGLContext() {
+        GLContext ctx = new GLContext(this);
+        return ctx;
     }
 
     /**

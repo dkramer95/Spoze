@@ -11,6 +11,7 @@ import java.io.IOException;
 import edu.neumont.dkramer.spoze3.gl.GLCamera;
 import edu.neumont.dkramer.spoze3.gl.GLCameraActivity;
 import edu.neumont.dkramer.spoze3.gl.GLContext;
+import edu.neumont.dkramer.spoze3.gl.GLDeviceInfo;
 import edu.neumont.dkramer.spoze3.gl.GLScene;
 import edu.neumont.dkramer.spoze3.gl.GLWorld;
 import edu.neumont.dkramer.spoze3.models.GLTexturedRect;
@@ -34,6 +35,13 @@ public class VisualizationActivity extends GLCameraActivity {
             finish();
         }
         return bmp;
+    }
+
+    @Override
+    protected GLContext createGLContext() {
+        GLContext ctx = new GLContext(this);
+        ctx.enableDeviceInfo(GLDeviceInfo.TYPE__ROTATION_VECTOR);
+        return ctx;
     }
 
     @Override

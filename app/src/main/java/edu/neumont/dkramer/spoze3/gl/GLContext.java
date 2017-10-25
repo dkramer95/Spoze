@@ -74,6 +74,24 @@ public final class GLContext extends Context {
         }
     }
 
+    public void enableDeviceInfo(int infoType) {
+        GLDeviceInfo info = null;
+
+        switch (infoType) {
+            case GLDeviceInfo.TYPE_TOUCH_INPUT:
+                //TODO add touch input
+                break;
+            case GLDeviceInfo.TYPE__ROTATION_VECTOR:
+                info = new GLSensorInfo(this);
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid GLDeviceInfo type constant!");
+        }
+        mDeviceInfoList.add(info);
+    }
+
+
+
 
 
     /* Method wrappers, that just use our GLActivity, but are needed in order to extend GLContext */
@@ -623,9 +641,5 @@ public final class GLContext extends Context {
     @Override
     public boolean isDeviceProtectedStorage() {
         return mActivity.isDeviceProtectedStorage();
-    }
-
-    public void addDeviceInfo(GLDeviceInfo glDeviceInfo) {
-        mDeviceInfoList.add(glDeviceInfo);
     }
 }

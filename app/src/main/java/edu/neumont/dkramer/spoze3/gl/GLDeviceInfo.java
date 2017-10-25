@@ -5,7 +5,18 @@ package edu.neumont.dkramer.spoze3.gl;
  */
 
 public abstract class GLDeviceInfo {
+    /**
+     * Constant values to be used when creating a GLContext and enabling
+     * specific GLDeviceInfo types, using GLContext.enableDeviceInfo(type);
+     */
+    public static final int TYPE_TOUCH_INPUT = 1;
+    public static final int TYPE__ROTATION_VECTOR = 100;
+
+
+
     protected GLContext mGLContext;
+
+
 
     public GLDeviceInfo(GLContext glContext) {
         mGLContext = glContext;
