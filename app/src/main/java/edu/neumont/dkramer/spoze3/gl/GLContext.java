@@ -36,8 +36,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Adapter class for regular Context class that provides additional OpenGL methods
@@ -45,13 +45,13 @@ import java.util.List;
  */
 
 public final class GLContext extends Context {
-    private List<GLDeviceInfo> mDeviceInfoList;
+    private Map<Integer, GLDeviceInfo> mDeviceInfo;
     private GLActivity mActivity;
     private GLView mGLView;
 
     public GLContext(GLActivity activity) {
         mActivity = activity;
-        mDeviceInfoList = new ArrayList<>();
+        mDeviceInfo = new HashMap<>();
     }
 
     public GLView getGLView() {
@@ -63,13 +63,13 @@ public final class GLContext extends Context {
     }
 
     public void onStart() {
-        for (GLDeviceInfo i : mDeviceInfoList) {
+        for (GLDeviceInfo i : mDeviceInfo.values()) {
             i.start();
         }
     }
 
     public void onStop() {
-        for (GLDeviceInfo i : mDeviceInfoList) {
+        for (GLDeviceInfo i : mDeviceInfo.values()) {
             i.stop();
         }
     }
@@ -81,13 +81,21 @@ public final class GLContext extends Context {
             case GLDeviceInfo.TYPE_TOUCH_INPUT:
                 //TODO add touch input
                 break;
-            case GLDeviceInfo.TYPE__ROTATION_VECTOR:
+            case GLDeviceInfo.TYPE_ROTATION_VECTOR:
                 info = new GLSensorInfo(this);
                 break;
             default:
                 throw new IllegalArgumentException("Invalid GLDeviceInfo type constant!");
         }
-        mDeviceInfoList.add(info);
+        if (mDeviceInfo.containsKey(infoType)) {
+            throw new IllegalArgumentException("Specified GLDeviceInfo already exists!");
+        }
+        mDeviceInfo.put(infoType, info);
+    }
+
+    public GLDeviceInfo getInfo(int infoType) {
+        GLDeviceInfo info = mDeviceInfo.get(infoType);
+        return info;
     }
 
 

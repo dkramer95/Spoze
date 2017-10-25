@@ -12,7 +12,16 @@ public class GLMotionCamera extends GLCamera {
 
 	@Override
 	public void update() {
+		//TODO apply gyro values to camera matrix
+		float value = GLDeviceInfo.getValue(GLSensorInfo.CURRENT_YAW);
+
 		super.update();
-		//apply gyroscope readings here
+	}
+
+	public static GLCamera getDefault(GLContext ctx) {
+		GLCamera camera = new GLMotionCamera(ctx);
+		camera.setDefaults();
+		camera.updateViewMatrix();
+		return camera;
 	}
 }

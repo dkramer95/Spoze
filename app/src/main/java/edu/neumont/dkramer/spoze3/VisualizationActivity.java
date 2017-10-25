@@ -41,7 +41,7 @@ public class VisualizationActivity extends GLCameraActivity {
     @Override
     protected GLContext createGLContext() {
         GLContext ctx = new GLContext(this);
-        ctx.enableDeviceInfo(GLDeviceInfo.TYPE__ROTATION_VECTOR);
+        ctx.enableDeviceInfo(GLDeviceInfo.TYPE_ROTATION_VECTOR);
         return ctx;
     }
 
@@ -82,7 +82,7 @@ public class VisualizationActivity extends GLCameraActivity {
         }
 
         public GLCamera createGLCamera() {
-            return GLMotionCamera.getDefault(getGLContext());
+        	return GLMotionCamera.getDefault(getGLContext());
         }
     }
 }

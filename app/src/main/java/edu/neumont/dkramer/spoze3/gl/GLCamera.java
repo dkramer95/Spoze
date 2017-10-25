@@ -35,14 +35,16 @@ public class GLCamera extends GLObject {
 
     public static GLCamera getDefault(GLContext ctx) {
         GLCamera camera = new GLCamera(ctx);
-        camera.mEye = new Point3f(0.0f, 0.0f, 1.0f);
-        camera.mLook = new Point3f(0.0f, 1.0f, -100.0f);
-        camera.mUp = new Vector3f(0.0f, 1.0f, 0.0f);
-        camera.mGLContext = ctx;
-        camera.setZoomFactor(1f);
-
+        camera.setDefaults();
         camera.updateViewMatrix();
         return camera;
+    }
+
+    protected void setDefaults() {
+        mEye = new Point3f(0.0f, 0.0f, 1.0f);
+        mLook = new Point3f(0.0f, 1.0f, -100.0f);
+        mUp = new Vector3f(0.0f, 1.0f, 0.0f);
+        setZoomFactor(1f);
     }
 
     protected void updateViewMatrix() {

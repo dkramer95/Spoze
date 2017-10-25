@@ -9,6 +9,7 @@ import android.view.View;
 
 public class GLTouchInfo extends GLDeviceInfo implements GLView.OnTouchListener {
 
+    private float[] values = new float[2];
 
     public GLTouchInfo(GLContext glContext) {
         super(glContext);
@@ -32,11 +33,18 @@ public class GLTouchInfo extends GLDeviceInfo implements GLView.OnTouchListener 
         final float normalizedY =
                 -((e.getY() / (float) v.getHeight()) * 2 - 1);
 
+        values[0] = normalizedX;
+        values[1] = normalizedY;
+
 //        Log.i("GLTouchInfo", String.format("X: %f, Y: %f\n", normalizedX, normalizedY));
 
         GLView view = getGLContext().getGLView();
         GLScene scene = view.getScene();
         view.queueEvent(() -> scene.handleTouchPress(normalizedX, normalizedY));
         return true;
+    }
+
+    public float[] getValues() {
+        return values;
     }
 }
