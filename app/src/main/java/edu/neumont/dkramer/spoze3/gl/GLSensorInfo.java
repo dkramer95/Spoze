@@ -11,17 +11,28 @@ import android.hardware.SensorManager;
  */
 
 public class GLSensorInfo extends GLDeviceInfo implements SensorEventListener {
-    public static final int VALUE_LAST_YAW = 0;
-    public static final int VALUE_LAST_PITCH = 1;
-    public static final int VALUE_LAST_ROLL = 2;
+	/* TYPE_ROTATION_VECTOR prepended to prevent integer key collision in map */
 
-    public static final int VALUE_CURRENT_YAW = 10;
-    public static final int VALUE_CURRENT_PITCH = 11;
-    public static final int VALUE_CURRENT_ROLL = 12;
+    /*
+     * Constants indicating previous values
+     */
+    public static final int VALUE_LAST_YAW = (TYPE_ROTATION_VECTOR + 0x00);
+    public static final int VALUE_LAST_PITCH = (TYPE_ROTATION_VECTOR + 0x01);
+    public static final int VALUE_LAST_ROLL = (TYPE_ROTATION_VECTOR + 0x02);
 
-    public static final int VALUE_CALIBRATED_YAW = 20;
-    public static final int VALUE_CALIBRATED_PITCH = 21;
-    public static final int VALUE_CALIBRATED_ROLL = 22;
+    /*
+     * Constants indicating current values
+     */
+    public static final int VALUE_CURRENT_YAW = (TYPE_ROTATION_VECTOR + 0x03);
+    public static final int VALUE_CURRENT_PITCH = (TYPE_ROTATION_VECTOR + 0x04);
+    public static final int VALUE_CURRENT_ROLL = (TYPE_ROTATION_VECTOR + 0x05);
+
+    /*
+     * Constants indicating calibrated values
+     */
+    public static final int VALUE_CALIBRATED_YAW =  (TYPE_ROTATION_VECTOR + 0x06);
+    public static final int VALUE_CALIBRATED_PITCH = (TYPE_ROTATION_VECTOR + 0x07);
+    public static final int VALUE_CALIBRATED_ROLL = (TYPE_ROTATION_VECTOR + 0x08);
 
 
 

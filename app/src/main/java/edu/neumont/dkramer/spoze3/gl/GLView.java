@@ -24,6 +24,7 @@ public class GLView extends GLSurfaceView {
 
     public void init(GLContext glContext) {
         mGLContext = glContext;
+        mGLContext.setGLView(this);
         mRenderer = new GLRenderer(this);
 
         setEGLContextClientVersion(2);

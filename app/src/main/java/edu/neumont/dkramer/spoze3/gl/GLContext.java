@@ -79,7 +79,7 @@ public final class GLContext extends Context {
 
         switch (infoType) {
             case GLDeviceInfo.TYPE_TOUCH_INPUT:
-                //TODO add touch input
+                info = new GLTouchInfo(this);
                 break;
             case GLDeviceInfo.TYPE_ROTATION_VECTOR:
                 info = new GLSensorInfo(this);

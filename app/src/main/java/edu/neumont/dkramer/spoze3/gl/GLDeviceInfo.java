@@ -11,8 +11,8 @@ public abstract class GLDeviceInfo extends GLObject {
      * Constant values to be used when creating a GLContext and enabling
      * specific GLDeviceInfo types, using GLContext.enableDeviceInfo(type);
      */
-    public static final int TYPE_TOUCH_INPUT = 1;
-    public static final int TYPE_ROTATION_VECTOR = 100;
+    public static final int TYPE_TOUCH_INPUT = 100;
+    public static final int TYPE_ROTATION_VECTOR = 200;
 
     /*
      * This is shared between all GLDeviceInfo classes.. Subclasses should specify
