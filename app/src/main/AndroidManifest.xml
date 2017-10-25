@@ -18,7 +18,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="edu.neumont.dkramer.spoze3.VisualizationActivity"/>
+        <activity android:name="edu.neumont.dkramer.spoze3.VisualizationActivity"
+                  android:theme="@style/FullscreenTheme"/>
         <activity android:name="edu.neumont.dkramer.spoze3.util.ImportBitmapActivity" />
     </application>
     <uses-feature android:glEsVersion="0x0020000" android:required="true"/>

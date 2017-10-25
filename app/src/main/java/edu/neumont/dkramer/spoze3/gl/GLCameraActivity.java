@@ -1,39 +1,47 @@
 package edu.neumont.dkramer.spoze3.gl;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.pm.PackageManager;
-import android.hardware.camera2.CameraAccessException;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
 
 import edu.neumont.dkramer.spoze3.R;
 import edu.neumont.dkramer.spoze3.camera.Camera;
+import edu.neumont.dkramer.spoze3.camera.CameraPreview;
 
 /**
  * Created by dkramer on 10/23/17.
  */
 
 public abstract class GLCameraActivity extends GLActivity {
-	protected Camera mCamera;
-	protected SurfaceView mCameraPreview;
+	protected CameraPreview mCameraPreview;
 
 
 
 	@Override
 	protected void onStop() {
 		super.onStop();
-		closeCameraPreview();
+		mCameraPreview.stopPreviewing();
 	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		init();
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		mCameraPreview.startPreviewing();
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		mCameraPreview.stopPreviewing();
 	}
 
 	@Override
@@ -48,48 +56,15 @@ public abstract class GLCameraActivity extends GLActivity {
 	}
 
 	protected void init() {
+		mCameraPreview = findViewById(R.id.cameraPreview);
+		mCameraPreview.setCameraType(Camera.CAM_REAR);
+
 		if (!hasGrantedCameraPermission()) {
 			requestCameraPermission();
 			return;
 		}
-		openCameraPreview();
+		mCameraPreview.startPreviewing();
 	}
-
-	protected void openCameraPreview() {
-		final Context ctx = this;
-
-		mCameraPreview = findViewById(R.id.cameraPreview);
-		mCameraPreview.getHolder().addCallback(new SurfaceHolder.Callback() {
-			@Override
-			public void surfaceCreated(SurfaceHolder holder) {
-				try {
-					mCamera = Camera.acquire(ctx, Camera.CAM_REAR);
-					mCamera.addTarget(holder.getSurface());
-					mCamera.open();
-				} catch (CameraAccessException e) {
-					e.printStackTrace();
-				}
-			}
-
-			@Override
-			public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i1, int i2) { }
-
-			@Override
-			public void surfaceDestroyed(SurfaceHolder surfaceHolder) { }
-		});
-	}
-
-	protected void closeCameraPreview() {
-		if (mCamera != null) {
-			try {
-				mCamera.close();
-				mCamera = null;
-			} catch (CameraAccessException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-
 
 	/**
 	 * Checks to see if we have been granted permission to use the camera
@@ -119,8 +94,8 @@ public abstract class GLCameraActivity extends GLActivity {
 		switch (requestCode) {
 			case Camera.PERMISSION_CODE:
 				if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-					closeCameraPreview();
-					openCameraPreview();
+					mCameraPreview.stopPreviewing();
+				    mCameraPreview.startPreviewing();
 				}
 				break;
 		}
