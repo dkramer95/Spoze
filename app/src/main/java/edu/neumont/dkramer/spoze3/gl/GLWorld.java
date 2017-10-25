@@ -7,8 +7,7 @@ import java.util.List;
  * Created by dkramer on 10/20/17.
  */
 
-public abstract class GLWorld {
-    protected GLContext mGLContext;
+public abstract class GLWorld extends GLObject {
     protected int mWidth;
     protected int mHeight;
     protected List<GLModel> mModels;
@@ -16,7 +15,7 @@ public abstract class GLWorld {
 
 
     public GLWorld(GLContext glContext) {
-        mGLContext = glContext;
+        super(glContext);
         mModels = new ArrayList<>();
     }
 
@@ -51,10 +50,6 @@ public abstract class GLWorld {
         for (GLModel m : mModels) {
             m.render(camera);
         }
-    }
-
-    public GLContext getGLContext() {
-        return mGLContext;
     }
 
 }

@@ -6,8 +6,7 @@ import android.opengl.Matrix;
  * Created by dkramer on 10/20/17.
  */
 
-public abstract class GLModel {
-    protected GLContext mGLContext;
+public abstract class GLModel extends GLObject {
     protected GLProgram mGLProgram;
     protected final GLVertexArray mVertexArray;
 //    protected final GLTransformation mTransformation;
@@ -26,7 +25,7 @@ public abstract class GLModel {
 //    }
 
     public GLModel(GLContext glContext) {
-        mGLContext = glContext;
+    	super(glContext);
         mVertexArray = new GLVertexArray(getVertexData());
         mGLProgram = createGLProgram();
 //        mTransformation = new GLTransformation();
@@ -77,10 +76,6 @@ public abstract class GLModel {
 
     public GLVertexArray getVertexArray() {
         return mVertexArray;
-    }
-
-    public GLContext getGLContext() {
-        return mGLContext;
     }
 
     public GLProgram getGLProgram() {

@@ -11,7 +11,7 @@ import static android.opengl.GLES20.glViewport;
  * Created by dkramer on 10/21/17.
  */
 
-public class GLCamera {
+public class GLCamera extends GLObject {
     // what our eye sees
     protected final float[] mViewMatrix = new float[16];
 
@@ -29,13 +29,16 @@ public class GLCamera {
 
 
     // instantiate using static method presets
-    private GLCamera() { }
+    protected GLCamera(GLContext ctx) {
+        super(ctx);
+    }
 
-    public static GLCamera getDefault() {
-        GLCamera camera = new GLCamera();
+    public static GLCamera getDefault(GLContext ctx) {
+        GLCamera camera = new GLCamera(ctx);
         camera.mEye = new Point3f(0.0f, 0.0f, 1.0f);
         camera.mLook = new Point3f(0.0f, 1.0f, -100.0f);
         camera.mUp = new Vector3f(0.0f, 1.0f, 0.0f);
+        camera.mGLContext = ctx;
         camera.setZoomFactor(1f);
 
         camera.updateViewMatrix();

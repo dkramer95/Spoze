@@ -21,7 +21,7 @@ import static android.opengl.GLES20.glEnable;
  * Created by dkramer on 10/20/17.
  */
 
-public class GLScene {
+public abstract class GLScene extends GLObject {
     protected final float[] mInvertedViewProjectionMatrix = new float[16];
 
     protected FPSCounter mFPSCounter;
@@ -30,11 +30,14 @@ public class GLScene {
 
 
 
-    public GLScene(GLWorld world) {
-        mGLCamera = GLCamera.getDefault();
-        mWorld = world;
+    public GLScene(GLContext ctx) {
+    	super(ctx);
+        mGLCamera = createGLCamera();
+        mWorld = createWorld();
         mFPSCounter = new FPSCounter();
     }
+
+    public abstract GLWorld createWorld();
 
     public void render() {
         clearScreen();
@@ -61,6 +64,11 @@ public class GLScene {
 
     public GLWorld getWorld() {
         return mWorld;
+    }
+
+    protected GLCamera createGLCamera() {
+        GLCamera camera = GLCamera.getDefault(getGLContext());
+        return camera;
     }
 
     public GLCamera getCamera() {
