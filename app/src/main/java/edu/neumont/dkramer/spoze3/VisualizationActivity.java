@@ -55,4 +55,9 @@ public class VisualizationActivity extends GLCameraActivity {
         });
         return scene;
     }
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.gl_motion_camera_layout;
+    }
 }

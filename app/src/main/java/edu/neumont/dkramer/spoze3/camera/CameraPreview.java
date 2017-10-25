@@ -72,14 +72,22 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         try {
-            mCamera = Camera.acquire(getContext(), getCameraType());
-            Size size = getOptimalPreviewSize();
-            holder.setFixedSize(size.getWidth(), size.getHeight());
-            mCamera.addTarget(holder.getSurface());
-            mCamera.open();
+            attachCamera(holder);
+            openCamera();
         } catch (CameraAccessException e) {
             e.printStackTrace();
         }
+    }
+
+    protected void attachCamera(SurfaceHolder holder) throws CameraAccessException {
+        mCamera = Camera.acquire(getContext(), getCameraType());
+        Size size = getOptimalPreviewSize();
+        holder.setFixedSize(size.getWidth(), size.getHeight());
+        mCamera.addTarget(holder.getSurface());
+    }
+
+    protected void openCamera() throws CameraAccessException {
+        mCamera.open();
     }
 
     // unused
