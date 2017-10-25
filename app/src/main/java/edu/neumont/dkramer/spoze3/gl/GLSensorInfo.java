@@ -11,16 +11,22 @@ import android.hardware.SensorManager;
  */
 
 public class GLSensorInfo extends GLDeviceInfo implements SensorEventListener {
-    public static final int LAST_YAW = 0;
-    public static final int LAST_PITCH = 1;
-    public static final int LAST_ROLL = 2;
+    public static final int VALUE_LAST_YAW = 0;
+    public static final int VALUE_LAST_PITCH = 1;
+    public static final int VALUE_LAST_ROLL = 2;
 
-    public static final int CURRENT_YAW = 10;
-    public static final int CURRENT_PITCH = 11;
-    public static final int CURRENT_ROLL = 12;
+    public static final int VALUE_CURRENT_YAW = 10;
+    public static final int VALUE_CURRENT_PITCH = 11;
+    public static final int VALUE_CURRENT_ROLL = 12;
+
+    public static final int VALUE_CALIBRATED_YAW = 20;
+    public static final int VALUE_CALIBRATED_PITCH = 21;
+    public static final int VALUE_CALIBRATED_ROLL = 22;
 
 
 
+    private final float[] mRotationMatrix = new float[9];
+    private final float[] mOrientation = new float[3];
     private SensorManager mSensorManager;
     private Sensor mSensor;
 
@@ -51,37 +57,34 @@ public class GLSensorInfo extends GLDeviceInfo implements SensorEventListener {
 
     protected void initValues() {
         // init starting values so that updates don't receive null
-    	setValue(CURRENT_YAW, 0f);
-        setValue(CURRENT_ROLL, 0f);
-        setValue(CURRENT_PITCH, 0f);
+    	set(VALUE_CURRENT_YAW, 0f);
+        set(VALUE_CURRENT_ROLL, 0f);
+        set(VALUE_CURRENT_PITCH, 0f);
     }
 
     @Override
     public void onSensorChanged(SensorEvent event) {
         float[] values = event.values;
-        float[] orientation = new float[3];
-        float[] rotationMatrix = new float[9];
 
-        SensorManager.getRotationMatrixFromVector(rotationMatrix, values);
-        SensorManager.getOrientation(rotationMatrix, orientation);
+        SensorManager.getRotationMatrixFromVector(mRotationMatrix, values);
+        SensorManager.getOrientation(mRotationMatrix, mOrientation);
 
-        convertToDegrees(orientation);
-
+        convertToDegrees(mOrientation);
         updatePreviousValues();
-        updateCurrentValues(orientation);
+        updateCurrentValues(mOrientation);
     }
 
     protected void updatePreviousValues() {
-        setValue(LAST_YAW, getValue(CURRENT_YAW));
-        setValue(LAST_PITCH, getValue(CURRENT_PITCH));
-        setValue(LAST_ROLL, getValue(CURRENT_ROLL));
+        set(VALUE_LAST_YAW, get(VALUE_CURRENT_YAW));
+        set(VALUE_LAST_PITCH, get(VALUE_CURRENT_PITCH));
+        set(VALUE_LAST_ROLL, get(VALUE_CURRENT_ROLL));
     }
 
     protected void updateCurrentValues(float[] values) {
         // update current values
-        setValue(CURRENT_YAW, values[0]);
-        setValue(CURRENT_PITCH, values[1]);
-        setValue(CURRENT_ROLL, values[2]);
+        set(VALUE_CURRENT_YAW, values[0]);
+        set(VALUE_CURRENT_PITCH, values[1]);
+        set(VALUE_CURRENT_ROLL, values[2]);
     }
 
     private void convertToDegrees(float[] vector) {

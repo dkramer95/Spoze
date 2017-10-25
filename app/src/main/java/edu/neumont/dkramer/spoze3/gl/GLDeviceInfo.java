@@ -32,11 +32,11 @@ public abstract class GLDeviceInfo extends GLObject {
     public abstract void stop();
 
 
-    public static float getValue(int valueType) {
+    public static float get(int valueType) {
         return sValues.get(valueType);
     }
 
-    protected static void setValue(int key, float value) {
+    protected static void set(int key, float value) {
         sValues.put(key, value);
     }
 
