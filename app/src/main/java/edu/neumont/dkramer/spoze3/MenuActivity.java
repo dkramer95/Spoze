@@ -6,8 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
-import edu.neumont.dkramer.spoze3.util.ImportBitmapActivity;
-
 /**
  * Created by dkramer on 10/24/17.
  */

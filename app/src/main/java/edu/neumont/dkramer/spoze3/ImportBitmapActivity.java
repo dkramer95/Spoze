@@ -1,10 +1,8 @@
-package edu.neumont.dkramer.spoze3.util;
+package edu.neumont.dkramer.spoze3;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-
-import edu.neumont.dkramer.spoze3.VisualizationActivity;
 
 /**
  * Created by dkramer on 10/24/17.
@@ -38,9 +36,8 @@ public class ImportBitmapActivity extends AppCompatActivity {
 	}
 
 	protected void openGallery() {
-		Intent intent = new Intent();
+		Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
 		intent.setType("image/*");
-		intent.setAction(Intent.ACTION_GET_CONTENT);
 		startActivityForResult(Intent.createChooser(intent, "Open Image"), OPEN_IMAGE);
 	}
 }

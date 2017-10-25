@@ -1,7 +1,7 @@
 package edu.neumont.dkramer.spoze3;
 
-import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.widget.Toast;
@@ -12,7 +12,6 @@ import edu.neumont.dkramer.spoze3.gl.GLCamera;
 import edu.neumont.dkramer.spoze3.gl.GLCameraActivity;
 import edu.neumont.dkramer.spoze3.gl.GLContext;
 import edu.neumont.dkramer.spoze3.gl.GLScene;
-import edu.neumont.dkramer.spoze3.gl.GLView;
 import edu.neumont.dkramer.spoze3.gl.GLWorld;
 import edu.neumont.dkramer.spoze3.models.GLTexturedRect;
 
@@ -22,24 +21,19 @@ public class VisualizationActivity extends GLCameraActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Intent intent = getIntent();
-        boolean errorOccurred = false;
+        mBitmap = loadBitmap(getIntent().getData());
+    }
+
+    protected Bitmap loadBitmap(Uri uri) {
         Bitmap bmp = null;
-
         try {
-            bmp = MediaStore.Images.Media.getBitmap(getContentResolver(), intent.getData());
+            bmp = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
         } catch (IOException e) {
-            errorOccurred = true;
             e.printStackTrace();
-        }
-
-        //TODO handle error better
-        if (errorOccurred || bmp == null) {
             Toast.makeText(this, "Failed to open image", Toast.LENGTH_LONG).show();
             finish();
-        } else {
-            mBitmap = bmp;
         }
+        return bmp;
     }
 
     @Override
