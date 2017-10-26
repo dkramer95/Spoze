@@ -19,9 +19,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="edu.neumont.dkramer.spoze3.VisualizationActivity"
+        <activity android:name=".VisualizationActivity"
                   android:theme="@style/FullscreenTheme"
                   android:configChanges="orientation|screenSize"/>
+        <activity android:name=".DebugVisualizationActivity"
+            android:theme="@style/FullscreenTheme"
+            android:configChanges="orientation|screenSize"/>
         <activity android:name="edu.neumont.dkramer.spoze3.ImportBitmapActivity" />
     </application>
     <uses-feature android:glEsVersion="0x0020000" android:required="true"/>

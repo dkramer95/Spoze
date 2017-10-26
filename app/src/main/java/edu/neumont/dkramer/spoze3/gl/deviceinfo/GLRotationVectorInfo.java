@@ -48,7 +48,7 @@ public class GLRotationVectorInfo extends GLMotionInfo implements SensorEventLis
     }
 
     @Override
-    protected void calibrate() {
+    public void calibrate() {
         set(CALIBRATED_YAW,   get(CURRENT_YAW));
         set(CALIBRATED_PITCH, get(CURRENT_PITCH));
         set(CALIBRATED_ROLL,  get(CURRENT_ROLL));

@@ -38,7 +38,7 @@ public class GLAccelerometerInfo extends GLMotionInfo {
     }
 
     @Override
-    protected void calibrate() {
+    public void calibrate() {
         set(CALIBRATED_ACCEL_X, get(CURRENT_ACCEL_X));
         set(CALIBRATED_ACCEL_Y, get(CURRENT_ACCEL_Y));
         set(CALIBRATED_ACCEL_Z, get(CURRENT_ACCEL_Z));

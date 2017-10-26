@@ -26,10 +26,11 @@ public class VisualizationActivity extends GLCameraActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mBitmap = loadBitmap(getIntent().getData());
+        mBitmap = loadBitmap();
     }
 
-    protected Bitmap loadBitmap(Uri uri) {
+    protected Bitmap loadBitmap() {
+        Uri uri = getIntent().getData();
         Bitmap bmp = null;
         try {
             bmp = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);

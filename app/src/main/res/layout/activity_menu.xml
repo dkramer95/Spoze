@@ -44,6 +44,20 @@
             android:textSize="22sp"/>
 
         <Button
+            android:id="@+id/debugButton"
+            style="@android:style/Widget.DeviceDefault.Light.Button"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_margin="15dp"
+            android:layout_weight="1"
+            android:background="@drawable/ripple_effect"
+            android:fontFamily="sans-serif"
+            android:onClick="debugButtonClicked"
+            android:text="@string/debug_button"
+            android:textColor="@android:color/white"
+            android:textSize="22sp" />
+
+        <Button
             android:id="@+id/helpAboutButton"
             style="@android:style/Widget.DeviceDefault.Light.Button"
             android:layout_width="match_parent"
