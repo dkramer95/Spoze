@@ -1,10 +1,13 @@
-package edu.neumont.dkramer.spoze3.gl;
+package edu.neumont.dkramer.spoze3.gl.deviceinfo;
 
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 
-import edu.neumont.dkramer.spoze3.gl.deviceinfo.GLMotionInfo;
+import edu.neumont.dkramer.spoze3.gl.GLContext;
 
+import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Value.CALIBRATED_ACCEL_X;
+import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Value.CALIBRATED_ACCEL_Y;
+import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Value.CALIBRATED_ACCEL_Z;
 import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Value.CURRENT_ACCEL_X;
 import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Value.CURRENT_ACCEL_Y;
 import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Value.CURRENT_ACCEL_Z;
@@ -32,6 +35,13 @@ public class GLAccelerometerInfo extends GLMotionInfo {
         set(LAST_ACCEL_X, get(CURRENT_ACCEL_X));
         set(LAST_ACCEL_Y, get(CURRENT_ACCEL_Y));
         set(LAST_ACCEL_Z, get(CURRENT_ACCEL_Z));
+    }
+
+    @Override
+    protected void calibrate() {
+        set(CALIBRATED_ACCEL_X, get(CURRENT_ACCEL_X));
+        set(CALIBRATED_ACCEL_Y, get(CURRENT_ACCEL_Y));
+        set(CALIBRATED_ACCEL_Z, get(CURRENT_ACCEL_Z));
     }
 
     @Override

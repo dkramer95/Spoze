@@ -39,6 +39,7 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+import edu.neumont.dkramer.spoze3.gl.deviceinfo.GLAccelerometerInfo;
 import edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo;
 import edu.neumont.dkramer.spoze3.gl.deviceinfo.GLRotationVectorInfo;
 import edu.neumont.dkramer.spoze3.gl.deviceinfo.GLTouchInfo;
@@ -103,6 +104,9 @@ public final class GLContext extends Context {
         mDeviceInfo.put(infoType, info);
     }
 
+    public GLDeviceInfo getDeviceInfo(GLDeviceInfo.Type type) {
+        return mDeviceInfo.get(type);
+    }
 
 
 

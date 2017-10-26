@@ -34,6 +34,11 @@ public abstract class GLMotionInfo extends GLDeviceInfo implements SensorEventLi
     protected abstract void updatePreviousValues();
 
     /**
+     * Method to be implemented that sets calibration values
+     */
+    protected abstract void calibrate();
+
+    /**
      * Method that should be implemented to update the current values based on a new SensorEvent
      * @param event SensorEvent containing latest values
      */

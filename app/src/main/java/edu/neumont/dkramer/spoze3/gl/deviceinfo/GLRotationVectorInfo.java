@@ -9,6 +9,9 @@ import edu.neumont.dkramer.spoze3.gl.GLContext;
 
 import static android.hardware.SensorManager.getOrientation;
 import static android.hardware.SensorManager.getRotationMatrixFromVector;
+import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Value.CALIBRATED_PITCH;
+import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Value.CALIBRATED_ROLL;
+import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Value.CALIBRATED_YAW;
 import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Value.CURRENT_PITCH;
 import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Value.CURRENT_ROLL;
 import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Value.CURRENT_YAW;
@@ -42,6 +45,13 @@ public class GLRotationVectorInfo extends GLMotionInfo implements SensorEventLis
         set(LAST_YAW,   get(CURRENT_YAW));
         set(LAST_PITCH, get(CURRENT_PITCH));
         set(LAST_ROLL,  get(CURRENT_ROLL));
+    }
+
+    @Override
+    protected void calibrate() {
+        set(CALIBRATED_YAW,   get(CURRENT_YAW));
+        set(CALIBRATED_PITCH, get(CURRENT_PITCH));
+        set(CALIBRATED_ROLL,  get(CURRENT_ROLL));
     }
 
     protected void updateCurrentValues(SensorEvent event) {
