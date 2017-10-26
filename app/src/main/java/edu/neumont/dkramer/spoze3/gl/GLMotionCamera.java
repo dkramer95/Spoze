@@ -1,6 +1,10 @@
 package edu.neumont.dkramer.spoze3.gl;
 
+import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Value.CALIBRATED_PITCH;
+import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Value.CALIBRATED_YAW;
 import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Value.CURRENT_ACCEL_Z;
+import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Value.CURRENT_PITCH;
+import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Value.CURRENT_YAW;
 import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.get;
 
 /**
@@ -23,6 +27,9 @@ public class GLMotionCamera extends GLCamera {
 //		Log.i("GLMotionCamera", String.format("Yaw = %f, Pitch = %f, Roll = %f", yaw, pitch, roll));
 
 //		mEye.x = (mLook.x + (get(CURRENT_ACCEL_Z) * -1f));
+
+		mEye.x = (mLook.x + (get(CALIBRATED_YAW) - get(CURRENT_YAW)) * -5f);
+		mEye.y = (mLook.y + (get(CALIBRATED_PITCH) - get(CURRENT_PITCH)));
 
 		super.update();
 	}

@@ -46,7 +46,7 @@ public class VisualizationActivity extends GLCameraActivity {
     protected GLContext createGLContext() {
         GLContext ctx = new GLContext(this);
         ctx.enableDeviceInfo(ROTATION_VECTOR);
-        ctx.enableDeviceInfo(ACCELEROMETER);
+//        ctx.enableDeviceInfo(ACCELEROMETER);
         ctx.enableDeviceInfo(TOUCH_INPUT);
         return ctx;
     }

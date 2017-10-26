@@ -7,7 +7,7 @@
     style="@style/FullscreenTheme"
     android:keepScreenOn="true">
 
-    <edu.neumont.dkramer.spoze3.converter.MotionCameraPreview
+    <edu.neumont.dkramer.spoze3.camera.CameraPreview
         android:id="@+id/cameraPreview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
