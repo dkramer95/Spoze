@@ -45,7 +45,7 @@ import java.util.Map;
  */
 
 public final class GLContext extends Context {
-    private Map<Integer, GLDeviceInfo> mDeviceInfo;
+    private Map<GLDeviceInfo.Type, GLDeviceInfo> mDeviceInfo;
     private GLActivity mActivity;
     private GLView mGLView;
 
@@ -74,18 +74,16 @@ public final class GLContext extends Context {
         }
     }
 
-    public void enableDeviceInfo(int infoType) {
+    public void enableDeviceInfo(GLDeviceInfo.Type infoType) {
         GLDeviceInfo info = null;
 
         switch (infoType) {
-            case GLDeviceInfo.TYPE_TOUCH_INPUT:
+            case TOUCH_INPUT:
                 info = new GLTouchInfo(this);
                 break;
-            case GLDeviceInfo.TYPE_ROTATION_VECTOR:
-                info = new GLSensorInfo(this);
+            case ROTATION_VECTOR:
+                info = new GLRotationVectorInfo(this);
                 break;
-            default:
-                throw new IllegalArgumentException("Invalid GLDeviceInfo type constant!");
         }
         if (mDeviceInfo.containsKey(infoType)) {
             throw new IllegalArgumentException("Specified GLDeviceInfo already exists!");
@@ -93,7 +91,7 @@ public final class GLContext extends Context {
         mDeviceInfo.put(infoType, info);
     }
 
-    public GLDeviceInfo getInfo(int infoType) {
+    public GLDeviceInfo getInfo(GLDeviceInfo.Type infoType) {
         GLDeviceInfo info = mDeviceInfo.get(infoType);
         return info;
     }

@@ -11,11 +11,13 @@ import java.io.IOException;
 import edu.neumont.dkramer.spoze3.gl.GLCamera;
 import edu.neumont.dkramer.spoze3.gl.GLCameraActivity;
 import edu.neumont.dkramer.spoze3.gl.GLContext;
-import edu.neumont.dkramer.spoze3.gl.GLDeviceInfo;
 import edu.neumont.dkramer.spoze3.gl.GLMotionCamera;
 import edu.neumont.dkramer.spoze3.gl.GLScene;
 import edu.neumont.dkramer.spoze3.gl.GLWorld;
 import edu.neumont.dkramer.spoze3.models.GLTexturedRect;
+
+import static edu.neumont.dkramer.spoze3.gl.GLDeviceInfo.Type.ROTATION_VECTOR;
+import static edu.neumont.dkramer.spoze3.gl.GLDeviceInfo.Type.TOUCH_INPUT;
 
 public class VisualizationActivity extends GLCameraActivity {
     protected Bitmap mBitmap;
@@ -41,8 +43,8 @@ public class VisualizationActivity extends GLCameraActivity {
     @Override
     protected GLContext createGLContext() {
         GLContext ctx = new GLContext(this);
-        ctx.enableDeviceInfo(GLDeviceInfo.TYPE_ROTATION_VECTOR);
-        ctx.enableDeviceInfo(GLDeviceInfo.TYPE_TOUCH_INPUT);
+        ctx.enableDeviceInfo(ROTATION_VECTOR);
+        ctx.enableDeviceInfo(TOUCH_INPUT);
         return ctx;
     }
 

@@ -7,19 +7,14 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 
 public abstract class GLDeviceInfo extends GLObject {
-    /**
-     * Constant values to be used when creating a GLContext and enabling
-     * specific GLDeviceInfo types, using GLContext.enableDeviceInfo(type);
-     */
-    public static final int TYPE_TOUCH_INPUT = 100;
-    public static final int TYPE_ROTATION_VECTOR = 200;
-
     /*
      * This is shared between all GLDeviceInfo classes.. Subclasses should specify
      * constant values so that retrieving a specific type of value is easy between
      * different classes.
      */
-    protected static final ConcurrentHashMap<Integer, Float> sValues = new ConcurrentHashMap<>();
+    protected static final ConcurrentHashMap<Value, Float> sValues = new ConcurrentHashMap<>();
+
+
 
 
     public GLDeviceInfo(GLContext ctx) {
@@ -32,12 +27,51 @@ public abstract class GLDeviceInfo extends GLObject {
     public abstract void stop();
 
 
-    public static float get(int valueType) {
+    public static float get(Value valueType) {
         return sValues.get(valueType);
     }
 
-    protected static void set(int key, float value) {
+    protected static void set(Value key, float value) {
         sValues.put(key, value);
+    }
+
+
+
+    /**
+     * This enum defines all the available GLDeviceInfo types that can be used
+     */
+    public enum Type {
+        TOUCH_INPUT,
+        ROTATION_VECTOR,
+    }
+
+    /**
+     * This enum defines all the values for each of the GLDeviceInfo types
+     */
+    public enum Value {
+
+        /* Values for Type.ROTATION_VECTOR */
+
+        CALIBRATED_YAW,
+        CALIBRATED_PITCH,
+        CALIBRATED_ROLL,
+
+        LAST_YAW,
+        LAST_PITCH,
+        LAST_ROLL,
+
+        CURRENT_YAW,
+        CURRENT_PITCH,
+        CURRENT_ROLL,
+
+        /* Values for Type.TOUCH_INPUT */
+
+        LAST_TOUCH_X,
+        LAST_TOUCH_Y,
+
+        CURRENT_TOUCH_X,
+        CURRENT_TOUCH_Y,
+
     }
 
 }

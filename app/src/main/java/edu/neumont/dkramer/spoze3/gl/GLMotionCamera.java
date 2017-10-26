@@ -2,9 +2,9 @@ package edu.neumont.dkramer.spoze3.gl;
 
 import android.util.Log;
 
-import static edu.neumont.dkramer.spoze3.gl.GLSensorInfo.VALUE_CURRENT_PITCH;
-import static edu.neumont.dkramer.spoze3.gl.GLSensorInfo.VALUE_CURRENT_ROLL;
-import static edu.neumont.dkramer.spoze3.gl.GLSensorInfo.VALUE_CURRENT_YAW;
+import static edu.neumont.dkramer.spoze3.gl.GLDeviceInfo.Value.CURRENT_PITCH;
+import static edu.neumont.dkramer.spoze3.gl.GLDeviceInfo.Value.CURRENT_ROLL;
+import static edu.neumont.dkramer.spoze3.gl.GLDeviceInfo.Value.CURRENT_YAW;
 
 /**
  * Created by dkramer on 10/25/17.
@@ -19,9 +19,9 @@ public class GLMotionCamera extends GLCamera {
 	@Override
 	public void update() {
 		//TODO apply gyro values to camera matrix
-		float yaw = GLDeviceInfo.get(VALUE_CURRENT_YAW);
-		float pitch = GLDeviceInfo.get(VALUE_CURRENT_PITCH);
-		float roll = GLDeviceInfo.get(VALUE_CURRENT_ROLL);
+		float yaw = GLDeviceInfo.get(CURRENT_YAW);
+		float pitch = GLDeviceInfo.get(CURRENT_PITCH);
+		float roll = GLDeviceInfo.get(CURRENT_ROLL);
 
 		Log.i("GLMotionCamera", String.format("Yaw = %f, Pitch = %f, Roll = %f", yaw, pitch, roll));
 
