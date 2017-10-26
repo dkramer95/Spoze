@@ -16,8 +16,9 @@ import edu.neumont.dkramer.spoze3.gl.GLScene;
 import edu.neumont.dkramer.spoze3.gl.GLWorld;
 import edu.neumont.dkramer.spoze3.models.GLTexturedRect;
 
-import static edu.neumont.dkramer.spoze3.gl.GLDeviceInfo.Type.ROTATION_VECTOR;
-import static edu.neumont.dkramer.spoze3.gl.GLDeviceInfo.Type.TOUCH_INPUT;
+import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Type.ACCELEROMETER;
+import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Type.ROTATION_VECTOR;
+import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Type.TOUCH_INPUT;
 
 public class VisualizationActivity extends GLCameraActivity {
     protected Bitmap mBitmap;
@@ -44,6 +45,7 @@ public class VisualizationActivity extends GLCameraActivity {
     protected GLContext createGLContext() {
         GLContext ctx = new GLContext(this);
         ctx.enableDeviceInfo(ROTATION_VECTOR);
+        ctx.enableDeviceInfo(ACCELEROMETER);
         ctx.enableDeviceInfo(TOUCH_INPUT);
         return ctx;
     }

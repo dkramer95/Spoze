@@ -1,6 +1,9 @@
-package edu.neumont.dkramer.spoze3.gl;
+package edu.neumont.dkramer.spoze3.gl.deviceinfo;
 
 import java.util.concurrent.ConcurrentHashMap;
+
+import edu.neumont.dkramer.spoze3.gl.GLContext;
+import edu.neumont.dkramer.spoze3.gl.GLObject;
 
 /**
  * Created by dkramer on 10/20/17.
@@ -8,11 +11,18 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class GLDeviceInfo extends GLObject {
     /*
-     * This is shared between all GLDeviceInfo classes.. Subclasses should specify
-     * constant values so that retrieving a specific type of value is easy between
-     * different classes.
+     * Shared between GLDeviceInfo classes, which stores their respective values here. Access
+     * to a particular value can be obtained by specifying the Value type. GLDeviceInfo
+     * types must be added through a GLContext in order to be enabled.
      */
     protected static final ConcurrentHashMap<Value, Float> sValues = new ConcurrentHashMap<>();
+
+    // ensure keys exist to prevent some issues of accessing missing values the first time
+    static {
+        for(Value v : Value.values()) {
+            set(v, 0f);
+        }
+    }
 
 
 
@@ -43,6 +53,7 @@ public abstract class GLDeviceInfo extends GLObject {
     public enum Type {
         TOUCH_INPUT,
         ROTATION_VECTOR,
+        ACCELEROMETER,
     }
 
     /**
@@ -72,6 +83,19 @@ public abstract class GLDeviceInfo extends GLObject {
         CURRENT_TOUCH_X,
         CURRENT_TOUCH_Y,
 
+        /* Values for Type.ACCELEROMETER */
+
+        CALIBRATED_ACCEL_X,
+        CALIBRATED_ACCEL_Y,
+        CALIBRATED_ACCEL_Z,
+
+        LAST_ACCEL_X,
+        LAST_ACCEL_Y,
+        LAST_ACCEL_Z,
+
+        CURRENT_ACCEL_X,
+        CURRENT_ACCEL_Y,
+        CURRENT_ACCEL_Z,
     }
 
 }

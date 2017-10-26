@@ -1,20 +1,21 @@
-package edu.neumont.dkramer.spoze3.gl;
+package edu.neumont.dkramer.spoze3.gl.deviceinfo;
 
 import android.view.MotionEvent;
 import android.view.View;
 
-import static edu.neumont.dkramer.spoze3.gl.GLDeviceInfo.Value.CURRENT_TOUCH_X;
-import static edu.neumont.dkramer.spoze3.gl.GLDeviceInfo.Value.CURRENT_TOUCH_Y;
+import edu.neumont.dkramer.spoze3.gl.GLContext;
+
+import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Value.CURRENT_TOUCH_X;
+import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Value.CURRENT_TOUCH_Y;
 
 /**
  * Created by dkramer on 10/20/17.
  */
 
-public class GLTouchInfo extends GLDeviceInfo implements GLView.OnTouchListener {
+public class GLTouchInfo extends GLDeviceInfo implements View.OnTouchListener {
 
     public GLTouchInfo(GLContext glContext) {
         super(glContext);
-        initValues();
     }
 
     @Override
@@ -25,12 +26,6 @@ public class GLTouchInfo extends GLDeviceInfo implements GLView.OnTouchListener 
     @Override
     public void stop() {
         getGLContext().getGLView().setOnTouchListener(null);
-    }
-
-    protected void initValues() {
-    	// initialize values that will not exist the first time they are updated
-        set(CURRENT_TOUCH_X, 0);
-        set(CURRENT_TOUCH_Y, 0);
     }
 
     @Override

@@ -2,9 +2,11 @@ package edu.neumont.dkramer.spoze3.gl;
 
 import android.util.Log;
 
-import static edu.neumont.dkramer.spoze3.gl.GLDeviceInfo.Value.CURRENT_PITCH;
-import static edu.neumont.dkramer.spoze3.gl.GLDeviceInfo.Value.CURRENT_ROLL;
-import static edu.neumont.dkramer.spoze3.gl.GLDeviceInfo.Value.CURRENT_YAW;
+import edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo;
+
+import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Value.CURRENT_PITCH;
+import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Value.CURRENT_ROLL;
+import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Value.CURRENT_YAW;
 
 /**
  * Created by dkramer on 10/25/17.

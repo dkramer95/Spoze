@@ -39,6 +39,10 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+import edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo;
+import edu.neumont.dkramer.spoze3.gl.deviceinfo.GLRotationVectorInfo;
+import edu.neumont.dkramer.spoze3.gl.deviceinfo.GLTouchInfo;
+
 /**
  * Adapter class for regular Context class that provides additional OpenGL methods
  * Created by dkramer on 10/20/17.
@@ -87,16 +91,16 @@ public final class GLContext extends Context {
             case ROTATION_VECTOR:
                 info = new GLRotationVectorInfo(this);
                 break;
+            case ACCELEROMETER:
+                info = new GLAccelerometerInfo(this);
+                break;
+            default:
+                throw new UnsupportedOperationException("Specified type hasn't been implemented yet!");
         }
         if (mDeviceInfo.containsKey(infoType)) {
             throw new IllegalArgumentException("Specified GLDeviceInfo already exists!");
         }
         mDeviceInfo.put(infoType, info);
-    }
-
-    public GLDeviceInfo getInfo(GLDeviceInfo.Type infoType) {
-        GLDeviceInfo info = mDeviceInfo.get(infoType);
-        return info;
     }
 
 
