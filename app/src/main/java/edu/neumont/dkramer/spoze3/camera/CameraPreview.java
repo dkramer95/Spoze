@@ -65,8 +65,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 
     protected Size getOptimalPreviewSize() {
         Size[] sizes = mCamera.getAvailablePreviewSizes();
-        Size size = Camera.getOptimalPreviewSize(getWidth(), getHeight(), sizes);
-        return size;
+        return Camera.getOptimalPreviewSize(getWidth(), getHeight(), sizes);
     }
 
     @Override

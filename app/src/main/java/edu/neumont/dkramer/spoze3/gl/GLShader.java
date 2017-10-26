@@ -30,13 +30,11 @@ public final class GLShader {
     }
 
     public static GLShader newVertexShader(String vertexShaderCode) {
-        GLShader vertexShader = new GLShader(GL_VERTEX_SHADER, vertexShaderCode);
-        return vertexShader;
+        return new GLShader(GL_VERTEX_SHADER, vertexShaderCode);
     }
 
     public static GLShader newFragmentShader(String fragmentShaderCode) {
-        GLShader fragmentShader = new GLShader(GL_FRAGMENT_SHADER, fragmentShaderCode);
-        return fragmentShader;
+        return new GLShader(GL_FRAGMENT_SHADER, fragmentShaderCode);
     }
 
     public GLShader compile() {
@@ -58,8 +56,7 @@ public final class GLShader {
     protected int getCompileStatus(final int shaderObjectId) {
         final int[] compileStatus = new int[1];
         glGetShaderiv(shaderObjectId, GL_COMPILE_STATUS, compileStatus, 0);
-        int result = compileStatus[0];
-        return result;
+        return compileStatus[0];
     }
 
     protected String getShaderCode() {

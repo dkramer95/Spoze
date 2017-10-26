@@ -67,8 +67,7 @@ public abstract class GLScene extends GLObject {
     }
 
     protected GLCamera createGLCamera() {
-        GLCamera camera = GLCamera.getDefault(getGLContext());
-        return camera;
+        return GLCamera.getDefault(getGLContext());
     }
 
     public GLCamera getCamera() {
@@ -106,9 +105,7 @@ public abstract class GLScene extends GLObject {
         Point3f farPointRay =
                 new Point3f(farPointWorld[0], farPointWorld[1], farPointWorld[2]);
 
-        Ray result = new Ray(nearPointRay, Vector3f.between(nearPointRay, farPointRay));
-
-        return result;
+        return new Ray(nearPointRay, Vector3f.between(nearPointRay, farPointRay));
     }
 
     protected void divideByW(float[] vector) {

@@ -49,6 +49,9 @@ public final class GLContext extends Context {
     private GLActivity mActivity;
     private GLView mGLView;
 
+
+
+
     public GLContext(GLActivity activity) {
         mActivity = activity;
         mDeviceInfo = new HashMap<>();

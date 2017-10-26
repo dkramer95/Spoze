@@ -29,8 +29,7 @@ public class GLRotationVectorInfo extends GLMotionInfo implements SensorEventLis
 
     @Override
     protected Sensor acquireSensor() {
-        Sensor sensor = getSensorManager().getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
-        return sensor;
+        return getSensorManager().getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
     }
 
     protected void initValues() {

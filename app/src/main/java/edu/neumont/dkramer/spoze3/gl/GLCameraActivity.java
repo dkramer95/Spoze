@@ -51,8 +51,7 @@ public abstract class GLCameraActivity extends GLActivity {
 
 	@Override
 	protected GLView createGLView() {
-		GLView glView = findViewById(R.id.glView);
-		return glView;
+		return findViewById(R.id.glView);
 	}
 
 	protected void init() {
@@ -71,9 +70,8 @@ public abstract class GLCameraActivity extends GLActivity {
 	 * @return true if we have permission, false otherwise
 	 */
 	protected boolean hasGrantedCameraPermission() {
-		boolean result = ContextCompat.checkSelfPermission(this,
+		return ContextCompat.checkSelfPermission(this,
 				Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED;
-		return result;
 	}
 
 	/**

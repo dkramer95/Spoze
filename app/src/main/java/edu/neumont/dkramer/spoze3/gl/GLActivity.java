@@ -65,8 +65,7 @@ public abstract class GLActivity extends AppCompatActivity {
      * @return
      */
     protected GLContext createGLContext() {
-        GLContext ctx = new GLContext(this);
-        return ctx;
+        return new GLContext(this);
     }
 
     /**
@@ -84,8 +83,7 @@ public abstract class GLActivity extends AppCompatActivity {
      * @return GLView
      */
     protected GLView createGLView() {
-        GLView glView = new GLView(getGLContext());
-        return glView;
+        return new GLView(getGLContext());
     }
 
     /**
