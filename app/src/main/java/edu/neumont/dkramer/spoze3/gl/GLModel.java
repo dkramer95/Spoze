@@ -17,6 +17,8 @@ public abstract class GLModel extends GLObject {
     // where this model exists and will be projected in the viewport
     protected final float[] mMVPMatrix = new float[16];
 
+    protected float[] mVertexData;
+
 
 //    public GLModel() {
 //        mVertexArray = new GLVertexArray(getVertexData());
@@ -26,9 +28,17 @@ public abstract class GLModel extends GLObject {
 
     public GLModel(GLContext glContext) {
     	super(glContext);
-        mVertexArray = new GLVertexArray(getVertexData());
+    	mVertexData = getVertexData();
+        mVertexArray = new GLVertexArray(mVertexData);
         mGLProgram = createGLProgram();
 //        mTransformation = new GLTransformation();
+    }
+
+    public GLModel(GLContext glContext, float[] vertexData) {
+        super(glContext);
+        mVertexData = vertexData;
+        mVertexArray = new GLVertexArray(vertexData);
+        mGLProgram = createGLProgram();
     }
 
     protected abstract GLProgram createGLProgram();
@@ -36,6 +46,7 @@ public abstract class GLModel extends GLObject {
     public abstract void render(GLCamera camera);
 
     public abstract float[] getVertexData();
+
 
     protected void applyTransformations() {
         Matrix.setIdentityM(mModelMatrix, 0);

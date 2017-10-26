@@ -11,19 +11,20 @@ import edu.neumont.dkramer.spoze3.util.TextResourceReader;
 import static android.opengl.GLES20.GL_TRIANGLE_FAN;
 import static android.opengl.GLES20.glDrawArrays;
 import static android.opengl.GLES20.glUniformMatrix4fv;
+import static edu.neumont.dkramer.spoze3.gl.GLVertexArray.BYTES_PER_FLOAT;
 
 /**
  * Created by dkramer on 10/20/17.
  */
 
 public class GLSquare extends GLModel {
-    private static final int VERTEX_COMPONENT_COUNT = 3;
-    private static final int COLOR_COMPONENT_COUNT = 4;
-    private static final int STRIDE =
-            ((VERTEX_COMPONENT_COUNT + COLOR_COMPONENT_COUNT) * GLVertexArray.BYTES_PER_FLOAT);
+    protected static final int VERTEX_COMPONENT_COUNT = 3;
+    protected static final int COLOR_COMPONENT_COUNT = 4;
+    protected static final int STRIDE =
+            ((VERTEX_COMPONENT_COUNT + COLOR_COMPONENT_COUNT) * BYTES_PER_FLOAT);
 
-    private static final int POSITION_OFFSET = 0;
-    private static final int COLOR_OFFSET = 3;
+    protected static final int POSITION_OFFSET = 0;
+    protected static final int COLOR_OFFSET = 3;
 
     private static final float[] VERTEX_DATA = {
             // X, Y, Z,
@@ -50,6 +51,10 @@ public class GLSquare extends GLModel {
         super(glContext);
     }
 
+    public GLSquare(GLContext glContext, float[] vertexData) {
+        super(glContext, vertexData);
+    }
+
     @Override
     protected GLProgram createGLProgram() {
         String vertexShaderCode =
@@ -60,14 +65,21 @@ public class GLSquare extends GLModel {
 
         GLProgram glProgram = GLProgram.create(vertexShaderCode, fragmentShaderCode);
 
+        createHandles(glProgram);
+        setVertexAttribPointers();
+
+        return glProgram;
+    }
+
+    protected void createHandles(GLProgram glProgram) {
         mPositionHandle = glProgram.bindAttribute("a_Position");
         mColorHandle = glProgram.bindAttribute("a_Color");
         mMVPMatrixHandle = glProgram.defineUniform("u_MVPMatrix");
+    }
 
+    protected void setVertexAttribPointers() {
         mVertexArray.setVertexAttribPointer(POSITION_OFFSET, mPositionHandle, VERTEX_COMPONENT_COUNT, STRIDE);
         mVertexArray.setVertexAttribPointer(COLOR_OFFSET, mColorHandle, COLOR_COMPONENT_COUNT, STRIDE);
-
-        return glProgram;
     }
 
     @Override

@@ -13,12 +13,14 @@ import edu.neumont.dkramer.spoze3.util.TextResourceReader;
 
 import static android.opengl.GLES20.GL_CLAMP_TO_EDGE;
 import static android.opengl.GLES20.GL_NEAREST;
+import static android.opengl.GLES20.GL_TEXTURE0;
 import static android.opengl.GLES20.GL_TEXTURE_2D;
 import static android.opengl.GLES20.GL_TEXTURE_MAG_FILTER;
 import static android.opengl.GLES20.GL_TEXTURE_MIN_FILTER;
 import static android.opengl.GLES20.GL_TEXTURE_WRAP_S;
 import static android.opengl.GLES20.GL_TEXTURE_WRAP_T;
 import static android.opengl.GLES20.GL_TRIANGLE_FAN;
+import static android.opengl.GLES20.glActiveTexture;
 import static android.opengl.GLES20.glBindTexture;
 import static android.opengl.GLES20.glDrawArrays;
 import static android.opengl.GLES20.glGenTextures;
@@ -83,6 +85,8 @@ public abstract class GLTexturedRect extends GLModel {
                 mGLProgram.use();
                 applyTransformations();
                 camera.applyToModel(this);
+//                glActiveTexture(GL_TEXTURE0);
+//                glBindTexture(GL_TEXTURE_2D, mTextureHandle);
                 glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mMVPMatrix, 0);
                 glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
             }

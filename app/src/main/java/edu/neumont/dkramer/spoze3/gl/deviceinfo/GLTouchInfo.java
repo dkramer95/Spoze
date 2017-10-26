@@ -4,6 +4,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import edu.neumont.dkramer.spoze3.gl.GLContext;
+import edu.neumont.dkramer.spoze3.models.GLPoint;
 
 import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Value.CURRENT_TOUCH_X;
 import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Value.CURRENT_TOUCH_Y;
@@ -48,6 +49,7 @@ public class GLTouchInfo extends GLDeviceInfo implements View.OnTouchListener {
     protected void updateCurrentValues(View v, MotionEvent e) {
         final float x = e.getX();
         final float y = e.getY();
+
 
         // TODO MAYBE move this to be handled elsewhere and derive it from stored x, y values
 //        final float normalizedX =   (x / (float) v.getWidth()) * 2 - 1;
