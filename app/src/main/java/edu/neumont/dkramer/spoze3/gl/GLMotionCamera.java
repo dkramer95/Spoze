@@ -28,8 +28,9 @@ public class GLMotionCamera extends GLCamera {
 
 //		mEye.x = (mLook.x + (get(CURRENT_ACCEL_Z) * -1f));
 
+        //TODO check orientation to determine offset value... instead of magic 5
 		mEye.x = (mLook.x + (get(CALIBRATED_YAW) - get(CURRENT_YAW)) * -5f);
-		mEye.y = (mLook.y + (get(CALIBRATED_PITCH) - get(CURRENT_PITCH)));
+		mEye.y = (mLook.y + (get(CALIBRATED_PITCH) - get(CURRENT_PITCH)) * 5f);
 
 		super.update();
 	}

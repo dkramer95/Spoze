@@ -87,13 +87,13 @@ public class VisualizationActivity extends GLCameraActivity {
 //                    addModel(GLPoint.create(ctx, 1, 1, 0));
 
                     for (int j = 0; j < 30; ++j) {
-                        float x = rng.nextFloat() * 2f;
-                        float y = rng.nextFloat() * 2f;
-                        float z = rng.nextFloat() * 2f;
+                        float x = -1f + (rng.nextFloat() * 2f);
+                        float y = -1f + (rng.nextFloat() * 2f);
+                        float z = -1f + (rng.nextFloat() * 2f);
                         float r = rng.nextFloat();
                         float g = rng.nextFloat();
                         float b = rng.nextFloat();
-                        float a = 1.0f;
+                        float a = rng.nextFloat();
                         GLTrackPoints.addPoint(fromCoords(x, y, z, r, g, b, a));
                     }
                     GLTrackPoints trackPoints = GLTrackPoints.getInstance(ctx);
