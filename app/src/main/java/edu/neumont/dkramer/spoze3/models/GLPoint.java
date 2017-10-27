@@ -57,6 +57,7 @@ public class GLPoint extends GLSquare {
 		applyTransformations();
 		camera.applyToModel(this);
 		setVertexAttribPointers();
+		createHandles(mGLProgram);
 		glVertexAttrib1f(mPointSizeHandle, 100f);
 		glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mMVPMatrix, 0);
 		glDrawArrays(GL_POINTS, 0, 1);
