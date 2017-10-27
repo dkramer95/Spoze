@@ -25,6 +25,7 @@ import static android.opengl.GLES20.glBindTexture;
 import static android.opengl.GLES20.glDrawArrays;
 import static android.opengl.GLES20.glGenTextures;
 import static android.opengl.GLES20.glTexParameteri;
+import static android.opengl.GLES20.glUniform1i;
 import static android.opengl.GLES20.glUniformMatrix4fv;
 import static android.opengl.GLUtils.texImage2D;
 
@@ -85,8 +86,10 @@ public abstract class GLTexturedRect extends GLModel {
                 mGLProgram.use();
                 applyTransformations();
                 camera.applyToModel(this);
-//                glActiveTexture(GL_TEXTURE0);
-//                glBindTexture(GL_TEXTURE_2D, mTextureHandle);
+                bindHandles(mGLProgram);
+                glActiveTexture(GL_TEXTURE0);
+                glBindTexture(GL_TEXTURE_2D, mTextureHandle);
+                glUniform1i(mTextureUniformHandle, 0);
                 glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mMVPMatrix, 0);
                 glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
             }
@@ -130,10 +133,10 @@ public abstract class GLTexturedRect extends GLModel {
         mPositionHandle = glProgram.bindAttribute("a_Position");
         mMVPMatrixHandle = glProgram.defineUniform("u_MVPMatrix");
         mTextureCoordinateHandle = glProgram.bindAttribute("a_TextureCoordinates");
-        mTextureUniformHandle = glProgram.defineUniform("u_TextureUnit");
+        mTextureUniformHandle = glProgram.defineUniform("u_Texture");
 
         mVertexArray.setVertexAttribPointer(0, mPositionHandle, 2, STRIDE);
-        mVertexArray.setVertexAttribPointer(2, mTextureHandle, 2, STRIDE);
+        mVertexArray.setVertexAttribPointer(2, mTextureCoordinateHandle, 2, STRIDE);
     }
 
     protected final void loadTexture(Bitmap bmp) {
