@@ -28,6 +28,7 @@ import static android.opengl.GLES20.glTexParameteri;
 import static android.opengl.GLES20.glUniform1i;
 import static android.opengl.GLES20.glUniformMatrix4fv;
 import static android.opengl.GLUtils.texImage2D;
+import static edu.neumont.dkramer.spoze3.gl.GLVertexArray.BYTES_PER_FLOAT;
 
 /**
  * Created by dkramer on 10/23/17.
@@ -37,7 +38,7 @@ public abstract class GLTexturedRect extends GLModel {
     protected static final int POSITION_COMPONENT_COUNT = 2;
     protected static final int TEXTURE_COMPONENT_COUNT = 2;
     protected static final int STRIDE =
-            ((POSITION_COMPONENT_COUNT + TEXTURE_COMPONENT_COUNT) * GLVertexArray.BYTES_PER_FLOAT);
+            ((POSITION_COMPONENT_COUNT + TEXTURE_COMPONENT_COUNT) * BYTES_PER_FLOAT);
 
     protected int mTextureHandle;
     protected int mPositionHandle;
@@ -47,12 +48,10 @@ public abstract class GLTexturedRect extends GLModel {
 
 
 
-
     /* Instantiate using static methods */
-    private GLTexturedRect(GLContext ctx) {
-        super(ctx);
+    protected GLTexturedRect(GLContext glContext, float[] vertexData) {
+        super(glContext, vertexData);
     }
-
 
 
     public static GLTexturedRect createFromResource(GLContext ctx, int resourceId, int maxWidth, int maxHeight) {
@@ -70,33 +69,13 @@ public abstract class GLTexturedRect extends GLModel {
         final float[] VERTEX_DATA =
                 createScaledVertexData(bmp.getWidth(), bmp.getHeight(), maxWidth, maxHeight);
 
-        final GLTexturedRect rect = new GLTexturedRect(ctx) {
+        final GLTexturedRect rect = new GLTexturedRect(ctx, VERTEX_DATA) {
             @Override
             protected GLProgram createGLProgram() {
                 GLProgram glProgram = loadProgram(ctx);
-                bindHandles(glProgram);
-
                 loadTexture(bmp);
                 bmp.recycle();
                 return glProgram;
-            }
-
-            @Override
-            public void render(GLCamera camera) {
-                mGLProgram.use();
-                applyTransformations();
-                camera.applyToModel(this);
-                bindHandles(mGLProgram);
-                glActiveTexture(GL_TEXTURE0);
-                glBindTexture(GL_TEXTURE_2D, mTextureHandle);
-                glUniform1i(mTextureUniformHandle, 0);
-                glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mMVPMatrix, 0);
-                glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
-            }
-
-            @Override
-            public float[] getVertexData() {
-                return VERTEX_DATA;
             }
         };
         return rect;
@@ -129,14 +108,31 @@ public abstract class GLTexturedRect extends GLModel {
         return glProgram;
     }
 
-    protected final void bindHandles(GLProgram glProgram) {
-        mPositionHandle = glProgram.bindAttribute("a_Position");
-        mMVPMatrixHandle = glProgram.defineUniform("u_MVPMatrix");
-        mTextureCoordinateHandle = glProgram.bindAttribute("a_TextureCoordinates");
-        mTextureUniformHandle = glProgram.defineUniform("u_Texture");
+    @Override
+    protected final void bindHandles() {
+        mPositionHandle = mGLProgram.bindAttribute("a_Position");
+        mMVPMatrixHandle = mGLProgram.defineUniform("u_MVPMatrix");
+        mTextureCoordinateHandle = mGLProgram.bindAttribute("a_TextureCoordinates");
+        mTextureUniformHandle = mGLProgram.defineUniform("u_Texture");
+    }
 
+    @Override
+    protected void enableAttributes() {
         mVertexArray.setVertexAttribPointer(0, mPositionHandle, 2, STRIDE);
         mVertexArray.setVertexAttribPointer(2, mTextureCoordinateHandle, 2, STRIDE);
+        enableTexture();
+    }
+
+    @Override
+    protected void draw(GLCamera camera) {
+        glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mMVPMatrix, 0);
+        glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+    }
+
+    protected void enableTexture() {
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, mTextureHandle);
+        glUniform1i(mTextureUniformHandle, 0);
     }
 
     protected final void loadTexture(Bitmap bmp) {
@@ -148,6 +144,13 @@ public abstract class GLTexturedRect extends GLModel {
 
         // add bitmap to our texture
         texImage2D(GL_TEXTURE_2D, 0, bmp, 0);
+    }
+
+    private static int createTextureHandle() {
+        final int[] textureObjectIds = new int[1];
+        glGenTextures(1, textureObjectIds, 0);
+        int textureHandle = textureObjectIds[0];
+        return textureHandle;
     }
 
     protected final void setTexParams() {
@@ -169,12 +172,5 @@ public abstract class GLTexturedRect extends GLModel {
 
         Bitmap scaledBmp = Bitmap.createScaledBitmap(bmp, newWidth, newHeight, false);
         return scaledBmp;
-    }
-
-    private static int createTextureHandle() {
-        final int[] textureObjectIds = new int[1];
-        glGenTextures(1, textureObjectIds, 0);
-        int textureHandle = textureObjectIds[0];
-        return textureHandle;
     }
 }

@@ -16,6 +16,7 @@ import edu.neumont.dkramer.spoze3.gl.GLMotionCamera;
 import edu.neumont.dkramer.spoze3.gl.GLScene;
 import edu.neumont.dkramer.spoze3.gl.GLWorld;
 import edu.neumont.dkramer.spoze3.models.GLPoint;
+import edu.neumont.dkramer.spoze3.models.GLSquare;
 import edu.neumont.dkramer.spoze3.models.GLTexturedRect;
 import edu.neumont.dkramer.spoze3.models.GLTrackPoints;
 
@@ -84,6 +85,7 @@ public class VisualizationActivity extends GLCameraActivity {
 //                    GLTrackPoints.addPoint(fromCoords(0, 0, 0, 1, 0, 0, 1));
 
                     addModel(GLTexturedRect.createFromBitmap(ctx, mBitmap, getWidth(), getHeight()));
+//                    addModel(GLSquare.create(ctx));
 //                    addModel(GLPoint.create(ctx, 1, 1, 0));
 
                     for (int j = 0; j < 30; ++j) {

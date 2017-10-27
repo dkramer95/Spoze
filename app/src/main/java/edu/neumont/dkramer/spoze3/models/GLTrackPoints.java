@@ -2,7 +2,6 @@ package edu.neumont.dkramer.spoze3.models;
 
 import edu.neumont.dkramer.spoze3.gl.GLCamera;
 import edu.neumont.dkramer.spoze3.gl.GLContext;
-import edu.neumont.dkramer.spoze3.gl.GLProgram;
 
 import static android.opengl.GLES20.GL_POINTS;
 import static android.opengl.GLES20.glDrawArrays;
@@ -37,38 +36,34 @@ public class GLTrackPoints extends GLSquare {
 
 	private static GLTrackPoints sInstance;
 
-
-	private GLTrackPoints(GLContext glContext) {
-		super(glContext);
+	protected GLTrackPoints(GLContext glContext, float[] vertexData) {
+		super(glContext, vertexData);
 	}
+
 
 	public static GLTrackPoints getInstance(GLContext glContext) {
 		if (sInstance == null) {
-			sInstance = new GLTrackPoints(glContext);
+			sInstance = new GLTrackPoints(glContext, VERTEX_DATA);
 		}
 		return sInstance;
 	}
 
 	@Override
-	protected void createHandles(GLProgram glProgram) {
-		super.createHandles(glProgram);
-		sPointSizeHandle = glProgram.bindAttribute("a_PointSize");
+	protected void bindHandles() {
+		super.bindHandles();
+		sPointSizeHandle = mGLProgram.bindAttribute("a_PointSize");
 	}
 
 	@Override
-	public void render(GLCamera camera) {
-		mGLProgram.use();
-		applyTransformations();
-		camera.applyToModel(this);
-		setVertexAttribPointers();
+    protected void enableAttributes() {
+		super.enableAttributes();
 		glVertexAttrib1f(sPointSizeHandle, sPointSize);
+	}
+
+	@Override
+	protected void draw(GLCamera camera) {
 		glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mMVPMatrix, 0);
 		glDrawArrays(GL_POINTS, 0, sPointCount);
-	}
-
-	@Override
-	public float[] getVertexData() {
-		return VERTEX_DATA;
 	}
 
 	public static float[] fromCoords(float x, float y, float z, float red, float green, float blue, float alpha) {
@@ -89,5 +84,10 @@ public class GLTrackPoints extends GLSquare {
 		}
 		sIndexPointer += (COLOR_COMPONENT_COUNT + VERTEX_COMPONENT_COUNT);
 		++sPointCount;
+	}
+
+	@Override
+	public float[] getVertexData() {
+		return VERTEX_DATA;
 	}
 }

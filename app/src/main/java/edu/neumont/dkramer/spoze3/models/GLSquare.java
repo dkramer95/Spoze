@@ -47,12 +47,13 @@ public class GLSquare extends GLModel {
     protected int mMVPMatrixHandle;
 
 
-    public GLSquare(GLContext glContext) {
-        super(glContext);
+    /* Instantiate using static methods */
+    protected GLSquare(GLContext glContext, float[] vertexData) {
+        super(glContext, vertexData);
     }
 
-    public GLSquare(GLContext glContext, float[] vertexData) {
-        super(glContext, vertexData);
+    public static GLSquare create(GLContext ctx) {
+        return new GLSquare(ctx, VERTEX_DATA);
     }
 
     @Override
@@ -64,36 +65,24 @@ public class GLSquare extends GLModel {
                 TextResourceReader.readTextFileFromResource(getGLContext(), R.raw.simple_fragment_shader);
 
         GLProgram glProgram = GLProgram.create(vertexShaderCode, fragmentShaderCode);
-
-        createHandles(glProgram);
-        setVertexAttribPointers();
-
         return glProgram;
     }
 
-    protected void createHandles(GLProgram glProgram) {
-        mPositionHandle = glProgram.bindAttribute("a_Position");
-        mColorHandle = glProgram.bindAttribute("a_Color");
-        mMVPMatrixHandle = glProgram.defineUniform("u_MVPMatrix");
+    protected void bindHandles() {
+        mPositionHandle = mGLProgram.bindAttribute("a_Position");
+        mColorHandle = mGLProgram.bindAttribute("a_Color");
+        mMVPMatrixHandle = mGLProgram.defineUniform("u_MVPMatrix");
     }
 
-    protected void setVertexAttribPointers() {
+    @Override
+    protected void enableAttributes() {
         mVertexArray.setVertexAttribPointer(POSITION_OFFSET, mPositionHandle, VERTEX_COMPONENT_COUNT, STRIDE);
         mVertexArray.setVertexAttribPointer(COLOR_OFFSET, mColorHandle, COLOR_COMPONENT_COUNT, STRIDE);
     }
 
     @Override
-    public void render(GLCamera camera) {
-        mGLProgram.use();
-        applyTransformations();
-
-        camera.applyToModel(this);
+    protected void draw(GLCamera camera) {
         glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mMVPMatrix, 0);
         glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
-    }
-
-    @Override
-    public float[] getVertexData() {
-        return VERTEX_DATA;
     }
 }

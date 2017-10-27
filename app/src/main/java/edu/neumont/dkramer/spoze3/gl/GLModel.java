@@ -7,9 +7,11 @@ import android.opengl.Matrix;
  */
 
 public abstract class GLModel extends GLObject {
+    // shader program that we're using to render our GLModel
     protected GLProgram mGLProgram;
+
+    // open gl buffer array
     protected final GLVertexArray mVertexArray;
-//    protected final GLTransformation mTransformation;
 
     // move this model into world space
     protected final float[] mModelMatrix = new float[16];
@@ -17,22 +19,11 @@ public abstract class GLModel extends GLObject {
     // where this model exists and will be projected in the viewport
     protected final float[] mMVPMatrix = new float[16];
 
-    protected float[] mVertexData;
+    // backing array that stores vertices
+    protected final float[] mVertexData;
 
 
-//    public GLModel() {
-//        mVertexArray = new GLVertexArray(getVertexData());
-//        mGLProgram = createGLProgram();
-////        mTransformation = new GLTransformation();
-//    }
 
-    public GLModel(GLContext glContext) {
-    	super(glContext);
-    	mVertexData = getVertexData();
-        mVertexArray = new GLVertexArray(mVertexData);
-        mGLProgram = createGLProgram();
-//        mTransformation = new GLTransformation();
-    }
 
     public GLModel(GLContext glContext, float[] vertexData) {
         super(glContext);
@@ -41,40 +32,50 @@ public abstract class GLModel extends GLObject {
         mGLProgram = createGLProgram();
     }
 
+    /*
+     * Method to be implemented that requires a GLProgram be created for our GLModel
+     * to provide the necessary shaders to draw to the screen
+     */
     protected abstract GLProgram createGLProgram();
 
-    public abstract void render(GLCamera camera);
+    /*
+     * Method to be implemented that handles drawing vertices to screen.
+     */
+    protected abstract void draw(GLCamera camera);
 
-    public abstract float[] getVertexData();
+    /*
+     * Method to be implemented that creates all the necessary handles to various
+     * attributes / uniforms of our GLProgram.
+     */
+    protected abstract void bindHandles();
+
+    /*
+     * Method to be implemented that enables the correct attributes used
+     * at render time.
+     */
+    protected abstract void enableAttributes();
 
 
     protected void applyTransformations() {
+        //TODO implement matrix operations in correct order to transform our GLModel
         Matrix.setIdentityM(mModelMatrix, 0);
-
-//        Matrix.translateM(mModelMatrix, 0,
-//                mTransformation.translateX,
-//                mTransformation.translateY,
-//                mTransformation.translateZ
-//        );
-
-//        Matrix.rotateM(mModelMatrix, 0,
-//                mTransformation.rotationAngle,
-//                mTransformation.rotateX,
-//                mTransformation.rotateY,
-//                mTransformation.rotateZ
-//        );
-
-//        Matrix.scaleM(mModelMatrix, 0,
-//                mTransformation.scaleX,
-//                mTransformation.scaleY,
-//                mTransformation.scaleZ
-//        );
     }
 
     public void translate(float x, float y, float z) {
-//        mTransformation.translateX = x;
-//        mTransformation.translateY = y;
-//        mTransformation.translateZ = z;
+        //TODO implement this better
+    }
+
+    /*
+     * Performs a typical render job. Subclasses need to implement specific methods
+     * but this is the general flow of how a rendering should go.
+     */
+    public void render(GLCamera camera) {
+        getGLProgram().use();
+        applyTransformations();
+        camera.applyToModel(this);
+        bindHandles();
+        enableAttributes();
+        draw(camera);
     }
 
     public float[] getModelMatrix() {
@@ -87,6 +88,10 @@ public abstract class GLModel extends GLObject {
 
     public GLVertexArray getVertexArray() {
         return mVertexArray;
+    }
+
+    public float[] getVertexData() {
+        return mVertexData;
     }
 
     public GLProgram getGLProgram() {
