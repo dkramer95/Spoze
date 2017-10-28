@@ -6,8 +6,14 @@ import android.view.View;
 import edu.neumont.dkramer.spoze3.gl.GLContext;
 import edu.neumont.dkramer.spoze3.models.GLPoint;
 
+import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Value.CURRENT_TOUCH_NORMALIZED_X;
+import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Value.CURRENT_TOUCH_NORMALIZED_Y;
 import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Value.CURRENT_TOUCH_X;
 import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Value.CURRENT_TOUCH_Y;
+import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Value.LAST_TOUCH_NORMALIZED_X;
+import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Value.LAST_TOUCH_NORMALIZED_Y;
+import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Value.LAST_TOUCH_X;
+import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Value.LAST_TOUCH_Y;
 
 /**
  * Created by dkramer on 10/20/17.
@@ -42,20 +48,24 @@ public class GLTouchInfo extends GLDeviceInfo implements View.OnTouchListener {
     }
 
     protected void updatePreviousValues() {
-        set(Value.LAST_TOUCH_X, get(CURRENT_TOUCH_X));
-        set(Value.LAST_TOUCH_Y, get(CURRENT_TOUCH_Y));
+        set(LAST_TOUCH_X, get(CURRENT_TOUCH_X));
+        set(LAST_TOUCH_Y, get(CURRENT_TOUCH_Y));
+
+        set(LAST_TOUCH_NORMALIZED_X, get(CURRENT_TOUCH_NORMALIZED_X));
+        set(LAST_TOUCH_NORMALIZED_Y, get(CURRENT_TOUCH_NORMALIZED_Y));
     }
 
     protected void updateCurrentValues(View v, MotionEvent e) {
         final float x = e.getX();
         final float y = e.getY();
 
-
-        // TODO MAYBE move this to be handled elsewhere and derive it from stored x, y values
-//        final float normalizedX =   (x / (float) v.getWidth()) * 2 - 1;
-//        final float normalizedY = -((y / (float) v.getHeight()) * 2 - 1);
-
         set(CURRENT_TOUCH_X, x);
         set(CURRENT_TOUCH_Y, y);
+
+        final float normalizedX =   (x / (float) v.getWidth()) * 2 - 1;
+        final float normalizedY = -((y / (float) v.getHeight()) * 2 - 1);
+
+        set(CURRENT_TOUCH_NORMALIZED_X, normalizedX);
+        set(CURRENT_TOUCH_NORMALIZED_Y, normalizedY);
     }
 }

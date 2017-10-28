@@ -79,9 +79,13 @@ public abstract class GLDeviceInfo extends GLObject {
 
         LAST_TOUCH_X,
         LAST_TOUCH_Y,
+        LAST_TOUCH_NORMALIZED_X,
+        LAST_TOUCH_NORMALIZED_Y,
 
         CURRENT_TOUCH_X,
         CURRENT_TOUCH_Y,
+        CURRENT_TOUCH_NORMALIZED_X,
+        CURRENT_TOUCH_NORMALIZED_Y,
 
         /* Values for Type.ACCELEROMETER */
 
