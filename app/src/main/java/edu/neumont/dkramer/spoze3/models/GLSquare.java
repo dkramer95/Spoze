@@ -1,17 +1,24 @@
 package edu.neumont.dkramer.spoze3.models;
 
+import android.opengl.Matrix;
+
 import edu.neumont.dkramer.spoze3.R;
 import edu.neumont.dkramer.spoze3.gl.GLCamera;
 import edu.neumont.dkramer.spoze3.gl.GLContext;
 import edu.neumont.dkramer.spoze3.gl.GLModel;
 import edu.neumont.dkramer.spoze3.gl.GLProgram;
-import edu.neumont.dkramer.spoze3.gl.GLVertexArray;
+import edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo;
 import edu.neumont.dkramer.spoze3.util.TextResourceReader;
 
 import static android.opengl.GLES20.GL_TRIANGLE_FAN;
 import static android.opengl.GLES20.glDrawArrays;
 import static android.opengl.GLES20.glUniformMatrix4fv;
 import static edu.neumont.dkramer.spoze3.gl.GLVertexArray.BYTES_PER_FLOAT;
+import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Value.CURRENT_TOUCH_NORMALIZED_X;
+import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Value.CURRENT_TOUCH_NORMALIZED_Y;
+import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Value.CURRENT_TOUCH_X;
+import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Value.CURRENT_TOUCH_Y;
+import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.get;
 
 /**
  * Created by dkramer on 10/20/17.
@@ -66,6 +73,14 @@ public class GLSquare extends GLModel {
 
         GLProgram glProgram = GLProgram.create(vertexShaderCode, fragmentShaderCode);
         return glProgram;
+    }
+
+    @Override
+    protected void applyTransformations() {
+        super.applyTransformations();
+        float transX = get(CURRENT_TOUCH_NORMALIZED_X);
+        float transY = get(CURRENT_TOUCH_NORMALIZED_Y);
+        Matrix.translateM(mModelMatrix, 0, 0, 0, transX);
     }
 
     protected void bindHandles() {

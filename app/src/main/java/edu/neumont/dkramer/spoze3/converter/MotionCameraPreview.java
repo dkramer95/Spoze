@@ -23,6 +23,7 @@ public class MotionCameraPreview extends CameraPreview {
     protected ImageReader mImageReader;
     protected OnBitmapAvailableListener mBitmapAvailableListener;
     protected Bitmap mImageToDraw;
+    public static Bitmap sImage;
 
 
 
@@ -46,7 +47,8 @@ public class MotionCameraPreview extends CameraPreview {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         if (mImageToDraw != null) {
-            canvas.drawBitmap(mImageToDraw, 0, 0, new Paint());
+//            canvas.drawBitmap(mImageToDraw, 0, 0, new Paint());
+            sImage = mImageToDraw;
         }
     }
 

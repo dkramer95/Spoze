@@ -2,6 +2,7 @@ package edu.neumont.dkramer.spoze3.models;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.opengl.Matrix;
 
 import edu.neumont.dkramer.spoze3.R;
 import edu.neumont.dkramer.spoze3.gl.GLCamera;
@@ -29,6 +30,9 @@ import static android.opengl.GLES20.glUniform1i;
 import static android.opengl.GLES20.glUniformMatrix4fv;
 import static android.opengl.GLUtils.texImage2D;
 import static edu.neumont.dkramer.spoze3.gl.GLVertexArray.BYTES_PER_FLOAT;
+import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Value.CURRENT_TOUCH_NORMALIZED_X;
+import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Value.CURRENT_TOUCH_NORMALIZED_Y;
+import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.get;
 
 /**
  * Created by dkramer on 10/23/17.
@@ -74,7 +78,7 @@ public abstract class GLTexturedRect extends GLModel {
             protected GLProgram createGLProgram() {
                 GLProgram glProgram = loadProgram(ctx);
                 loadTexture(bmp);
-                bmp.recycle();
+//                bmp.recycle();
                 return glProgram;
             }
         };
@@ -144,6 +148,14 @@ public abstract class GLTexturedRect extends GLModel {
 
         // add bitmap to our texture
         texImage2D(GL_TEXTURE_2D, 0, bmp, 0);
+    }
+
+    @Override
+    protected void applyTransformations() {
+        super.applyTransformations();
+        float transX = get(CURRENT_TOUCH_NORMALIZED_X);
+        float transY = get(CURRENT_TOUCH_NORMALIZED_Y);
+        Matrix.translateM(mModelMatrix, 0, transX, transY, 0);
     }
 
     private static int createTextureHandle() {
