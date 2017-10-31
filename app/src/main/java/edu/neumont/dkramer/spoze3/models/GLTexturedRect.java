@@ -9,7 +9,6 @@ import edu.neumont.dkramer.spoze3.gl.GLCamera;
 import edu.neumont.dkramer.spoze3.gl.GLContext;
 import edu.neumont.dkramer.spoze3.gl.GLModel;
 import edu.neumont.dkramer.spoze3.gl.GLProgram;
-import edu.neumont.dkramer.spoze3.gl.GLVertexArray;
 import edu.neumont.dkramer.spoze3.util.TextResourceReader;
 
 import static android.opengl.GLES20.GL_CLAMP_TO_EDGE;

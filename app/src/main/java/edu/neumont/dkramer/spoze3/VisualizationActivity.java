@@ -122,8 +122,8 @@ public class VisualizationActivity extends GLCameraActivity {
                 }
                 @Override
                 public void render(GLCamera camera) {
-                    ++angle;
-                    camera.rotate(angle, 1f, 1f, 0f);
+                    angle += 0.5f;
+                    camera.rotate(angle, 1f, 0f, 1f);
                     super.render(camera);
 
 //                    // color test

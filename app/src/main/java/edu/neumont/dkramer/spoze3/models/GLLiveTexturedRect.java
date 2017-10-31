@@ -1,12 +1,15 @@
 package edu.neumont.dkramer.spoze3.models;
 
 import android.graphics.Bitmap;
+import android.opengl.Matrix;
 
 import edu.neumont.dkramer.spoze3.gl.GLContext;
 import edu.neumont.dkramer.spoze3.gl.GLProgram;
+import edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo;
 
 import static android.opengl.GLES20.GL_TEXTURE_2D;
 import static android.opengl.GLUtils.texImage2D;
+import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Value.CURRENT_PITCH;
 
 /**
  * Created by dkramer on 10/28/17.
@@ -49,8 +52,8 @@ public class GLLiveTexturedRect extends GLTexturedRect {
         texImage2D(GL_TEXTURE_2D, 0, bmp, 0);
     }
 
-//    public void applyTransformations() {
-//        super.applyTransformations();
-//        Matrix.rotateM(mModelMatrix, mMVPMatrixHandle, GLDeviceInfo.get(CURRENT_PITCH), 0, 0, 1);
-//    }
+    public void applyTransformations() {
+        super.applyTransformations();
+        Matrix.rotateM(mModelMatrix, mMVPMatrixHandle, GLDeviceInfo.get(CURRENT_PITCH), 0, 0, 1);
+    }
 }
