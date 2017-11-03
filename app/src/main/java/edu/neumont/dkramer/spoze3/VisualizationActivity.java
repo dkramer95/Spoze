@@ -20,6 +20,7 @@ import edu.neumont.dkramer.spoze3.gl.GLModel;
 import edu.neumont.dkramer.spoze3.gl.GLMotionCamera;
 import edu.neumont.dkramer.spoze3.gl.GLScene;
 import edu.neumont.dkramer.spoze3.gl.GLWorld;
+import edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo;
 import edu.neumont.dkramer.spoze3.models.GLLiveTexturedRect;
 import edu.neumont.dkramer.spoze3.models.GLTexturedRect;
 import edu.neumont.dkramer.spoze3.models.SignModel;
@@ -29,6 +30,7 @@ import static android.opengl.GLES20.GL_UNSIGNED_BYTE;
 import static android.opengl.GLES20.glReadPixels;
 import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Type.ROTATION_VECTOR;
 import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Type.TOUCH_INPUT;
+import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Value.CURRENT_ACCEL_Y;
 import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Value.CURRENT_TOUCH_X;
 import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Value.CURRENT_TOUCH_Y;
 import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.get;
@@ -66,8 +68,12 @@ public class VisualizationActivity extends GLCameraActivity {
 
     @Override
     protected GLScene createGLScene() {
-        return new SampleScene(getGLContext());
-//        return new MyScene(getGLContext());
+        final GLContext ctx = getGLContext();
+
+        return new GLScene.Builder(ctx)
+                .setWorld(new SignWorld(ctx))
+                .setCamera(GLMotionCamera.getDefault(ctx))
+                .build();
     }
 
     @Override
@@ -78,40 +84,45 @@ public class VisualizationActivity extends GLCameraActivity {
 
     private static final Random rng = new Random();
 
-
-
-    private class SampleScene extends GLScene {
+    private class SignWorld extends GLWorld implements GLDeviceInfo.OnUpdateListener {
         private GLPixelPicker mPixelPicker;
-        private SignModel mSignModel;
 
-        public SampleScene(GLContext ctx) {
-            super(ctx);
+        public SignWorld(GLContext glContext) {
+            super(glContext);
+            init();
+        }
+
+        private void init() {
             mPixelPicker = new GLPixelPicker();
             mPixelPicker.setOnPixelReadListener((p) -> {
+                // check to see if we hit any of our models
+                Log.i("PIXEL_PICKER", "Pixel Read: " + Integer.toHexString(p));
 
-            });
-        }
-
-        @Override
-        public GLWorld createWorld() {
-            final GLContext ctx = getGLContext();
-            return new GLWorld(ctx) {
-                @Override
-                public void create() {
-                    // heavy processing, run in background and add to this world when finished
-                    SignModel.createInBackground(this, mBitmap, getWidth(), getHeight());
-//                    mSignModel = SignModel.createFromBitmap(ctx, mBitmap, getWidth(), getHeight());
-//                    addModel(mSignModel);
+                for (GLModel model : mModels) {
+                    SignModel signModel = (SignModel)model;
+                    if (signModel.didTouch(p)) {
+                        Log.i("INFO", "Did touch sign model");
+                    }
                 }
-            };
+            });
+            getGLContext().getDeviceInfo(TOUCH_INPUT).addOnUpdateListener(this);
         }
 
         @Override
-        protected GLCamera createGLCamera() {
-            return GLMotionCamera.getDefault(getGLContext());
+        public void create() {
+            SignModel.createInBackground(this, mBitmap, getWidth(), getHeight());
+        }
+
+        @Override
+        public void onUpdate(GLDeviceInfo.Type type) {
+            if (type == TOUCH_INPUT) {
+                getGLContext().queueEvent(() -> {
+                    mPixelPicker.readPixel((int)get(CURRENT_TOUCH_X), (int)get(CURRENT_TOUCH_Y),
+                            getWidth(), getHeight());
+                });
+            }
         }
     }
-
 
     private class MyScene extends GLScene {
 
@@ -184,7 +195,7 @@ public class VisualizationActivity extends GLCameraActivity {
                     int pixel = (a << 24) + (r << 16) + (g << 8) + b;
 
                     if (((pixel ^ pattern) & clearBits) == 0)
-                        Log.i("PIXEL_TOUCH", "HIT TARGET");
+                        Log.i("PIXEL_TOUCH", "HIT TARGET:: " + Integer.toHexString(pixel));
                     }
 
 //                    generateTest(mModels.get(0));

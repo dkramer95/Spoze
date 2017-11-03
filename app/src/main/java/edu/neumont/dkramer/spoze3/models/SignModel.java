@@ -55,7 +55,7 @@ public abstract class SignModel extends GLTexturedRect {
             final float[] VERTEX_DATA =
                     createScaledVertexData(bmp.getWidth(), bmp.getHeight(), maxWidth, maxHeight);
 
-            ctx.getGLView().queueEvent(() -> {
+            ctx.queueEvent(() -> {
                 SignModel model = new SignModel(ctx, VERTEX_DATA, bitPattern) {
                     @Override
                     protected GLProgram createGLProgram() {
@@ -67,6 +67,10 @@ public abstract class SignModel extends GLTexturedRect {
                 world.addModel(model);
             });
         }).start();
+    }
+
+    public boolean didTouch(int pixel) {
+        return ((pixel ^ mBitPattern) & SPECIAL_BITS) == 0;
     }
 
     public static SignModel createFromBitmap(GLContext ctx, Bitmap src, float maxWidth, float maxHeight) {

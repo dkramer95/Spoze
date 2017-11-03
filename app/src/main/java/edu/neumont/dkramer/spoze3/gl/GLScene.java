@@ -2,6 +2,7 @@ package edu.neumont.dkramer.spoze3.gl;
 
 import android.opengl.Matrix;
 
+import edu.neumont.dkramer.spoze3.VisualizationActivity;
 import edu.neumont.dkramer.spoze3.geometry.Point3f;
 import edu.neumont.dkramer.spoze3.geometry.Ray;
 import edu.neumont.dkramer.spoze3.geometry.Vector3f;
@@ -39,6 +40,7 @@ public abstract class GLScene extends GLObject {
     }
 
     public abstract GLWorld createWorld();
+
 
     public void render() {
         clearScreen();
@@ -113,5 +115,42 @@ public abstract class GLScene extends GLObject {
         vector[0] /= vector[3];
         vector[1] /= vector[3];
         vector[2] /= vector[3];
+    }
+
+    public static class Builder {
+    	private GLWorld mWorld;
+    	private GLCamera mCamera;
+    	private GLContext mGLContext;
+
+        public Builder(GLContext ctx) {
+            mGLContext = ctx;
+        }
+
+        public Builder setWorld(GLWorld world) {
+        	mWorld = world;
+        	return this;
+        }
+
+        public Builder setCamera(GLCamera camera) {
+            mCamera = camera;
+            return this;
+        }
+
+        public GLScene build() {
+            final GLWorld world = mWorld;
+            final GLCamera camera = mCamera;
+
+            return new GLScene(mGLContext) {
+                @Override
+                public GLWorld createWorld() {
+                	return world;
+                }
+
+                @Override
+                public GLCamera createGLCamera() {
+                	return camera != null ? camera : super.createGLCamera();
+                }
+            };
+        }
     }
 }

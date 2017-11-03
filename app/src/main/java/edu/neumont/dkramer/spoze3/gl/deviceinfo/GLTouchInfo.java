@@ -40,6 +40,7 @@ public class GLTouchInfo extends GLDeviceInfo implements View.OnTouchListener {
         updatePreviousValues();
         updateCurrentValues(v, e);
         //TODO notify of touch event... somewhere
+	    notifyUpdateListeners();
 
 //        GLView view = getGLContext().getGLView();
 //        GLScene scene = view.getScene();
@@ -62,8 +63,8 @@ public class GLTouchInfo extends GLDeviceInfo implements View.OnTouchListener {
         set(CURRENT_TOUCH_X, x);
         set(CURRENT_TOUCH_Y, y);
 
-        Log.i("TOUCH_INFO", String.format("x: %f, y: %f", x, y));
-
+//        Log.i("TOUCH_INFO", String.format("x: %f, y: %f", x, y));
+//
         final float normalizedX =   (x / (float) v.getWidth()) * 2 - 1;
         final float normalizedY = -((y / (float) v.getHeight()) * 2 - 1);
 

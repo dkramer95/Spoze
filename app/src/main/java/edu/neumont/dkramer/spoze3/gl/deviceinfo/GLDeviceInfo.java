@@ -1,9 +1,13 @@
 package edu.neumont.dkramer.spoze3.gl.deviceinfo;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 import edu.neumont.dkramer.spoze3.gl.GLContext;
 import edu.neumont.dkramer.spoze3.gl.GLObject;
+
+import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Type.TOUCH_INPUT;
 
 /**
  * Created by dkramer on 10/20/17.
@@ -24,17 +28,32 @@ public abstract class GLDeviceInfo extends GLObject {
         }
     }
 
-
+    protected List<OnUpdateListener> mUpdateListeners;
 
 
     public GLDeviceInfo(GLContext ctx) {
         super(ctx);
+        mUpdateListeners = new ArrayList<>();
     }
 
 
     public abstract void start();
 
     public abstract void stop();
+
+    public void addOnUpdateListener(OnUpdateListener listener) {
+    	mUpdateListeners.add(listener);
+    }
+
+    public void removeOnUpdateListener(OnUpdateListener listenerToRemove) {
+        mUpdateListeners.remove(listenerToRemove);
+    }
+
+    protected void notifyUpdateListeners() {
+        for(OnUpdateListener listener : mUpdateListeners) {
+            listener.onUpdate(TOUCH_INPUT);
+        }
+    }
 
 
     public static float get(Value valueType) {
@@ -45,6 +64,11 @@ public abstract class GLDeviceInfo extends GLObject {
         sValues.put(key, value);
     }
 
+
+    /* Interface to allow users to do things when an update occurs */
+    public interface OnUpdateListener {
+        void onUpdate(GLDeviceInfo.Type sender);
+    }
 
 
     /**

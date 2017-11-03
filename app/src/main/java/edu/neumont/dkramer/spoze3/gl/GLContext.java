@@ -70,6 +70,10 @@ public final class GLContext extends Context {
         mGLView = glView;
     }
 
+    public void queueEvent(Runnable r) {
+        mGLView.queueEvent(r);
+    }
+
     public void onStart() {
         for (GLDeviceInfo i : mDeviceInfo.values()) {
             i.start();
@@ -82,7 +86,7 @@ public final class GLContext extends Context {
         }
     }
 
-    public void enableDeviceInfo(GLDeviceInfo.Type infoType) {
+    public GLDeviceInfo enableDeviceInfo(GLDeviceInfo.Type infoType) {
         GLDeviceInfo info = null;
 
         switch (infoType) {
@@ -102,6 +106,7 @@ public final class GLContext extends Context {
             throw new IllegalArgumentException("Specified GLDeviceInfo already exists!");
         }
         mDeviceInfo.put(infoType, info);
+        return info;
     }
 
     public GLDeviceInfo getDeviceInfo(GLDeviceInfo.Type type) {

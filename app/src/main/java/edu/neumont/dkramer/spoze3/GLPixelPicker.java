@@ -33,14 +33,17 @@ public class GLPixelPicker {
     public int readPixel(int x, int y, int width, int height) {
         mColorBuffer.rewind();
 
+        // y needs to be inverted to be in proper coordinate space
+        y = height - y;
+
         glReadPixels(x, y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, mColorBuffer);
         mColorBuffer.get(mColorArray);
 
         // extract pixel values
-        int r = mColorArray[0] & 0xFF;
-        int g = mColorArray[1] & 0xFF;
-        int b = mColorArray[2] & 0xFF;
-        int a = mColorArray[3] & 0xFF;
+        int r = ((int)mColorArray[0]) & 0xFF;
+        int g = ((int)mColorArray[1]) & 0xFF;
+        int b = ((int)mColorArray[2]) & 0xFF;
+        int a = ((int)mColorArray[3]) & 0xFF;
 
         int pixel = (a << 24) + (r << 16) + (g << 8) + b;
 
