@@ -22,6 +22,7 @@ import edu.neumont.dkramer.spoze3.gl.GLScene;
 import edu.neumont.dkramer.spoze3.gl.GLWorld;
 import edu.neumont.dkramer.spoze3.models.GLLiveTexturedRect;
 import edu.neumont.dkramer.spoze3.models.GLTexturedRect;
+import edu.neumont.dkramer.spoze3.models.SignModel;
 
 import static android.opengl.GLES20.GL_RGBA;
 import static android.opengl.GLES20.GL_UNSIGNED_BYTE;
@@ -65,7 +66,8 @@ public class VisualizationActivity extends GLCameraActivity {
 
     @Override
     protected GLScene createGLScene() {
-        return new MyScene(getGLContext());
+        return new SampleScene(getGLContext());
+//        return new MyScene(getGLContext());
     }
 
     @Override
@@ -75,6 +77,40 @@ public class VisualizationActivity extends GLCameraActivity {
     }
 
     private static final Random rng = new Random();
+
+
+
+    private class SampleScene extends GLScene {
+        private GLPixelPicker mPixelPicker;
+        private SignModel mSignModel;
+
+        public SampleScene(GLContext ctx) {
+            super(ctx);
+            mPixelPicker = new GLPixelPicker();
+            mPixelPicker.setOnPixelReadListener((p) -> {
+
+            });
+        }
+
+        @Override
+        public GLWorld createWorld() {
+            final GLContext ctx = getGLContext();
+            return new GLWorld(ctx) {
+                @Override
+                public void create() {
+                    // heavy processing, run in background and add to this world when finished
+                    SignModel.createInBackground(this, mBitmap, getWidth(), getHeight());
+//                    mSignModel = SignModel.createFromBitmap(ctx, mBitmap, getWidth(), getHeight());
+//                    addModel(mSignModel);
+                }
+            };
+        }
+
+        @Override
+        protected GLCamera createGLCamera() {
+            return GLMotionCamera.getDefault(getGLContext());
+        }
+    }
 
 
     private class MyScene extends GLScene {
