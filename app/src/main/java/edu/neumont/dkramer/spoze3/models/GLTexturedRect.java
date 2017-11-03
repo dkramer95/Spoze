@@ -2,7 +2,6 @@ package edu.neumont.dkramer.spoze3.models;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.opengl.Matrix;
 
 import edu.neumont.dkramer.spoze3.R;
 import edu.neumont.dkramer.spoze3.gl.GLCamera;
@@ -29,9 +28,6 @@ import static android.opengl.GLES20.glUniform1i;
 import static android.opengl.GLES20.glUniformMatrix4fv;
 import static android.opengl.GLUtils.texImage2D;
 import static edu.neumont.dkramer.spoze3.gl.GLVertexArray.BYTES_PER_FLOAT;
-import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Value.CURRENT_TOUCH_NORMALIZED_X;
-import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Value.CURRENT_TOUCH_NORMALIZED_Y;
-import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.get;
 
 /**
  * Created by dkramer on 10/23/17.
@@ -66,7 +62,12 @@ public abstract class GLTexturedRect extends GLModel {
     }
 
     public static GLTexturedRect createFromBitmap(GLContext ctx, Bitmap src, float maxWidth, float maxHeight) {
+//        Bitmap tmp = getFittedBitmap(src, maxWidth, maxHeight);
+//        Bitmap bmp = Bitmap.createBitmap(tmp);
         final Bitmap bmp = getFittedBitmap(src, maxWidth, maxHeight);
+//        tmp.recycle();
+        setPixels(bmp, 0x00010101);
+
 
         // ensure vertex data is normalized according to bitmap
         final float[] VERTEX_DATA =
@@ -82,6 +83,19 @@ public abstract class GLTexturedRect extends GLModel {
             }
         };
         return rect;
+    }
+
+    private static void setPixels(Bitmap bmp, int bits) {
+        final int clearBits = 0x00010101;
+        final int pattern = 0x00010100;
+
+        for (int x = 0; x < bmp.getWidth(); ++x) {
+            for (int y = 0; y < bmp.getHeight(); ++y) {
+                int pixel = bmp.getPixel(x, y);
+                pixel = (~(~pixel | clearBits)) | pattern;
+                bmp.setPixel(x, y, pixel);
+            }
+        }
     }
 
     protected static float[] createScaledVertexData(float imgWidth, float imgHeight, float maxWidth, float maxHeight) {
@@ -152,9 +166,9 @@ public abstract class GLTexturedRect extends GLModel {
     @Override
     protected void applyTransformations() {
         super.applyTransformations();
-        float transX = get(CURRENT_TOUCH_NORMALIZED_X);
-        float transY = get(CURRENT_TOUCH_NORMALIZED_Y);
-        Matrix.translateM(mModelMatrix, 0, transX, transY, 0);
+//        float transX = get(CURRENT_TOUCH_NORMALIZED_X);
+//        float transY = get(CURRENT_TOUCH_NORMALIZED_Y);
+//        Matrix.translateM(mModelMatrix, 0, transX, transY, 0);
     }
 
     private static int createTextureHandle() {

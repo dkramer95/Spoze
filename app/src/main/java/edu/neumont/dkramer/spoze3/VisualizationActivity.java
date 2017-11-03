@@ -1,7 +1,6 @@
 package edu.neumont.dkramer.spoze3;
 
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -22,16 +21,16 @@ import edu.neumont.dkramer.spoze3.gl.GLMotionCamera;
 import edu.neumont.dkramer.spoze3.gl.GLScene;
 import edu.neumont.dkramer.spoze3.gl.GLWorld;
 import edu.neumont.dkramer.spoze3.models.GLLiveTexturedRect;
-import edu.neumont.dkramer.spoze3.models.GLSquare;
 import edu.neumont.dkramer.spoze3.models.GLTexturedRect;
-import edu.neumont.dkramer.spoze3.models.GLTrackPoints;
 
 import static android.opengl.GLES20.GL_RGBA;
 import static android.opengl.GLES20.GL_UNSIGNED_BYTE;
 import static android.opengl.GLES20.glReadPixels;
 import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Type.ROTATION_VECTOR;
 import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Type.TOUCH_INPUT;
-import static edu.neumont.dkramer.spoze3.models.GLTrackPoints.fromCoords;
+import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Value.CURRENT_TOUCH_X;
+import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Value.CURRENT_TOUCH_Y;
+import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.get;
 
 public class VisualizationActivity extends GLCameraActivity {
     protected Bitmap mBitmap;
@@ -93,7 +92,8 @@ public class VisualizationActivity extends GLCameraActivity {
                 public void create() {
 //                    GLTrackPoints.addPoint(fromCoords(0, 0, 0, 1, 0, 0, 1));
 
-                    addModel(GLLiveTexturedRect.createFromBitmap(ctx, mBitmap, getWidth(), getHeight()));
+//                    addModel(GLLiveTexturedRect.createFromBitmap(ctx, mBitmap, getWidth(), getHeight()));
+                    addModel(GLTexturedRect.createFromBitmap(ctx, mBitmap, getWidth(), getHeight()));
 
 //                    addModel(GLSquare.create(ctx));
 //                    addModel(GLPoint.create(ctx, 1, 1, 0));
@@ -120,25 +120,38 @@ public class VisualizationActivity extends GLCameraActivity {
 
 //                    addModel(new GLPoint(ctx));
                 }
+                ByteBuffer colorBuffer = ByteBuffer.allocate(4).order(ByteOrder.nativeOrder());
+                byte[] byteArray = new byte[4];
+                final int clearBits = 0x00010101;
+                final int pattern = 0x00010100;
                 @Override
                 public void render(GLCamera camera) {
-                    angle += 0.5f;
-                    camera.rotate(angle, 1f, 0f, 1f);
+//                    angle += 0.5f;
+//                    camera.rotate(angle, 1f, 0f, 1f);
                     super.render(camera);
 
-//                    // color test
-//                    ByteBuffer colorBuffer = ByteBuffer.allocate(4).order(ByteOrder.nativeOrder());
-//                    glReadPixels(getWidth() / 2, getHeight() / 2, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, colorBuffer);
-//                    byte[] byteArray = new byte[4];
-//                    colorBuffer.get(byteArray);
-//
-//                    int r = ((int)byteArray[0]) & 0xFF;
-//                    int g = ((int)byteArray[1]) & 0xFF;
-//                    int b = ((int)byteArray[2]) & 0xFF;
-//                    Log.i("COLOR_RENDER", String.format("Red = %d, Green = %d, Blue = %d\n", r, g, b));
+                    // color test
+                    colorBuffer.rewind();
+                    int x = (int)get(CURRENT_TOUCH_X);
+                    // invert y coordinate
+                    int y = getHeight() - (int)get(CURRENT_TOUCH_Y);
 
-                    generateTest(mModels.get(0));
-                }
+                    glReadPixels(x, y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, colorBuffer);
+                    colorBuffer.get(byteArray);
+
+                    int r = ((int)byteArray[0]) & 0xFF;
+                    int g = ((int)byteArray[1]) & 0xFF;
+                    int b = ((int)byteArray[2]) & 0xFF;
+                    int a = ((int)byteArray[3]) & 0xFF;
+
+                    // recreate pixel value
+                    int pixel = (a << 24) + (r << 16) + (g << 8) + b;
+
+                    if (((pixel ^ pattern) & clearBits) == 0)
+                        Log.i("PIXEL_TOUCH", "HIT TARGET");
+                    }
+
+//                    generateTest(mModels.get(0));
                 float counter = 0;
 
                 protected void generateTest(GLModel model) {

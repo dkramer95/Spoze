@@ -1,10 +1,10 @@
 package edu.neumont.dkramer.spoze3.gl.deviceinfo;
 
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
 import edu.neumont.dkramer.spoze3.gl.GLContext;
-import edu.neumont.dkramer.spoze3.models.GLPoint;
 
 import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Value.CURRENT_TOUCH_NORMALIZED_X;
 import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Value.CURRENT_TOUCH_NORMALIZED_Y;
@@ -61,6 +61,8 @@ public class GLTouchInfo extends GLDeviceInfo implements View.OnTouchListener {
 
         set(CURRENT_TOUCH_X, x);
         set(CURRENT_TOUCH_Y, y);
+
+        Log.i("TOUCH_INFO", String.format("x: %f, y: %f", x, y));
 
         final float normalizedX =   (x / (float) v.getWidth()) * 2 - 1;
         final float normalizedY = -((y / (float) v.getHeight()) * 2 - 1);
