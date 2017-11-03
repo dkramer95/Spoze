@@ -4,6 +4,9 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import edu.neumont.dkramer.spoze3.gl.GLContext;
 
 import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Value.CURRENT_TOUCH_NORMALIZED_X;
@@ -20,9 +23,17 @@ import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Value.LAST_T
  */
 
 public class GLTouchInfo extends GLDeviceInfo implements View.OnTouchListener {
+    /*
+     * Work around limitation of single touch listener for a view when
+     * when this class is used.
+     */
+    protected List<View.OnTouchListener> mTouchListeners;
+
+
 
     public GLTouchInfo(GLContext glContext) {
         super(glContext);
+        mTouchListeners = new ArrayList<>();
     }
 
     @Override
@@ -33,6 +44,7 @@ public class GLTouchInfo extends GLDeviceInfo implements View.OnTouchListener {
     @Override
     public void stop() {
         getGLContext().getGLView().setOnTouchListener(null);
+        mTouchListeners.clear();
     }
 
     @Override
@@ -41,11 +53,22 @@ public class GLTouchInfo extends GLDeviceInfo implements View.OnTouchListener {
         updateCurrentValues(v, e);
         //TODO notify of touch event... somewhere
 	    notifyUpdateListeners();
+	    notifyTouchListeners(v, e);
 
 //        GLView view = getGLContext().getGLView();
 //        GLScene scene = view.getScene();
 //        view.queueEvent(() -> scene.handleTouchPress(normalizedX, normalizedY));
         return true;
+    }
+
+    public void addOnTouchListener(View.OnTouchListener listener) {
+        mTouchListeners.add(listener);
+    }
+
+    protected void notifyTouchListeners(View v, MotionEvent e) {
+        for (View.OnTouchListener listener : mTouchListeners) {
+            listener.onTouch(v, e);
+        }
     }
 
     protected void updatePreviousValues() {
@@ -63,8 +86,6 @@ public class GLTouchInfo extends GLDeviceInfo implements View.OnTouchListener {
         set(CURRENT_TOUCH_X, x);
         set(CURRENT_TOUCH_Y, y);
 
-//        Log.i("TOUCH_INFO", String.format("x: %f, y: %f", x, y));
-//
         final float normalizedX =   (x / (float) v.getWidth()) * 2 - 1;
         final float normalizedY = -((y / (float) v.getHeight()) * 2 - 1);
 

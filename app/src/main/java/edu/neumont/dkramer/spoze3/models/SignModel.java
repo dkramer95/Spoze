@@ -148,15 +148,8 @@ public abstract class SignModel extends GLTexturedRect {
     protected float mTransY;
 
     public void setTranslate(float transX, float transY) {
-        mTransX = transX;
-        mTransY = transY;
-
-//        if (transY > 0) {
-//            mTransY = transY + (mHeight / 2);
-//        } else {
-//            mTransY = transY - (mHeight / 2);
-//        }
-//    	mTransX = (mWidth + transX) / 2;
-//        mTransY = (mHeight + transY) / 2;
+        mTransX = transX + (mWidth / 2);
+        //TODO:: translating y is still off.. it should be more centered around touch
+        mTransY = transY + (mHeight / 2);
     }
 }

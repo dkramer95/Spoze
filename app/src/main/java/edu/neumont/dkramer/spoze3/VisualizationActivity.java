@@ -40,12 +40,17 @@ import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.get;
 public class VisualizationActivity extends GLCameraActivity {
     protected Bitmap mBitmap;
     protected Bitmap mTestBitmap;
+    protected Bitmap mTest2Bitmap;
+    protected Bitmap mTest3Bitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mTestBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.texture_2);
-        mBitmap = loadBitmap();
+        mTest2Bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.texture_3);
+        mTest3Bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.texture_4);
+
+//        mBitmap = loadBitmap();
     }
 
     protected Bitmap loadBitmap() {
@@ -73,18 +78,35 @@ public class VisualizationActivity extends GLCameraActivity {
     @Override
     protected GLScene createGLScene() {
         final GLContext ctx = getGLContext();
-//        SignWorld2 world = new SignWorld2(ctx);
-//
-//        GLScene scene = new GLScene.Builder(ctx)
-//                .setWorld(world)
-//		        .build();
-//
-//        return scene;
+//        SignWorld2 world = new SignWorld2(ctx) {
+//            @Override
+//            public void create() {
+//                super.create();
+//            	SignModel.createInBackground(this, mBitmap, getWidth(), getHeight());
+//            }
+//        };
+
+        TouchableWorld world = new TouchableWorld(ctx) {
+        	@Override
+            public void create() {
+                super.create();
+//                SignModel.createInBackground(this, mBitmap, getWidth(), getHeight());
+
+                // testing additional models
+                SignModel.createInBackground(this, mTestBitmap, getWidth(), getHeight());
+                SignModel.createInBackground(this, mTest2Bitmap, getWidth(), getHeight());
+                SignModel.createInBackground(this, mTest3Bitmap, getWidth(), getHeight());
+            }
+        };
 
         return new GLScene.Builder(ctx)
-                .setWorld(new SignWorld(ctx))
-                .setCamera(GLMotionCamera.getDefault(ctx))
-                .build();
+                .setWorld(world)
+		        .setCamera(GLMotionCamera.getDefault(ctx))
+		        .build();
+//        return new GLScene.Builder(ctx)
+//                .setWorld(new SignWorld(ctx))
+//                .setCamera(GLMotionCamera.getDefault(ctx))
+//                .build();
     }
 
     @Override
