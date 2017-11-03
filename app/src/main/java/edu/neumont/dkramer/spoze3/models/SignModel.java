@@ -1,6 +1,7 @@
 package edu.neumont.dkramer.spoze3.models;
 
 import android.graphics.Bitmap;
+import android.opengl.Matrix;
 
 import edu.neumont.dkramer.spoze3.gl.GLContext;
 import edu.neumont.dkramer.spoze3.gl.GLProgram;
@@ -52,11 +53,17 @@ public abstract class SignModel extends GLTexturedRect {
             final int bitPattern = getNextBitPattern();
             applyBitPatternToBitmap(bmp, bitPattern);
 
-            final float[] VERTEX_DATA =
-                    createScaledVertexData(bmp.getWidth(), bmp.getHeight(), maxWidth, maxHeight);
+            final float[] scaledSizes = getScaledSizes(bmp.getWidth(), bmp.getHeight(), maxWidth, maxHeight);
+            final float width = scaledSizes[0];
+            final float height = scaledSizes[1];
+
+            final float[] vertexData = createScaledVertexData(width, height);
+
+//            final float[] VERTEX_DATA =
+//                    createScaledVertexData(bmp.getWidth(), bmp.getHeight(), maxWidth, maxHeight);
 
             ctx.queueEvent(() -> {
-                SignModel model = new SignModel(ctx, VERTEX_DATA, bitPattern) {
+                SignModel model = new SignModel(ctx, vertexData, bitPattern) {
                     @Override
                     protected GLProgram createGLProgram() {
                         GLProgram glProgram = loadProgram(ctx);
@@ -64,10 +71,20 @@ public abstract class SignModel extends GLTexturedRect {
                         return glProgram;
                     }
                 };
+                model.setSize(width, height);
                 world.addModel(model);
             });
         }).start();
     }
+
+    protected void applyTransformations() {
+        super.applyTransformations();
+        Matrix.translateM(mModelMatrix, 0, mTransX, mTransY, 0);
+    }
+
+//    public void translate(float x, float y) {
+//        Matrix.translateM(mModelMatrix, 0, x, y, 0);
+//    }
 
     public boolean didTouch(int pixel) {
         return ((pixel ^ mBitPattern) & SPECIAL_BITS) == 0;
@@ -124,5 +141,22 @@ public abstract class SignModel extends GLTexturedRect {
     @Override
     protected GLProgram createGLProgram() {
         return null;
+    }
+
+    // testing
+    protected float mTransX;
+    protected float mTransY;
+
+    public void setTranslate(float transX, float transY) {
+        mTransX = transX;
+        mTransY = transY;
+
+//        if (transY > 0) {
+//            mTransY = transY + (mHeight / 2);
+//        } else {
+//            mTransY = transY - (mHeight / 2);
+//        }
+//    	mTransX = (mWidth + transX) / 2;
+//        mTransY = (mHeight + transY) / 2;
     }
 }

@@ -45,6 +45,8 @@ public abstract class GLTexturedRect extends GLModel {
     protected int mTextureCoordinateHandle;
     protected int mMVPMatrixHandle;
 
+    protected float mWidth;
+    protected float mHeight;
 
 
     /* Instantiate using static methods */
@@ -69,11 +71,17 @@ public abstract class GLTexturedRect extends GLModel {
         setPixels(bmp, 0x00010101);
 
 
-        // ensure vertex data is normalized according to bitmap
-        final float[] VERTEX_DATA =
-                createScaledVertexData(bmp.getWidth(), bmp.getHeight(), maxWidth, maxHeight);
+        final float[] scaledSizes = getScaledSizes(bmp.getWidth(), bmp.getHeight(), maxWidth, maxHeight);
+        final float width = scaledSizes[0];
+        final float height = scaledSizes[1];
 
-        final GLTexturedRect rect = new GLTexturedRect(ctx, VERTEX_DATA) {
+        final float[] vertexData = createScaledVertexData(width, height);
+
+        // ensure vertex data is normalized according to bitmap
+//        final float[] VERTEX_DATA =
+//                createScaledVertexData(bmp.getWidth(), bmp.getHeight(), maxWidth, maxHeight);
+
+        final GLTexturedRect rect = new GLTexturedRect(ctx, vertexData) {
             @Override
             protected GLProgram createGLProgram() {
                 GLProgram glProgram = loadProgram(ctx);
@@ -82,7 +90,13 @@ public abstract class GLTexturedRect extends GLModel {
                 return glProgram;
             }
         };
+        rect.setSize(width, height);
         return rect;
+    }
+
+    protected void setSize(float width, float height) {
+        mWidth = width;
+        mHeight = height;
     }
 
     private static void setPixels(Bitmap bmp, int bits) {
@@ -98,10 +112,36 @@ public abstract class GLTexturedRect extends GLModel {
         }
     }
 
-    protected static float[] createScaledVertexData(float imgWidth, float imgHeight, float maxWidth, float maxHeight) {
+    protected static float[] getScaledSizes(float width, float height, float maxWidth, float maxHeight) {
         final float scaleFactor = Math.max(maxWidth, maxHeight);
-        final float w = imgWidth / scaleFactor;
-        final float h = imgHeight / scaleFactor;
+        final float w = width / scaleFactor;
+        final float h = height / scaleFactor;
+
+        return new float[] { w, h };
+    }
+
+    protected static float[] createScaledVertexData(float w, float h) {
+        // ensure we are using normalized values!
+        if ((w < 0.0f || w > 1.0f) || (h < 0.0f || h > 1.0f)) {
+            throw new IllegalArgumentException("Scaled sizes must be normalized from 0.0f to 1.0f");
+        }
+
+        return new float[] {
+			 w, -h, 1.0f, 1.0f,
+			-w, -h, 0.0f, 1.0f,
+			-w,  h, 0.0f, 0.0f,
+			 w,  h, 1.0f, 0.0f,
+        };
+    }
+
+    protected static float[] createScaledVertexData(float imgWidth, float imgHeight, float maxWidth, float maxHeight) {
+        final float[] scaledSizes = getScaledSizes(imgWidth, imgHeight, maxWidth, maxHeight);
+        final float w = scaledSizes[0];
+        final float h = scaledSizes[1];
+
+//        final float scaleFactor = Math.max(maxWidth, maxHeight);
+//        final float w = imgWidth / scaleFactor;
+//        final float h = imgHeight / scaleFactor;
 
         // vertices that fit within maxWidth & maxHeight
         final float[] VERTEX_DATA = {

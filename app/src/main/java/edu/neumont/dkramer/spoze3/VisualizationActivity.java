@@ -1,6 +1,7 @@
 package edu.neumont.dkramer.spoze3;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -30,17 +31,20 @@ import static android.opengl.GLES20.GL_UNSIGNED_BYTE;
 import static android.opengl.GLES20.glReadPixels;
 import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Type.ROTATION_VECTOR;
 import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Type.TOUCH_INPUT;
-import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Value.CURRENT_ACCEL_Y;
+import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Value.CURRENT_TOUCH_NORMALIZED_X;
+import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Value.CURRENT_TOUCH_NORMALIZED_Y;
 import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Value.CURRENT_TOUCH_X;
 import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Value.CURRENT_TOUCH_Y;
 import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.get;
 
 public class VisualizationActivity extends GLCameraActivity {
     protected Bitmap mBitmap;
+    protected Bitmap mTestBitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mTestBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.texture_2);
         mBitmap = loadBitmap();
     }
 
@@ -69,6 +73,13 @@ public class VisualizationActivity extends GLCameraActivity {
     @Override
     protected GLScene createGLScene() {
         final GLContext ctx = getGLContext();
+//        SignWorld2 world = new SignWorld2(ctx);
+//
+//        GLScene scene = new GLScene.Builder(ctx)
+//                .setWorld(world)
+//		        .build();
+//
+//        return scene;
 
         return new GLScene.Builder(ctx)
                 .setWorld(new SignWorld(ctx))
@@ -97,13 +108,19 @@ public class VisualizationActivity extends GLCameraActivity {
             mPixelPicker.setOnPixelReadListener((p) -> {
                 // check to see if we hit any of our models
                 Log.i("PIXEL_PICKER", "Pixel Read: " + Integer.toHexString(p));
+                float transX = get(CURRENT_TOUCH_NORMALIZED_X);
+                float transY = get(CURRENT_TOUCH_NORMALIZED_Y);
 
                 for (GLModel model : mModels) {
                     SignModel signModel = (SignModel)model;
                     if (signModel.didTouch(p)) {
-                        Log.i("INFO", "Did touch sign model");
+                        signModel.setTranslate(transX, transY);
+//                        signModel.translate(transX, transY);
+
                     }
                 }
+                Log.i("TOUCH_INFO", String.format("TransX = %f, TransY = %f\n", transX, transY));
+
             });
             getGLContext().getDeviceInfo(TOUCH_INPUT).addOnUpdateListener(this);
         }
@@ -111,18 +128,27 @@ public class VisualizationActivity extends GLCameraActivity {
         @Override
         public void create() {
             SignModel.createInBackground(this, mBitmap, getWidth(), getHeight());
+//            SignModel.createInBackground(this, mTestBitmap, getWidth(), getHeight());
         }
 
         @Override
         public void onUpdate(GLDeviceInfo.Type type) {
             if (type == TOUCH_INPUT) {
-                getGLContext().queueEvent(() -> {
-                    mPixelPicker.readPixel((int)get(CURRENT_TOUCH_X), (int)get(CURRENT_TOUCH_Y),
-                            getWidth(), getHeight());
-                });
+//                getGLContext().queueEvent(() -> {
+//                    mPixelPicker.readPixel((int)get(CURRENT_TOUCH_X), (int)get(CURRENT_TOUCH_Y),
+//                            getWidth(), getHeight());
+//                });
+                float transX = get(CURRENT_TOUCH_NORMALIZED_X);
+                float transY = get(CURRENT_TOUCH_NORMALIZED_Y);
+                for (GLModel model : mModels) {
+                    SignModel signModel = (SignModel)model;
+                        signModel.setTranslate(transX, transY);
+                    }
+                }
             }
         }
-    }
+
+
 
     private class MyScene extends GLScene {
 

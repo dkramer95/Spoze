@@ -7,6 +7,9 @@ import android.opengl.Matrix;
  */
 
 public abstract class GLModel extends GLObject {
+    // counter that will be used to assign ID's to all created models
+	private static int sInstanceCounter;
+
     // shader program that we're using to render our GLModel
     protected GLProgram mGLProgram;
 
@@ -22,6 +25,9 @@ public abstract class GLModel extends GLObject {
     // backing array that stores vertices
     protected final float[] mVertexData;
 
+    // the id of our model
+    protected final int mId;
+
 
 
 
@@ -30,6 +36,7 @@ public abstract class GLModel extends GLObject {
         mVertexData = vertexData;
         mVertexArray = new GLVertexArray(vertexData);
         mGLProgram = createGLProgram();
+        mId = ++sInstanceCounter;
     }
 
     /*
@@ -96,5 +103,9 @@ public abstract class GLModel extends GLObject {
 
     public GLProgram getGLProgram() {
         return mGLProgram;
+    }
+
+    public int getId() {
+        return mId;
     }
 }
