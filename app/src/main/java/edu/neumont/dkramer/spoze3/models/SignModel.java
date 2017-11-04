@@ -22,7 +22,7 @@ public abstract class SignModel extends GLTexturedRect {
      * This is a work around to creating a more complex touch system
      * such as a raycaster, or additional color buffer.
      */
-    protected static final int SPECIAL_BITS = 0x00010101;
+    protected static final int SPECIAL_BITS = 0x01010101;
 
     /*
      * Bit Patterns that will allow us to uniquely identify models
@@ -35,6 +35,17 @@ public abstract class SignModel extends GLTexturedRect {
             0x00010000,
             0x00000100,
             0x00000001,
+            0x00010100,
+            0x00010001,
+            0x00000101,
+            0x01000000,
+            0x01010000,
+            0x01000100,
+            0x01000001,
+            0x01010100,
+            0x01000100,
+            0x01000101,
+            0x01010001,
     };
 
     // where we are in BIT_PATTERNS for modifying bits of our texture
