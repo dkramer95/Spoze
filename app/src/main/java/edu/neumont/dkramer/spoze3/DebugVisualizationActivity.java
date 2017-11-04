@@ -74,6 +74,14 @@ public class DebugVisualizationActivity extends VisualizationActivity {
         Toast.makeText(this, "Calibrated!", Toast.LENGTH_SHORT).show();
     }
 
+    public void deleteModelButtonClicked(View view) {
+        TouchableWorld world = (TouchableWorld)getGLContext().getGLView().getScene().getWorld();
+        getGLContext().queueEvent(() -> {
+            world.removeModel(world.getSelectedModel());
+        });
+        Toast.makeText(this, "Deleted Model", Toast.LENGTH_SHORT).show();
+    }
+
     public void hiddenButtonClicked(View view) {
         getGLContext().getGLView().setVisibility(View.VISIBLE);
         findViewById(R.id.hiddenOverlay).setVisibility(View.INVISIBLE);

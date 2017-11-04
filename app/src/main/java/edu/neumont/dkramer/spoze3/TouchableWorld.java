@@ -6,6 +6,7 @@ import edu.neumont.dkramer.spoze3.gl.GLActivity;
 import edu.neumont.dkramer.spoze3.gl.GLContext;
 import edu.neumont.dkramer.spoze3.gl.GLModel;
 import edu.neumont.dkramer.spoze3.gl.GLWorld;
+import edu.neumont.dkramer.spoze3.models.SignModel;
 
 import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Value.CURRENT_TOUCH_NORMALIZED_X;
 import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Value.CURRENT_TOUCH_NORMALIZED_Y;
@@ -21,6 +22,7 @@ public class TouchableWorld extends GLWorld implements TouchSelectionHandler.OnM
 
 
 	protected TouchSelectionHandler mTouchHandler;
+	protected SignModel mSelectedModel;
 
 
 
@@ -36,6 +38,7 @@ public class TouchableWorld extends GLWorld implements TouchSelectionHandler.OnM
 
 	@Override
 	public void onFirstSelect(GLModel model) {
+		mSelectedModel = (SignModel)model;
 		sendModelToFront(model);
 		updateToolbar(TOOLBAR_OBJECT);
 	}
@@ -47,6 +50,7 @@ public class TouchableWorld extends GLWorld implements TouchSelectionHandler.OnM
 
 	@Override
 	public void onDeselect(GLModel model) {
+		mSelectedModel = null;
 		updateToolbar(TOOLBAR_NORMAL);
 	}
 
@@ -56,5 +60,9 @@ public class TouchableWorld extends GLWorld implements TouchSelectionHandler.OnM
 			ViewFlipper flipper = activity.findViewById(R.id.toolbarFlipper);
 			flipper.setDisplayedChild(num);
 		});
+	}
+
+	public SignModel getSelectedModel() {
+		return mSelectedModel;
 	}
 }
