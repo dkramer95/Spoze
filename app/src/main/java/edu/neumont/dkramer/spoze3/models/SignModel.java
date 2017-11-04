@@ -2,7 +2,9 @@ package edu.neumont.dkramer.spoze3.models;
 
 import android.graphics.Bitmap;
 import android.opengl.Matrix;
+import android.util.Log;
 
+import edu.neumont.dkramer.spoze3.gl.GLCamera;
 import edu.neumont.dkramer.spoze3.gl.GLContext;
 import edu.neumont.dkramer.spoze3.gl.GLProgram;
 import edu.neumont.dkramer.spoze3.gl.GLWorld;
@@ -82,6 +84,10 @@ public abstract class SignModel extends GLTexturedRect {
         Matrix.translateM(mModelMatrix, 0, mTransX, mTransY, 0);
     }
 
+    public void render(GLCamera camera) {
+        super.render(camera);
+    }
+
 //    public void translate(float x, float y) {
 //        Matrix.translateM(mModelMatrix, 0, x, y, 0);
 //    }
@@ -148,8 +154,14 @@ public abstract class SignModel extends GLTexturedRect {
     protected float mTransY;
 
     public void setTranslate(float transX, float transY) {
+        //TODO this works fine in portrait mode, but in landscape it is off!!
+        //TODO::: determine the orientation and determine the scale factor to apply
+        //TODO:: also, need to compensate for the offset of the GLMotionCamera position
         mTransX = transX + (mWidth / 2);
-        //TODO:: translating y is still off.. it should be more centered around touch
-        mTransY = transY + (mHeight / 2);
+
+        // this works well
+        mTransY = (mHeight / 2) + (transY * 2f);
+
+        Log.i("SIGN_MODEL", "TransX: " + mTransX + ", TransY: " + mTransY);
     }
 }

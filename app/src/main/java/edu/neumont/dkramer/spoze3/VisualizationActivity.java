@@ -39,14 +39,14 @@ import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.get;
 
 public class VisualizationActivity extends GLCameraActivity {
     protected Bitmap mBitmap;
-    protected Bitmap mTestBitmap;
+//    protected Bitmap mTestBitmap;
     protected Bitmap mTest2Bitmap;
     protected Bitmap mTest3Bitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mTestBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.texture_2);
+//        mTestBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.texture_2);
         mTest2Bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.texture_3);
         mTest3Bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.texture_4);
 
@@ -93,7 +93,9 @@ public class VisualizationActivity extends GLCameraActivity {
 //                SignModel.createInBackground(this, mBitmap, getWidth(), getHeight());
 
                 // testing additional models
-                SignModel.createInBackground(this, mTestBitmap, getWidth(), getHeight());
+//                SignModel.createInBackground(this, mTestBitmap, getWidth(), getHeight());
+//                SignModel.createInBackground(this, mTest2Bitmap, getWidth(), getHeight());
+                // testing same image
                 SignModel.createInBackground(this, mTest2Bitmap, getWidth(), getHeight());
                 SignModel.createInBackground(this, mTest3Bitmap, getWidth(), getHeight());
             }
@@ -101,7 +103,7 @@ public class VisualizationActivity extends GLCameraActivity {
 
         return new GLScene.Builder(ctx)
                 .setWorld(world)
-		        .setCamera(GLMotionCamera.getDefault(ctx))
+//		        .setCamera(GLMotionCamera.getDefault(ctx))
 		        .build();
 //        return new GLScene.Builder(ctx)
 //                .setWorld(new SignWorld(ctx))

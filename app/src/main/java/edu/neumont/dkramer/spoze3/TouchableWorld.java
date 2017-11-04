@@ -72,8 +72,8 @@ public class TouchableWorld extends GLWorld implements View.OnTouchListener, GLP
 	float angle = 0.0f;
 	@Override
 	public void render(GLCamera camera) {
-		camera.rotate(angle, 1, 1, 0);
-		++angle;
+//		camera.rotate(angle, 1, 1, 0);
+//		++angle;
 		super.render(camera);
 	}
 
