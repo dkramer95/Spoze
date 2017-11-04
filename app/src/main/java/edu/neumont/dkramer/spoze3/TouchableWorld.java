@@ -1,9 +1,12 @@
 package edu.neumont.dkramer.spoze3;
 
+import android.icu.util.VersionInfo;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ViewFlipper;
 
+import edu.neumont.dkramer.spoze3.gl.GLActivity;
 import edu.neumont.dkramer.spoze3.gl.GLCamera;
 import edu.neumont.dkramer.spoze3.gl.GLContext;
 import edu.neumont.dkramer.spoze3.gl.GLModel;
@@ -64,10 +67,19 @@ public class TouchableWorld extends GLWorld implements View.OnTouchListener, GLP
 			SignModel signModel = (SignModel)model;
 			if (signModel.didTouch(pixel)) {
 				sendModelToFront(signModel);
+				updateToolbar(0);
 				mActiveModel = signModel;
 				break;
 			}
 		}
+	}
+
+	protected void updateToolbar(int num) {
+		GLActivity activity = getGLContext().getActivity();
+		activity.runOnUiThread(() -> {
+			ViewFlipper flipper = activity.findViewById(R.id.toolbarFlipper);
+			flipper.setDisplayedChild(num);
+		});
 	}
 
 	float angle = 0.0f;
@@ -93,6 +105,7 @@ public class TouchableWorld extends GLWorld implements View.OnTouchListener, GLP
 			case MotionEvent.ACTION_UP:
 				if (mActiveModel != null) {
 					mActiveModel = null;
+					updateToolbar(1);
 				}
 				break;
 		}

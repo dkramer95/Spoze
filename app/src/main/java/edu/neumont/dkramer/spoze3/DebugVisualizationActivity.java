@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ViewFlipper;
 
 import edu.neumont.dkramer.spoze3.converter.YUVToRGBAConverter;
 import edu.neumont.dkramer.spoze3.gl.deviceinfo.GLRotationVectorInfo;
@@ -27,6 +28,8 @@ public class DebugVisualizationActivity extends VisualizationActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         findViewById(R.id.hiddenOverlay).setVisibility(View.INVISIBLE);
+        ViewFlipper vf = (ViewFlipper)findViewById(R.id.toolbarFlipper);
+        vf.setDisplayedChild(1);
 //        initThresholdSeekbar();
     }
 
