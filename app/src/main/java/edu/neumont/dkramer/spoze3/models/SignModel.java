@@ -4,6 +4,11 @@ import android.graphics.Bitmap;
 import android.opengl.Matrix;
 import android.util.Log;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Stack;
+
 import edu.neumont.dkramer.spoze3.gl.GLCamera;
 import edu.neumont.dkramer.spoze3.gl.GLContext;
 import edu.neumont.dkramer.spoze3.gl.GLProgram;
@@ -32,26 +37,32 @@ public abstract class SignModel extends GLTexturedRect {
      */
     protected static final int[] BIT_PATTERNS =
     {
-            0x00010000,
-            0x00000100,
-            0x00000001,
-            0x00010100,
-            0x00010001,
-            0x00000101,
-            0x01000000,
-            0x01010000,
-            0x01000100,
-            0x01000001,
-            0x01010100,
-            0x01000100,
-            0x01000101,
-            0x01010001,
+            0x01000000, 0x01010000, 0x01000100,
+            0x01000001, 0x01010100, 0x01000100,
+            0x01000101, 0x01010001, 0x00010000,
+            0x00000100, 0x00000001, 0x00010100,
+            0x00010001, 0x00000101,
     };
 
-    // where we are in BIT_PATTERNS for modifying bits of our texture
-    protected static int sPatternIndex = 0;
+    /*
+     * Each time a model is created, a pattern will be popped off this stack and
+     * assigned to the model. If the model is deleted, it's pattern will be pushed
+     * back onto the stack, to be used for future models, allowing for safe reuse.
+     */
+    protected static final Stack<Integer> AVAILABLE_BIT_PATTERNS = new Stack<>();
+    static {
+        // load everything onto the stack
+        for (int pattern : BIT_PATTERNS) {
+            AVAILABLE_BIT_PATTERNS.add(pattern);
+        }
+        // sort by "least destructive"
+        Collections.sort(AVAILABLE_BIT_PATTERNS, (i1, i2) -> i2 - i1);
+    }
+
 
     protected final int mBitPattern;
+
+
 
 
     protected SignModel(GLContext glContext, float[] vertexData, int bitPattern) {
@@ -59,6 +70,7 @@ public abstract class SignModel extends GLTexturedRect {
         mBitPattern = bitPattern;
     }
 
+    //TODO background creation should be handled elsewhere
     public static void createInBackground(GLWorld world, Bitmap src, float maxWidth, float maxHeight) {
         new Thread(() -> {
             final GLContext ctx = world.getGLContext();
@@ -71,9 +83,6 @@ public abstract class SignModel extends GLTexturedRect {
             final float height = scaledSizes[1];
 
             final float[] vertexData = createScaledVertexData(width, height);
-
-//            final float[] VERTEX_DATA =
-//                    createScaledVertexData(bmp.getWidth(), bmp.getHeight(), maxWidth, maxHeight);
 
             ctx.queueEvent(() -> {
                 SignModel model = new SignModel(ctx, vertexData, bitPattern) {
@@ -102,6 +111,11 @@ public abstract class SignModel extends GLTexturedRect {
 //    public void translate(float x, float y) {
 //        Matrix.translateM(mModelMatrix, 0, x, y, 0);
 //    }
+
+    public void delete() {
+        super.delete();
+        AVAILABLE_BIT_PATTERNS.push(getBitPattern());
+    }
 
     public boolean didTouch(int pixel) {
         return ((pixel ^ mBitPattern) & SPECIAL_BITS) == 0;
@@ -144,14 +158,14 @@ public abstract class SignModel extends GLTexturedRect {
      * @return bit pattern value
      */
     protected static int getNextBitPattern() {
-        if (sPatternIndex >= BIT_PATTERNS.length) {
+        if (AVAILABLE_BIT_PATTERNS.isEmpty()) {
             throw new IllegalStateException("Usable bit pattern limit reached! :( " +
                     "Too many instances created!");
         }
-        return BIT_PATTERNS[sPatternIndex++];
+        return AVAILABLE_BIT_PATTERNS.pop();
     }
 
-    public int getBitPattern() {
+    protected int getBitPattern() {
         return mBitPattern;
     }
 

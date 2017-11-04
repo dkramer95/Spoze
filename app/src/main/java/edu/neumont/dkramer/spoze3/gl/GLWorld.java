@@ -36,6 +36,25 @@ public abstract class GLWorld extends GLObject {
 
     public void removeModel(GLModel model) {
         mModels.remove(model);
+        model.delete();
+    }
+
+    /**
+     * Sends the specified model to the front, by ensuring that it is
+     * rendered last, appearing over any other models.
+     * @param model Model to send to front
+     */
+    protected void sendModelToFront(GLModel model) {
+        int frontIndex = (mModels.size() - 1);
+        GLModel frontModel = mModels.get(frontIndex);
+
+        if (model != frontModel) {
+            int modelIndex = mModels.indexOf(model);
+
+            // swap model position rendering order
+            mModels.set(modelIndex, frontModel);
+            mModels.set(frontIndex, model);
+        }
     }
 
     public int getWidth() {

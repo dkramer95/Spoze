@@ -85,6 +85,14 @@ public abstract class GLModel extends GLObject {
         draw(camera);
     }
 
+    /*
+     * Method that can be overwritten to perform any cleanup actions
+     * necessary when it has been removed from a world.
+     */
+    public void delete() {
+
+    }
+
     public float[] getModelMatrix() {
         return mModelMatrix;
     }

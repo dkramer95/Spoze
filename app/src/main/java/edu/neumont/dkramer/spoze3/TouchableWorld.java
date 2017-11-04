@@ -63,6 +63,7 @@ public class TouchableWorld extends GLWorld implements View.OnTouchListener, GLP
 		for (GLModel model : mModels) {
 			SignModel signModel = (SignModel)model;
 			if (signModel.didTouch(pixel)) {
+				sendModelToFront(signModel);
 				mActiveModel = signModel;
 				break;
 			}
