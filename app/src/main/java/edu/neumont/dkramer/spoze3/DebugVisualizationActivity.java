@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -11,6 +12,7 @@ import android.widget.Toast;
 import edu.neumont.dkramer.spoze3.converter.YUVToRGBAConverter;
 import edu.neumont.dkramer.spoze3.gl.deviceinfo.GLRotationVectorInfo;
 
+import static android.view.View.GONE;
 import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Type.ROTATION_VECTOR;
 
 /**
@@ -24,28 +26,29 @@ public class DebugVisualizationActivity extends VisualizationActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initThresholdSeekbar();
+        findViewById(R.id.hiddenOverlay).setVisibility(View.INVISIBLE);
+//        initThresholdSeekbar();
     }
 
-    protected void initThresholdSeekbar() {
-        mThresholdSeekBar = (SeekBar)findViewById(R.id.thresholdSeekBar);
-        mThresholdTextView = (TextView)findViewById(R.id.thresholdTextView);
-
-        mThresholdSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int value, boolean b) {
-                YUVToRGBAConverter.setThreshold(value);
-                mThresholdTextView.setText("" + value);
-            }
-
-            // unused
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) { }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) { }
-        });
-    }
+//    protected void initThresholdSeekbar() {
+//        mThresholdSeekBar = (SeekBar)findViewById(R.id.thresholdSeekBar);
+//        mThresholdTextView = (TextView)findViewById(R.id.thresholdTextView);
+//
+//        mThresholdSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+//            @Override
+//            public void onProgressChanged(SeekBar seekBar, int value, boolean b) {
+//                YUVToRGBAConverter.setThreshold(value);
+//                mThresholdTextView.setText("" + value);
+//            }
+//
+//            // unused
+//            @Override
+//            public void onStartTrackingTouch(SeekBar seekBar) { }
+//
+//            @Override
+//            public void onStopTrackingTouch(SeekBar seekBar) { }
+//        });
+//    }
 
 
     @Override
@@ -56,7 +59,7 @@ public class DebugVisualizationActivity extends VisualizationActivity {
 
     @Override
     protected int getLayoutId() {
-        return R.layout.gl_debug_motion_camera_layout;
+        return R.layout.gl_debug_motion_camera_layout_overlay;
     }
 
     public void calibrateButtonClicked(View view) {
@@ -66,5 +69,16 @@ public class DebugVisualizationActivity extends VisualizationActivity {
         rotationVectorInfo.calibrate();
 
         Toast.makeText(this, "Calibrated!", Toast.LENGTH_SHORT).show();
+    }
+
+    public void hiddenButtonClicked(View view) {
+        getGLContext().getGLView().setVisibility(View.VISIBLE);
+        findViewById(R.id.hiddenOverlay).setVisibility(View.INVISIBLE);
+    }
+
+    public void testButtonClicked(View view) {
+        getGLContext().getGLView().setVisibility(View.GONE);
+//        setContentView(R.layout.gl_debug_motion_camera_layout_overlay);
+        findViewById(R.id.hiddenOverlay).setVisibility(View.VISIBLE);
     }
 }

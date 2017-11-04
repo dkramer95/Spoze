@@ -98,6 +98,7 @@ public class VisualizationActivity extends GLCameraActivity {
                 // testing same image
                 SignModel.createInBackground(this, mTest2Bitmap, getWidth(), getHeight());
                 SignModel.createInBackground(this, mTest3Bitmap, getWidth(), getHeight());
+                SignModel.createInBackground(this, mTest3Bitmap, getWidth(), getHeight());
             }
         };
 
