@@ -56,8 +56,13 @@ public abstract class GLDeviceInfo extends GLObject {
     }
 
 
-    public static float get(Value valueType) {
+    public static float getf(Value valueType) {
         return sValues.get(valueType);
+    }
+
+    public static int geti(Value valueType) {
+        float value = sValues.get(valueType);
+        return (int)value;
     }
 
     protected static void set(Value key, float value) {

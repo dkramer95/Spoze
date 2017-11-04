@@ -206,8 +206,8 @@ public abstract class GLTexturedRect extends GLModel {
     @Override
     protected void applyTransformations() {
         super.applyTransformations();
-//        float transX = get(CURRENT_TOUCH_NORMALIZED_X);
-//        float transY = get(CURRENT_TOUCH_NORMALIZED_Y);
+//        float transX = getf(CURRENT_TOUCH_NORMALIZED_X);
+//        float transY = getf(CURRENT_TOUCH_NORMALIZED_Y);
 //        Matrix.translateM(mModelMatrix, 0, transX, transY, 0);
     }
 

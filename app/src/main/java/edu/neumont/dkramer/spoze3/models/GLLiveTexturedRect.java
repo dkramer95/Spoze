@@ -54,6 +54,6 @@ public class GLLiveTexturedRect extends GLTexturedRect {
 
     public void applyTransformations() {
         super.applyTransformations();
-        Matrix.rotateM(mModelMatrix, mMVPMatrixHandle, GLDeviceInfo.get(CURRENT_PITCH), 0, 0, 1);
+        Matrix.rotateM(mModelMatrix, mMVPMatrixHandle, GLDeviceInfo.getf(CURRENT_PITCH), 0, 0, 1);
     }
 }

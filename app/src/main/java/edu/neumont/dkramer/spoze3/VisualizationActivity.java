@@ -5,37 +5,17 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.widget.Toast;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.util.Random;
 
-import edu.neumont.dkramer.spoze3.converter.MotionCameraPreview;
-import edu.neumont.dkramer.spoze3.gl.GLCamera;
 import edu.neumont.dkramer.spoze3.gl.GLCameraActivity;
 import edu.neumont.dkramer.spoze3.gl.GLContext;
-import edu.neumont.dkramer.spoze3.gl.GLModel;
-import edu.neumont.dkramer.spoze3.gl.GLMotionCamera;
 import edu.neumont.dkramer.spoze3.gl.GLScene;
-import edu.neumont.dkramer.spoze3.gl.GLWorld;
-import edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo;
-import edu.neumont.dkramer.spoze3.models.GLLiveTexturedRect;
-import edu.neumont.dkramer.spoze3.models.GLTexturedRect;
 import edu.neumont.dkramer.spoze3.models.SignModel;
 
-import static android.opengl.GLES20.GL_RGBA;
-import static android.opengl.GLES20.GL_UNSIGNED_BYTE;
-import static android.opengl.GLES20.glReadPixels;
 import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Type.ROTATION_VECTOR;
 import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Type.TOUCH_INPUT;
-import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Value.CURRENT_TOUCH_NORMALIZED_X;
-import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Value.CURRENT_TOUCH_NORMALIZED_Y;
-import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Value.CURRENT_TOUCH_X;
-import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Value.CURRENT_TOUCH_Y;
-import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.get;
 
 public class VisualizationActivity extends GLCameraActivity {
     protected Bitmap mBitmap;
@@ -78,13 +58,6 @@ public class VisualizationActivity extends GLCameraActivity {
     @Override
     protected GLScene createGLScene() {
         final GLContext ctx = getGLContext();
-//        SignWorld2 world = new SignWorld2(ctx) {
-//            @Override
-//            public void create() {
-//                super.create();
-//            	SignModel.createInBackground(this, mBitmap, getWidth(), getHeight());
-//            }
-//        };
 
         TouchableWorld world = new TouchableWorld(ctx) {
         	@Override
@@ -104,173 +77,12 @@ public class VisualizationActivity extends GLCameraActivity {
 
         return new GLScene.Builder(ctx)
                 .setWorld(world)
-//		        .setCamera(GLMotionCamera.getDefault(ctx))
 		        .build();
-//        return new GLScene.Builder(ctx)
-//                .setWorld(new SignWorld(ctx))
-//                .setCamera(GLMotionCamera.getDefault(ctx))
-//                .build();
     }
 
     @Override
     protected int getLayoutId() {
         return R.layout.gl_camera_layout;
 //        return R.layout.gl_motion_camera_layout;
-    }
-
-    private static final Random rng = new Random();
-
-    private class SignWorld extends GLWorld implements GLDeviceInfo.OnUpdateListener {
-        private GLPixelPicker mPixelPicker;
-
-        public SignWorld(GLContext glContext) {
-            super(glContext);
-            init();
-        }
-
-        private void init() {
-            mPixelPicker = new GLPixelPicker();
-            mPixelPicker.setOnPixelReadListener((p) -> {
-                // check to see if we hit any of our models
-                Log.i("PIXEL_PICKER", "Pixel Read: " + Integer.toHexString(p));
-                float transX = get(CURRENT_TOUCH_NORMALIZED_X);
-                float transY = get(CURRENT_TOUCH_NORMALIZED_Y);
-
-                for (GLModel model : mModels) {
-                    SignModel signModel = (SignModel)model;
-                    if (signModel.didTouch(p)) {
-                        signModel.setTranslate(transX, transY);
-//                        signModel.translate(transX, transY);
-
-                    }
-                }
-                Log.i("TOUCH_INFO", String.format("TransX = %f, TransY = %f\n", transX, transY));
-
-            });
-            getGLContext().getDeviceInfo(TOUCH_INPUT).addOnUpdateListener(this);
-        }
-
-        @Override
-        public void create() {
-            SignModel.createInBackground(this, mBitmap, getWidth(), getHeight());
-//            SignModel.createInBackground(this, mTestBitmap, getWidth(), getHeight());
-        }
-
-        @Override
-        public void onUpdate(GLDeviceInfo.Type type) {
-            if (type == TOUCH_INPUT) {
-//                getGLContext().queueEvent(() -> {
-//                    mPixelPicker.readPixel((int)get(CURRENT_TOUCH_X), (int)get(CURRENT_TOUCH_Y),
-//                            getWidth(), getHeight());
-//                });
-                float transX = get(CURRENT_TOUCH_NORMALIZED_X);
-                float transY = get(CURRENT_TOUCH_NORMALIZED_Y);
-                for (GLModel model : mModels) {
-                    SignModel signModel = (SignModel)model;
-                        signModel.setTranslate(transX, transY);
-                    }
-                }
-            }
-        }
-
-
-
-    private class MyScene extends GLScene {
-
-        public MyScene(GLContext ctx) {
-            super(ctx);
-        }
-
-        @Override
-        public GLWorld createWorld() {
-            final GLContext ctx = getGLContext();
-        	return new GLWorld(ctx) {
-        		float angle = 0f;
-                @Override
-                public void create() {
-//                    GLTrackPoints.addPoint(fromCoords(0, 0, 0, 1, 0, 0, 1));
-
-//                    addModel(GLLiveTexturedRect.createFromBitmap(ctx, mBitmap, getWidth(), getHeight()));
-                    addModel(GLTexturedRect.createFromBitmap(ctx, mBitmap, getWidth(), getHeight()));
-
-//                    addModel(GLSquare.create(ctx));
-//                    addModel(GLPoint.create(ctx, 1, 1, 0));
-
-//                    for (int j = 0; j < 30; ++j) {
-//                        float x = -1f + (rng.nextFloat() * 2f);
-//                        float y = -1f + (rng.nextFloat() * 2f);
-//                        float z = -1f + (rng.nextFloat() * 2f);
-//                        float r = rng.nextFloat();
-//                        float g = rng.nextFloat();
-//                        float b = rng.nextFloat();
-//                        float a = rng.nextFloat();
-//                        GLTrackPoints.addPoint(fromCoords(x, y, z, r, g, b, a));
-//                    }
-//                    GLTrackPoints trackPoints = GLTrackPoints.getInstance(ctx);
-//                    addModel(trackPoints);
-
-//                    for (int j = 0; j < 20; ++j) {
-//                    	float randX = rng.nextFloat();
-//                        float randY = rng.nextFloat();
-//
-//                        addModel(GLPoint.create(ctx, randX, randY, 0));
-//                    }
-
-//                    addModel(new GLPoint(ctx));
-                }
-                ByteBuffer colorBuffer = ByteBuffer.allocate(4).order(ByteOrder.nativeOrder());
-                byte[] byteArray = new byte[4];
-                final int clearBits = 0x00010101;
-                final int pattern = 0x00010100;
-                @Override
-                public void render(GLCamera camera) {
-//                    angle += 0.5f;
-//                    camera.rotate(angle, 1f, 0f, 1f);
-                    super.render(camera);
-
-                    // color test
-                    colorBuffer.rewind();
-                    int x = (int)get(CURRENT_TOUCH_X);
-                    // invert y coordinate
-                    int y = getHeight() - (int)get(CURRENT_TOUCH_Y);
-
-                    glReadPixels(x, y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, colorBuffer);
-                    colorBuffer.get(byteArray);
-
-                    int r = ((int)byteArray[0]) & 0xFF;
-                    int g = ((int)byteArray[1]) & 0xFF;
-                    int b = ((int)byteArray[2]) & 0xFF;
-                    int a = ((int)byteArray[3]) & 0xFF;
-
-                    // recreate pixel value
-                    int pixel = (a << 24) + (r << 16) + (g << 8) + b;
-
-                    if (((pixel ^ pattern) & clearBits) == 0)
-                        Log.i("PIXEL_TOUCH", "HIT TARGET:: " + Integer.toHexString(pixel));
-                    }
-
-//                    generateTest(mModels.get(0));
-                float counter = 0;
-
-                protected void generateTest(GLModel model) {
-                    if (counter > 2) {
-                        if (MotionCameraPreview.sImage != null) {
-                            // do stuff
-                            counter = 0;
-                            GLLiveTexturedRect rect = (GLLiveTexturedRect)model;
-                            rect.update(MotionCameraPreview.sImage);
-                        }
-//                            removeModel(model);
-//                            model = GLTexturedRect.createFromBitmap(ctx, MotionCameraPreview.sImage, getWidth(), getHeight());
-//                            addModel(model);
-                    }
-                    ++counter;
-                }
-            };
-        }
-
-        public GLCamera createGLCamera() {
-        	return GLMotionCamera.getDefault(getGLContext());
-        }
     }
 }

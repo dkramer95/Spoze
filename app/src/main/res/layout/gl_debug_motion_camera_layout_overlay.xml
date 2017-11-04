@@ -16,29 +16,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <LinearLayout
+
+        <!-- Swap between different toolbar layouts -->
+        <ViewFlipper
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/background_dark"
-            android:orientation="horizontal">
+            android:id="@+id/toolbarFlipper">
 
-            <Button
-                android:id="@+id/calibrateButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:onClick="calibrateButtonClicked"
-                android:text="Calibrate" />
-
-            <Button
-                android:id="@+id/button2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:onClick="testButtonClicked"
-                android:text="TEST" />
-
-        </LinearLayout>
+            <include layout="@layout/sign_toolbar"/>
+            <include layout="@layout/normal_toolbar"/>
+        </ViewFlipper>
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"

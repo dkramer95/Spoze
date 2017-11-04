@@ -58,6 +58,10 @@ public abstract class GLWorld extends GLObject {
         }
     }
 
+    public Iterator<GLModel> getModelIterator() {
+        return mModels.iterator();
+    }
+
     public int getWidth() {
         return mWidth;
     }
@@ -73,7 +77,7 @@ public abstract class GLWorld extends GLObject {
     }
 
     public void removeAllModels() {
-        Iterator<GLModel> iter = mModels.iterator();
+        Iterator<GLModel> iter = getModelIterator();
         while (iter.hasNext()) {
             GLModel model = iter.next();
             iter.remove();

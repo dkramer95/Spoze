@@ -5,13 +5,11 @@ import android.util.Log;
 import edu.neumont.dkramer.spoze3.gl.GLContext;
 import edu.neumont.dkramer.spoze3.gl.GLWorld;
 import edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo;
-import edu.neumont.dkramer.spoze3.gl.deviceinfo.GLTouchInfo;
-import edu.neumont.dkramer.spoze3.models.SignModel;
 
 import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Type.TOUCH_INPUT;
 import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Value.CURRENT_TOUCH_X;
 import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Value.CURRENT_TOUCH_Y;
-import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.get;
+import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.getf;
 
 /**
  * Created by dkramer on 11/3/17.
@@ -46,7 +44,7 @@ public abstract class SignWorld2 extends GLWorld implements GLDeviceInfo.OnUpdat
 	public void onUpdate(GLDeviceInfo.Type type) {
 		getGLContext().queueEvent(() -> {
 			if (type == TOUCH_INPUT) {
-				mPixelPicker.readPixel((int)get(CURRENT_TOUCH_X), (int)get(CURRENT_TOUCH_Y),
+				mPixelPicker.readPixel((int) getf(CURRENT_TOUCH_X), (int) getf(CURRENT_TOUCH_Y),
 						getWidth(), getHeight());
 			}
 		});

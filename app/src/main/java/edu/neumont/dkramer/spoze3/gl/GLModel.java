@@ -28,6 +28,9 @@ public abstract class GLModel extends GLObject {
     // the id of our model
     protected final int mId;
 
+    protected float mTransX;
+    protected float mTransY;
+    protected float mTransZ;
 
 
 

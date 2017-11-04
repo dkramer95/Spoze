@@ -32,16 +32,16 @@ public class GLAccelerometerInfo extends GLMotionInfo {
 
     @Override
     protected void updatePreviousValues() {
-        set(LAST_ACCEL_X, get(CURRENT_ACCEL_X));
-        set(LAST_ACCEL_Y, get(CURRENT_ACCEL_Y));
-        set(LAST_ACCEL_Z, get(CURRENT_ACCEL_Z));
+        set(LAST_ACCEL_X, getf(CURRENT_ACCEL_X));
+        set(LAST_ACCEL_Y, getf(CURRENT_ACCEL_Y));
+        set(LAST_ACCEL_Z, getf(CURRENT_ACCEL_Z));
     }
 
     @Override
     public void calibrate() {
-        set(CALIBRATED_ACCEL_X, get(CURRENT_ACCEL_X));
-        set(CALIBRATED_ACCEL_Y, get(CURRENT_ACCEL_Y));
-        set(CALIBRATED_ACCEL_Z, get(CURRENT_ACCEL_Z));
+        set(CALIBRATED_ACCEL_X, getf(CURRENT_ACCEL_X));
+        set(CALIBRATED_ACCEL_Y, getf(CURRENT_ACCEL_Y));
+        set(CALIBRATED_ACCEL_Z, getf(CURRENT_ACCEL_Z));
     }
 
     @Override

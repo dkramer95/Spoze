@@ -175,19 +175,13 @@ public abstract class SignModel extends GLTexturedRect {
         return null;
     }
 
-    // testing
-    protected float mTransX;
-    protected float mTransY;
-
-    public void setTranslate(float transX, float transY) {
+    public void translate(float x, float y, float z) {
         //TODO this works fine in portrait mode, but in landscape it is off!!
         //TODO::: determine the orientation and determine the scale factor to apply
         //TODO:: also, need to compensate for the offset of the GLMotionCamera position
-        mTransX = transX + (mWidth / 2);
+        mTransX = x + (mWidth / 2);
 
         // this works well
-        mTransY = (mHeight / 2) + (transY * 2f);
-
-        Log.i("SIGN_MODEL", "TransX: " + mTransX + ", TransY: " + mTransY);
+        mTransY = (mHeight / 2) + (y * 2f);
     }
 }
