@@ -2,7 +2,6 @@ package edu.neumont.dkramer.spoze3.gl;
 
 import android.opengl.Matrix;
 
-import edu.neumont.dkramer.spoze3.VisualizationActivity;
 import edu.neumont.dkramer.spoze3.geometry.Point3f;
 import edu.neumont.dkramer.spoze3.geometry.Ray;
 import edu.neumont.dkramer.spoze3.geometry.Vector3f;
@@ -115,6 +114,10 @@ public abstract class GLScene extends GLObject {
         vector[0] /= vector[3];
         vector[1] /= vector[3];
         vector[2] /= vector[3];
+    }
+
+    public void stop() {
+        getWorld().removeAllModels();
     }
 
     public static class Builder {

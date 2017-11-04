@@ -90,6 +90,7 @@ public abstract class SignModel extends GLTexturedRect {
                     protected GLProgram createGLProgram() {
                         GLProgram glProgram = loadProgram(ctx);
                         loadTexture(bmp);
+                        bmp.recycle();
                         return glProgram;
                     }
                 };

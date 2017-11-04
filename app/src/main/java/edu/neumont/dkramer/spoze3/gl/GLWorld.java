@@ -1,6 +1,7 @@
 package edu.neumont.dkramer.spoze3.gl;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -71,4 +72,12 @@ public abstract class GLWorld extends GLObject {
         }
     }
 
+    public void removeAllModels() {
+        Iterator<GLModel> iter = mModels.iterator();
+        while (iter.hasNext()) {
+            GLModel model = iter.next();
+            iter.remove();
+            model.delete();
+        }
+    }
 }

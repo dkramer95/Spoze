@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.PixelFormat;
 import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
+import android.util.Log;
 
 /**
  * Created by dkramer on 10/20/17.
@@ -48,5 +49,11 @@ public class GLView extends GLSurfaceView {
 
     public void setScene(GLScene scene) {
         mScene = scene;
+    }
+
+    public void stop() {
+        // stop continuous rendering!
+        setRenderMode(RENDERMODE_WHEN_DIRTY);
+        getScene().stop();
     }
 }

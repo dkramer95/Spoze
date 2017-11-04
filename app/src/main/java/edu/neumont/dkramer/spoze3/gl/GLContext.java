@@ -84,6 +84,7 @@ public final class GLContext extends Context {
         for (GLDeviceInfo i : mDeviceInfo.values()) {
             i.stop();
         }
+        getGLView().stop();
     }
 
     public GLDeviceInfo enableDeviceInfo(GLDeviceInfo.Type infoType) {
