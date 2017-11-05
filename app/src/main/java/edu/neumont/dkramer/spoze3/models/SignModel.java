@@ -2,14 +2,11 @@ package edu.neumont.dkramer.spoze3.models;
 
 import android.graphics.Bitmap;
 import android.opengl.Matrix;
-import android.util.Log;
 
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Stack;
 
-import edu.neumont.dkramer.spoze3.gl.GLCamera;
+import edu.neumont.dkramer.spoze3.geometry.Point3f;
 import edu.neumont.dkramer.spoze3.gl.GLContext;
 import edu.neumont.dkramer.spoze3.gl.GLProgram;
 import edu.neumont.dkramer.spoze3.gl.GLWorld;
@@ -105,14 +102,6 @@ public abstract class SignModel extends GLTexturedRect {
         Matrix.translateM(mModelMatrix, 0, mTransX, mTransY, 0);
     }
 
-    public void render(GLCamera camera) {
-        super.render(camera);
-    }
-
-//    public void translate(float x, float y) {
-//        Matrix.translateM(mModelMatrix, 0, x, y, 0);
-//    }
-
     public void delete() {
         super.delete();
         AVAILABLE_BIT_PATTERNS.push(getBitPattern());
@@ -176,12 +165,13 @@ public abstract class SignModel extends GLTexturedRect {
     }
 
     public void translate(float x, float y, float z) {
+        Point3f cameraEye = getWorld().getCamera().getEye();
+
         //TODO this works fine in portrait mode, but in landscape it is off!!
         //TODO::: determine the orientation and determine the scale factor to apply
-        //TODO:: also, need to compensate for the offset of the GLMotionCamera position
-        mTransX = x + (mWidth / 2);
+        mTransX = x + (mWidth / 2) + cameraEye.x;
 
         // this works well
-        mTransY = (mHeight / 2) + (y * 2f);
+        mTransY = (mHeight / 2) + (y * 2f) + cameraEye.y;
     }
 }

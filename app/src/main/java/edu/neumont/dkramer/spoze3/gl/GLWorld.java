@@ -12,6 +12,7 @@ public abstract class GLWorld extends GLObject {
     protected int mWidth;
     protected int mHeight;
     protected List<GLModel> mModels;
+    protected GLCamera mCamera;
 
 
 
@@ -24,7 +25,9 @@ public abstract class GLWorld extends GLObject {
      * Method to be implemented that creates all necessary models
      * for this world
      */
-    public abstract void create();
+    public void create() {
+        mCamera = getGLContext().getGLView().getScene().getCamera();
+    }
 
     public void setSize(int width, int height) {
         mWidth = width;
@@ -83,5 +86,9 @@ public abstract class GLWorld extends GLObject {
             iter.remove();
             model.delete();
         }
+    }
+
+    public GLCamera getCamera() {
+        return mCamera;
     }
 }

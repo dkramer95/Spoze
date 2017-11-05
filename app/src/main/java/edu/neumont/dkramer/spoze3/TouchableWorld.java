@@ -32,6 +32,7 @@ public class TouchableWorld extends GLWorld implements TouchSelectionHandler.OnM
 
 	@Override
 	public void create() {
+		super.create();
 		mTouchHandler = new TouchSelectionHandler(this);
 		mTouchHandler.setOnModelSelectionListener(this);
 	}

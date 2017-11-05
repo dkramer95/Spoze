@@ -11,6 +11,7 @@ import java.io.IOException;
 
 import edu.neumont.dkramer.spoze3.gl.GLCameraActivity;
 import edu.neumont.dkramer.spoze3.gl.GLContext;
+import edu.neumont.dkramer.spoze3.gl.GLMotionCamera;
 import edu.neumont.dkramer.spoze3.gl.GLScene;
 import edu.neumont.dkramer.spoze3.models.SignModel;
 
@@ -77,6 +78,7 @@ public class VisualizationActivity extends GLCameraActivity {
 
         return new GLScene.Builder(ctx)
                 .setWorld(world)
+                .setCamera(GLMotionCamera.getDefault(ctx))
 		        .build();
     }
 

@@ -16,6 +16,9 @@ public abstract class GLModel extends GLObject {
     // open gl buffer array
     protected final GLVertexArray mVertexArray;
 
+    // world that this model exists in
+    protected GLWorld mWorld;
+
     // move this model into world space
     protected final float[] mModelMatrix = new float[16];
 
@@ -39,6 +42,7 @@ public abstract class GLModel extends GLObject {
         mVertexData = vertexData;
         mVertexArray = new GLVertexArray(vertexData);
         mGLProgram = createGLProgram();
+        mWorld = glContext.getGLView().getScene().getWorld();
         mId = ++sInstanceCounter;
     }
 
@@ -110,6 +114,10 @@ public abstract class GLModel extends GLObject {
 
     public float[] getVertexData() {
         return mVertexData;
+    }
+
+    public GLWorld getWorld() {
+        return mWorld;
     }
 
     public GLProgram getGLProgram() {

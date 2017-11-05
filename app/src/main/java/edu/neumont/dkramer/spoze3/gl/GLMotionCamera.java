@@ -1,5 +1,7 @@
 package edu.neumont.dkramer.spoze3.gl;
 
+import android.util.Log;
+
 import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Value.CALIBRATED_PITCH;
 import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Value.CALIBRATED_YAW;
 import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Value.CURRENT_PITCH;
@@ -30,6 +32,8 @@ public class GLMotionCamera extends GLCamera {
         //TODO check orientation to determine offset value... instead of magic 5
 		mEye.x = (mLook.x + (getf(CALIBRATED_YAW) - getf(CURRENT_YAW)) * -5f);
 		mEye.y = (mLook.y + (getf(CALIBRATED_PITCH) - getf(CURRENT_PITCH)) * 5f);
+
+		Log.i("GL_MOTION", String.format("EyeX: %f, EyeY: %f, EyeZ: %f\n", mEye.x, mEye.y, mEye.z));
 
 		super.update();
 	}

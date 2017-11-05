@@ -37,6 +37,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:background="@android:color/background_dark"
+        android:onClick="deleteModelButtonClicked"
         android:text="x"
         android:textColor="@android:color/background_light" />
 
