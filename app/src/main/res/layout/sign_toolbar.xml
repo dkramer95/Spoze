@@ -10,6 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:background="@android:color/background_dark"
+        android:onClick="rotateCounterClockwiseButtonClicked"
         android:text="CCW"
         android:textColor="@android:color/background_light" />
 
@@ -19,6 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:background="@android:color/background_dark"
+        android:onClick="rotateClockwiseButtonClicked"
         android:text="CW"
         android:textColor="@android:color/background_light" />
 

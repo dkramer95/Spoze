@@ -65,11 +65,6 @@ public class VisualizationActivity extends GLCameraActivity {
             public void create() {
                 super.create();
 //                SignModel.createInBackground(this, mBitmap, getWidth(), getHeight());
-
-                // testing additional models
-//                SignModel.createInBackground(this, mTestBitmap, getWidth(), getHeight());
-//                SignModel.createInBackground(this, mTest2Bitmap, getWidth(), getHeight());
-                // testing same image
                 SignModel.createInBackground(this, mTest2Bitmap, getWidth(), getHeight());
                 SignModel.createInBackground(this, mTest3Bitmap, getWidth(), getHeight());
                 SignModel.createInBackground(this, mTest3Bitmap, getWidth(), getHeight());
@@ -85,6 +80,5 @@ public class VisualizationActivity extends GLCameraActivity {
     @Override
     protected int getLayoutId() {
         return R.layout.gl_camera_layout;
-//        return R.layout.gl_motion_camera_layout;
     }
 }

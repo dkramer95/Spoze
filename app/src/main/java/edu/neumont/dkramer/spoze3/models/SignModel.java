@@ -59,6 +59,7 @@ public abstract class SignModel extends GLTexturedRect {
 
     protected final int mBitPattern;
 
+    protected float mRotation;
 
 
 
@@ -100,6 +101,7 @@ public abstract class SignModel extends GLTexturedRect {
     protected void applyTransformations() {
         super.applyTransformations();
         Matrix.translateM(mModelMatrix, 0, mTransX, mTransY, 0);
+        Matrix.rotateM(mModelMatrix, 0, mRotation, 0, 0, 1);
     }
 
     public void delete() {
@@ -173,5 +175,9 @@ public abstract class SignModel extends GLTexturedRect {
 
         // this works well
         mTransY = (mHeight / 2) + (y * 2f) + cameraEye.y;
+    }
+
+    public void rotate(int angle) {
+        mRotation += angle;
     }
 }

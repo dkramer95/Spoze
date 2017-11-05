@@ -82,6 +82,20 @@ public class DebugVisualizationActivity extends VisualizationActivity {
         Toast.makeText(this, "Deleted Model", Toast.LENGTH_SHORT).show();
     }
 
+    public void rotateClockwiseButtonClicked(View view) {
+        TouchableWorld world = (TouchableWorld)getGLContext().getGLView().getScene().getWorld();
+        getGLContext().queueEvent(() -> {
+            world.getSelectedModel().rotate(-90);
+        });
+    }
+
+    public void rotateCounterClockwiseButtonClicked(View view) {
+        TouchableWorld world = (TouchableWorld)getGLContext().getGLView().getScene().getWorld();
+        getGLContext().queueEvent(() -> {
+            world.getSelectedModel().rotate(90);
+        });
+    }
+
     public void hiddenButtonClicked(View view) {
         getGLContext().getGLView().setVisibility(View.VISIBLE);
         findViewById(R.id.hiddenOverlay).setVisibility(View.INVISIBLE);
