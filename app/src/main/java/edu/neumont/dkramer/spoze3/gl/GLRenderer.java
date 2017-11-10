@@ -3,6 +3,8 @@ package edu.neumont.dkramer.spoze3.gl;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
+import edu.neumont.dkramer.spoze3.GLPixelPicker;
+
 /**
  * Created by dkramer on 10/20/17.
  */
@@ -10,6 +12,7 @@ import javax.microedition.khronos.opengles.GL10;
 public class GLRenderer implements GLView.Renderer {
     protected GLView mView;
     protected GLScene mScene;
+    protected GLPixelPicker mPixelPicker;
 
 
 
@@ -27,6 +30,7 @@ public class GLRenderer implements GLView.Renderer {
     @Override
     public void onSurfaceChanged(GL10 glUnused, int width, int height) {
         mScene.refreshSize(width, height);
+        mPixelPicker = new GLPixelPicker(width, height);
     }
 
     @Override

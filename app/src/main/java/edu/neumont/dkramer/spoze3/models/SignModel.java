@@ -74,7 +74,7 @@ public abstract class SignModel extends GLTexturedRect {
             final GLContext ctx = world.getGLContext();
             final Bitmap bmp = getFittedBitmap(src, maxWidth, maxHeight);
             final int bitPattern = getNextBitPattern();
-            applyBitPatternToBitmap(bmp, bitPattern);
+//            applyBitPatternToBitmap(bmp, bitPattern);
 
             final float[] scaledSizes = getScaledSizes(bmp.getWidth(), bmp.getHeight(), maxWidth, maxHeight);
             final float width = scaledSizes[0];

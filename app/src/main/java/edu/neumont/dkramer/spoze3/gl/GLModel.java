@@ -2,11 +2,16 @@ package edu.neumont.dkramer.spoze3.gl;
 
 import android.opengl.Matrix;
 
+import java.util.Random;
+
 /**
  * Created by dkramer on 10/20/17.
  */
 
 public abstract class GLModel extends GLObject {
+    // random number generator for creating pixel id's
+    private static final Random rng = new Random();
+
     // counter that will be used to assign ID's to all created models
 	private static int sInstanceCounter;
 
@@ -31,6 +36,9 @@ public abstract class GLModel extends GLObject {
     // the id of our model
     protected final int mId;
 
+    // unique pixel identifier that will be used for object selection detection
+    protected final int mPixelId;
+
     protected float mTransX;
     protected float mTransY;
     protected float mTransZ;
@@ -44,6 +52,7 @@ public abstract class GLModel extends GLObject {
         mGLProgram = createGLProgram();
         mWorld = glContext.getGLView().getScene().getWorld();
         mId = ++sInstanceCounter;
+        mPixelId = generatePixelId();
     }
 
     /*
@@ -93,6 +102,15 @@ public abstract class GLModel extends GLObject {
     }
 
     /*
+     * Method to be implemented that handles drawing our pixel identifier
+     */
+    public void drawSelector(GLCamera camera) {
+        //TODO implement me! -- just drawing normal for now
+        draw(camera);
+//        render(camera);
+    }
+
+    /*
      * Method that can be overwritten to perform any cleanup actions
      * necessary when it has been removed from a world.
      */
@@ -126,5 +144,13 @@ public abstract class GLModel extends GLObject {
 
     public int getId() {
         return mId;
+    }
+
+    public int getPixelId() {
+        return mPixelId;
+    }
+
+    private static int generatePixelId() {
+        return 0xFF000000 + rng.nextInt(0xFFFFFF);
     }
 }

@@ -6,6 +6,8 @@ import android.view.View;
 import java.util.Iterator;
 
 import edu.neumont.dkramer.spoze3.gl.GLModel;
+import edu.neumont.dkramer.spoze3.gl.GLScene;
+import edu.neumont.dkramer.spoze3.gl.GLView;
 import edu.neumont.dkramer.spoze3.gl.GLWorld;
 import edu.neumont.dkramer.spoze3.gl.deviceinfo.GLTouchInfo;
 import edu.neumont.dkramer.spoze3.models.SignModel;
@@ -26,6 +28,7 @@ public class TouchSelectionHandler implements View.OnTouchListener, GLPixelPicke
 
 
 
+    protected GLView mView;
     protected GLWorld mWorld;
     protected SignModel mSelectedModel;
     protected GLPixelPicker mPixelPicker;
@@ -37,9 +40,21 @@ public class TouchSelectionHandler implements View.OnTouchListener, GLPixelPicke
 
 
 
+    public TouchSelectionHandler(GLView view) {
+        mView = view;
+        mView.setOnTouchListener(this);
+
+        GLTouchInfo info = (GLTouchInfo)view.getGLContext().getDeviceInfo(TOUCH_INPUT);
+        info.addOnTouchListener(this);
+
+        // default.. does nothing
+        mModelSelectionListener = new OnModelSelectionListener() { };
+    }
+
 
     public TouchSelectionHandler(GLWorld world) {
         mWorld = world;
+        mView = world.getGLContext().getGLView();
         mPixelPicker = new GLPixelPicker();
         mPixelPicker.setOnPixelReadListener(this);
 
@@ -55,10 +70,16 @@ public class TouchSelectionHandler implements View.OnTouchListener, GLPixelPicke
     }
 
     protected void checkModelSelection() {
-        mWorld.getGLContext().queueEvent(() -> {
-            mPixelPicker.readPixel(geti(CURRENT_TOUCH_X), geti(CURRENT_TOUCH_Y),
-                    mWorld.getWidth(), mWorld.getHeight());
+        GLScene scene = mView.getScene();
+
+        scene.addGLEvent(() -> {
+            scene.readPixel(geti(CURRENT_TOUCH_X), geti(CURRENT_TOUCH_Y));
         });
+
+//        mWorld.getGLContext().queueEvent(() -> {
+//            mPixelPicker.readPixel(geti(CURRENT_TOUCH_X), geti(CURRENT_TOUCH_Y),
+//                    mWorld.getWidth(), mWorld.getHeight());
+//        });
     }
 
     @Override

@@ -1,7 +1,15 @@
 package edu.neumont.dkramer.spoze3.gl;
 
 import android.opengl.Matrix;
+import android.util.Log;
 
+import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
+import java.util.Iterator;
+import java.util.List;
+import java.util.concurrent.ArrayBlockingQueue;
+
+import edu.neumont.dkramer.spoze3.GLPixelPicker;
 import edu.neumont.dkramer.spoze3.geometry.Point3f;
 import edu.neumont.dkramer.spoze3.geometry.Ray;
 import edu.neumont.dkramer.spoze3.geometry.Vector3f;
@@ -24,11 +32,19 @@ import static android.opengl.GLES20.glEnable;
  */
 
 public abstract class GLScene extends GLObject {
+    private static final String TAG = "GLScene";
+
     protected final float[] mInvertedViewProjectionMatrix = new float[16];
 
     protected FPSCounter mFPSCounter;
     protected GLCamera mGLCamera;
     protected GLWorld mWorld;
+    protected GLPixelPicker mPixelPicker;
+    protected int mWidth;
+    protected int mHeight;
+
+    // special events that need to be executed during rendering (i.e. pixel selection)
+    protected ArrayBlockingQueue<GLEvent> mEvents;
 
 
 
@@ -37,6 +53,7 @@ public abstract class GLScene extends GLObject {
         mGLCamera = createGLCamera();
         mWorld = createWorld();
         mFPSCounter = new FPSCounter();
+        mEvents = new ArrayBlockingQueue(8);
     }
 
     public abstract GLWorld createWorld();
@@ -45,15 +62,21 @@ public abstract class GLScene extends GLObject {
     public void render() {
         clearScreen();
         mGLCamera.update();
+
+        for (GLEvent e : mEvents) {
+            e.run();
+            mEvents.remove(e);
+        }
+
         mWorld.render(mGLCamera);
         mFPSCounter.logFrame();
-
         Matrix.invertM(mInvertedViewProjectionMatrix, 0, mGLCamera.getProjectionMatrix(), 0);
     }
 
     public void refreshSize(int width, int height) {
         getWorld().setSize(width, height);
         getCamera().refreshSize(width, height);
+        mPixelPicker = new GLPixelPicker(width, height);
     }
 
     protected void clearScreen() {
@@ -66,6 +89,18 @@ public abstract class GLScene extends GLObject {
         glDisable(GL_BLEND);
     }
 
+    public void readPixel(int x, int y) {
+        mPixelPicker.enable();
+        Iterator<GLModel> models = getWorld().getModelIterator();
+        while (models.hasNext()) {
+            GLModel model = models.next();
+            model.drawSelector(getCamera());
+        }
+        int pixel = mPixelPicker.readPixel(x, y);
+        Log.i(TAG, "Pixel value readout => " + Integer.toHexString(pixel));
+        mPixelPicker.disable();
+    }
+
     public GLWorld getWorld() {
         return mWorld;
     }
@@ -76,6 +111,19 @@ public abstract class GLScene extends GLObject {
 
     public GLCamera getCamera() {
         return mGLCamera;
+    }
+
+    public int getWidth() {
+        return mWidth;
+    }
+
+    public int getHeight() {
+        return mHeight;
+    }
+
+
+    public void addGLEvent(GLEvent e) {
+        mEvents.add(e);
     }
 
     public void handleTouchPress(float normalizedX, float normalizedY) {
