@@ -238,4 +238,9 @@ public abstract class GLTexturedRect extends GLModel {
         Bitmap scaledBmp = Bitmap.createScaledBitmap(bmp, newWidth, newHeight, false);
         return scaledBmp;
     }
+
+    @Override
+    public int getStride() {
+        return STRIDE;
+    }
 }

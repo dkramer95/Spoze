@@ -150,6 +150,10 @@ public abstract class GLModel extends GLObject {
         return mPixelId;
     }
 
+    public int getStride() {
+        throw new UnsupportedOperationException(getClass() + "should implement me to return correct value!");
+    }
+
     private static int generatePixelId() {
         return 0xFF000000 + rng.nextInt(0xFFFFFF);
     }
