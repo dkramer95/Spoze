@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 
 import edu.neumont.dkramer.spoze3.GLPixelPicker;
+import edu.neumont.dkramer.spoze3.TouchSelectionHandler;
 import edu.neumont.dkramer.spoze3.geometry.Point3f;
 import edu.neumont.dkramer.spoze3.geometry.Ray;
 import edu.neumont.dkramer.spoze3.geometry.Vector3f;
@@ -40,6 +41,7 @@ public abstract class GLScene extends GLObject {
     protected GLCamera mGLCamera;
     protected GLWorld mWorld;
     protected GLPixelPicker mPixelPicker;
+    protected TouchSelectionHandler mTouchHandler;
     protected int mWidth;
     protected int mHeight;
 
@@ -77,6 +79,9 @@ public abstract class GLScene extends GLObject {
         getWorld().setSize(width, height);
         getCamera().refreshSize(width, height);
         mPixelPicker = new GLPixelPicker(width, height);
+
+        // TODO probably shouldn't be here
+        mTouchHandler = new TouchSelectionHandler(getGLContext().getGLView(), mPixelPicker);
     }
 
     protected void clearScreen() {

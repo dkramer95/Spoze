@@ -3,7 +3,6 @@ package edu.neumont.dkramer.spoze3.models;
 import android.graphics.Bitmap;
 import android.opengl.Matrix;
 
-import edu.neumont.dkramer.spoze3.GLPickerModel;
 import edu.neumont.dkramer.spoze3.R;
 import edu.neumont.dkramer.spoze3.geometry.Point3f;
 import edu.neumont.dkramer.spoze3.gl.GLCamera;
@@ -47,6 +46,10 @@ public abstract class SignModel2 extends GLTexturedRect {
     @Override
     public void drawSelector(GLCamera camera) {
         mPickerModel.render(camera);
+    }
+
+    public boolean didTouch(int pixel) {
+        return mPickerModel.getPixelId() == pixel;
     }
 
     protected void applyTransformations() {

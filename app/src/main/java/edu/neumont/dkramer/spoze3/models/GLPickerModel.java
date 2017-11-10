@@ -1,7 +1,9 @@
-package edu.neumont.dkramer.spoze3;
+package edu.neumont.dkramer.spoze3.models;
 
 import java.nio.FloatBuffer;
+import java.util.Random;
 
+import edu.neumont.dkramer.spoze3.R;
 import edu.neumont.dkramer.spoze3.gl.GLCamera;
 import edu.neumont.dkramer.spoze3.gl.GLContext;
 import edu.neumont.dkramer.spoze3.gl.GLModel;
@@ -18,19 +20,23 @@ import static android.opengl.GLES20.glUniformMatrix4fv;
  */
 
 public class GLPickerModel extends GLModel {
+    // random number generator for creating pixel id's
+    private static final Random rng = new Random();
+
     protected int mPickerHandle;
     protected int mPickingMVPMatrixHandle;
     protected int mPickingPositionHandle;
     protected GLModel mSourceModel;
     protected final FloatBuffer mColorBuffer;
-
-
+    protected final int mPixelId;
 
 
     public GLPickerModel(GLContext glContext, GLModel sourceModel) {
         super(glContext, sourceModel.getVertexData());
-        //TODO make this unique
-        mColorBuffer = FloatBuffer.wrap(new float[]{ 0.1f });
+        float value = rng.nextFloat();
+        mPixelId = Math.round(Integer.MAX_VALUE * value) & 0xFF000000;
+
+        mColorBuffer = FloatBuffer.wrap(new float[]{ value });
         mSourceModel = sourceModel;
     }
 
@@ -66,5 +72,9 @@ public class GLPickerModel extends GLModel {
     @Override
     protected void enableAttributes() {
         mVertexArray.setVertexAttribPointer(0, mPickingPositionHandle, 2, mSourceModel.getStride());
+    }
+
+    public int getPixelId() {
+        return mPixelId;
     }
 }

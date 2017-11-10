@@ -11,6 +11,7 @@ import edu.neumont.dkramer.spoze3.gl.GLView;
 import edu.neumont.dkramer.spoze3.gl.GLWorld;
 import edu.neumont.dkramer.spoze3.gl.deviceinfo.GLTouchInfo;
 import edu.neumont.dkramer.spoze3.models.SignModel;
+import edu.neumont.dkramer.spoze3.models.SignModel2;
 
 import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Type.TOUCH_INPUT;
 import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Value.CURRENT_TOUCH_X;
@@ -30,7 +31,7 @@ public class TouchSelectionHandler implements View.OnTouchListener, GLPixelPicke
 
     protected GLView mView;
     protected GLWorld mWorld;
-    protected SignModel mSelectedModel;
+    protected SignModel2 mSelectedModel;
     protected GLPixelPicker mPixelPicker;
     protected OnModelSelectionListener mModelSelectionListener;
 
@@ -40,9 +41,12 @@ public class TouchSelectionHandler implements View.OnTouchListener, GLPixelPicke
 
 
 
-    public TouchSelectionHandler(GLView view) {
+    public TouchSelectionHandler(GLView view, GLPixelPicker picker) {
         mView = view;
-        mView.setOnTouchListener(this);
+//        mView.setOnTouchListener(this);
+        mPixelPicker = picker;
+        mWorld = view.getScene().getWorld();
+        picker.setOnPixelReadListener(this);
 
         GLTouchInfo info = (GLTouchInfo)view.getGLContext().getDeviceInfo(TOUCH_INPUT);
         info.addOnTouchListener(this);
@@ -55,8 +59,6 @@ public class TouchSelectionHandler implements View.OnTouchListener, GLPixelPicke
     public TouchSelectionHandler(GLWorld world) {
         mWorld = world;
         mView = world.getGLContext().getGLView();
-        mPixelPicker = new GLPixelPicker();
-        mPixelPicker.setOnPixelReadListener(this);
 
         GLTouchInfo info = (GLTouchInfo)world.getGLContext().getDeviceInfo(TOUCH_INPUT);
         info.addOnTouchListener(this);
@@ -122,7 +124,7 @@ public class TouchSelectionHandler implements View.OnTouchListener, GLPixelPicke
         Iterator<GLModel> iter = mWorld.getModelIterator();
 
         while (iter.hasNext() && mSelectedModel == null) {
-            SignModel model = (SignModel)iter.next();
+            SignModel2 model = (SignModel2)iter.next();
             if (model.didTouch(pixel)) {
                 mSelectedModel = model;
                 mModelSelectionListener.onFirstSelect(mSelectedModel);

@@ -4,6 +4,7 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 import edu.neumont.dkramer.spoze3.GLPixelPicker;
+import edu.neumont.dkramer.spoze3.TouchSelectionHandler;
 
 /**
  * Created by dkramer on 10/20/17.
@@ -12,8 +13,6 @@ import edu.neumont.dkramer.spoze3.GLPixelPicker;
 public class GLRenderer implements GLView.Renderer {
     protected GLView mView;
     protected GLScene mScene;
-    protected GLPixelPicker mPixelPicker;
-
 
 
     public GLRenderer(GLView view) {
@@ -30,7 +29,6 @@ public class GLRenderer implements GLView.Renderer {
     @Override
     public void onSurfaceChanged(GL10 glUnused, int width, int height) {
         mScene.refreshSize(width, height);
-        mPixelPicker = new GLPixelPicker(width, height);
     }
 
     @Override
