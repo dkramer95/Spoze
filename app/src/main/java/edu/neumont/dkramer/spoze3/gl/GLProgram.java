@@ -9,6 +9,7 @@ import static android.opengl.GLES20.glBindAttribLocation;
 import static android.opengl.GLES20.glCreateProgram;
 import static android.opengl.GLES20.glDeleteProgram;
 import static android.opengl.GLES20.glGetAttribLocation;
+import static android.opengl.GLES20.glGetError;
 import static android.opengl.GLES20.glGetProgramiv;
 import static android.opengl.GLES20.glGetUniformLocation;
 import static android.opengl.GLES20.glLinkProgram;
@@ -45,15 +46,15 @@ public final class GLProgram {
     public static GLProgram create(String vertexShaderCode, String fragmentShaderCode) {
         GLShader vertexShader = GLShader.newVertexShader(vertexShaderCode).compile();
         GLShader fragmentShader = GLShader.newFragmentShader(fragmentShaderCode).compile();
-        GLProgram program = new GLProgram(vertexShader, fragmentShader).build();
-        return program;
+        return new GLProgram(vertexShader, fragmentShader).build();
     }
 
     private GLProgram build() {
         mProgramId = link();
 
         if (validate(mProgramId) == GL_VALIDATION_ERROR) {
-            throw new RuntimeException("GL Program validation error");
+            int error = glGetError();
+            throw new RuntimeException("GL Program validation error => " + error);
         }
         return this;
     }

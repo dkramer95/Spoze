@@ -166,7 +166,7 @@ public abstract class GLTexturedRect extends GLModel {
     }
 
     @Override
-    protected final void bindHandles() {
+    protected void bindHandles() {
         mPositionHandle = mGLProgram.bindAttribute("a_Position");
         mMVPMatrixHandle = mGLProgram.defineUniform("u_MVPMatrix");
         mTextureCoordinateHandle = mGLProgram.bindAttribute("a_TextureCoordinates");

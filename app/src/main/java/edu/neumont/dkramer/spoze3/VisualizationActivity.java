@@ -14,6 +14,7 @@ import edu.neumont.dkramer.spoze3.gl.GLContext;
 import edu.neumont.dkramer.spoze3.gl.GLMotionCamera;
 import edu.neumont.dkramer.spoze3.gl.GLScene;
 import edu.neumont.dkramer.spoze3.models.SignModel;
+import edu.neumont.dkramer.spoze3.models.SignModel2;
 
 import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Type.ROTATION_VECTOR;
 import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Type.TOUCH_INPUT;
@@ -65,9 +66,11 @@ public class VisualizationActivity extends GLCameraActivity {
             public void create() {
                 super.create();
 //                SignModel.createInBackground(this, mBitmap, getWidth(), getHeight());
-                SignModel.createInBackground(this, mTest2Bitmap, getWidth(), getHeight());
-                SignModel.createInBackground(this, mTest3Bitmap, getWidth(), getHeight());
-                SignModel.createInBackground(this, mTest3Bitmap, getWidth(), getHeight());
+//                SignModel.createInBackground(this, mTest2Bitmap, getWidth(), getHeight());
+//                SignModel.createInBackground(this, mTest3Bitmap, getWidth(), getHeight());
+//                SignModel.createInBackground(this, mTest3Bitmap, getWidth(), getHeight());
+
+                addModel(SignModel2.fromBitmap(ctx, mTest3Bitmap, getWidth(), getHeight()));
             }
         };
 

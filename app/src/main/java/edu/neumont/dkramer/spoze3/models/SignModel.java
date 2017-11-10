@@ -60,6 +60,7 @@ public abstract class SignModel extends GLTexturedRect {
     protected final int mBitPattern;
 
     protected float mRotation;
+    protected GLProgram mPickingProgram;
 
 
 
