@@ -40,13 +40,13 @@ public abstract class GLScene extends GLObject {
     protected FPSCounter mFPSCounter;
     protected GLCamera mGLCamera;
     protected GLWorld mWorld;
-    protected GLPixelPicker mPixelPicker;
-    protected TouchSelectionHandler mTouchHandler;
+//    protected GLPixelPicker mPixelPicker;
+//    protected TouchSelectionHandler mTouchHandler;
     protected int mWidth;
     protected int mHeight;
 
     // special events that need to be executed during rendering (i.e. pixel selection)
-    protected ArrayBlockingQueue<GLEvent> mEvents;
+//    protected ArrayBlockingQueue<GLEvent> mEvents;
 
 
 
@@ -55,7 +55,7 @@ public abstract class GLScene extends GLObject {
         mGLCamera = createGLCamera();
         mWorld = createWorld();
         mFPSCounter = new FPSCounter();
-        mEvents = new ArrayBlockingQueue(8);
+//        mEvents = new ArrayBlockingQueue(8);
     }
 
     public abstract GLWorld createWorld();
@@ -65,10 +65,10 @@ public abstract class GLScene extends GLObject {
         clearScreen();
         mGLCamera.update();
 
-        for (GLEvent e : mEvents) {
-            e.run();
-            mEvents.remove(e);
-        }
+//        for (GLEvent e : mEvents) {
+//            e.run();
+//            mEvents.remove(e);
+//        }
 
         mWorld.render(mGLCamera);
         mFPSCounter.logFrame();
@@ -78,10 +78,10 @@ public abstract class GLScene extends GLObject {
     public void refreshSize(int width, int height) {
         getWorld().setSize(width, height);
         getCamera().refreshSize(width, height);
-        mPixelPicker = new GLPixelPicker(width, height);
+//        mPixelPicker = new GLPixelPicker(width, height);
 
         // TODO probably shouldn't be here
-        mTouchHandler = new TouchSelectionHandler(getGLContext().getGLView(), mPixelPicker);
+//        mTouchHandler = new TouchSelectionHandler(getGLContext().getGLView(), mPixelPicker);
     }
 
     protected void clearScreen() {
@@ -94,17 +94,17 @@ public abstract class GLScene extends GLObject {
         glDisable(GL_BLEND);
     }
 
-    public void readPixel(int x, int y) {
-        mPixelPicker.enable();
-        Iterator<GLModel> models = getWorld().getModelIterator();
-        while (models.hasNext()) {
-            GLModel model = models.next();
-            model.drawSelector(getCamera());
-        }
-        int pixel = mPixelPicker.readPixel(x, y);
-        Log.i(TAG, "Pixel value readout => " + Integer.toHexString(pixel));
-        mPixelPicker.disable();
-    }
+//    public void readPixel(int x, int y) {
+//        mPixelPicker.enable();
+//        Iterator<GLModel> models = getWorld().getModelIterator();
+//        while (models.hasNext()) {
+//            GLModel model = models.next();
+//            model.drawSelector(getCamera());
+//        }
+//        int pixel = mPixelPicker.readPixel(x, y);
+//        Log.i(TAG, "Pixel value readout => " + Integer.toHexString(pixel));
+//        mPixelPicker.disable();
+//    }
 
     public GLWorld getWorld() {
         return mWorld;
@@ -127,9 +127,9 @@ public abstract class GLScene extends GLObject {
     }
 
 
-    public void addGLEvent(GLEvent e) {
-        mEvents.add(e);
-    }
+//    public void addGLEvent(GLEvent e) {
+//        mEvents.add(e);
+//    }
 
     public void handleTouchPress(float normalizedX, float normalizedY) {
         Ray ray = convertNormalized2DPointToRay(normalizedX, normalizedY);

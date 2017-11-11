@@ -74,9 +74,9 @@ public class TouchSelectionHandler implements View.OnTouchListener, GLPixelPicke
     protected void checkModelSelection() {
         GLScene scene = mView.getScene();
 
-        scene.addGLEvent(() -> {
-            scene.readPixel(geti(CURRENT_TOUCH_X), geti(CURRENT_TOUCH_Y));
-        });
+//        scene.addGLEvent(() -> {
+//            scene.readPixel(geti(CURRENT_TOUCH_X), geti(CURRENT_TOUCH_Y));
+//        });
 
 //        mWorld.getGLContext().queueEvent(() -> {
 //            mPixelPicker.readPixel(geti(CURRENT_TOUCH_X), geti(CURRENT_TOUCH_Y),

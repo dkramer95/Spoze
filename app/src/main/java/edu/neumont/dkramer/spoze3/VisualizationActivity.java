@@ -15,6 +15,7 @@ import edu.neumont.dkramer.spoze3.gl.GLMotionCamera;
 import edu.neumont.dkramer.spoze3.gl.GLScene;
 import edu.neumont.dkramer.spoze3.models.SignModel;
 import edu.neumont.dkramer.spoze3.models.SignModel2;
+import edu.neumont.dkramer.spoze3.scene.SignScene;
 
 import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Type.ROTATION_VECTOR;
 import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Type.TOUCH_INPUT;
@@ -29,8 +30,8 @@ public class VisualizationActivity extends GLCameraActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 //        mTestBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.texture_2);
-        mTest2Bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.texture_3);
-        mTest3Bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.texture_4);
+//        mTest2Bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.texture_3);
+//        mTest3Bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.texture_4);
 
 //        mBitmap = loadBitmap();
     }
@@ -59,25 +60,26 @@ public class VisualizationActivity extends GLCameraActivity {
 
     @Override
     protected GLScene createGLScene() {
-        final GLContext ctx = getGLContext();
-
-        TouchableWorld world = new TouchableWorld(ctx) {
-        	@Override
-            public void create() {
-                super.create();
-//                SignModel.createInBackground(this, mBitmap, getWidth(), getHeight());
-//                SignModel.createInBackground(this, mTest2Bitmap, getWidth(), getHeight());
-//                SignModel.createInBackground(this, mTest3Bitmap, getWidth(), getHeight());
-//                SignModel.createInBackground(this, mTest3Bitmap, getWidth(), getHeight());
-
-                addModel(SignModel2.fromBitmap(ctx, mTest3Bitmap, getWidth(), getHeight()));
-            }
-        };
-
-        return new GLScene.Builder(ctx)
-                .setWorld(world)
-                .setCamera(GLMotionCamera.getDefault(ctx))
-		        .build();
+        return new SignScene(getGLContext());
+//        final GLContext ctx = getGLContext();
+//
+//        TouchableWorld world = new TouchableWorld(ctx) {
+//        	@Override
+//            public void create() {
+//                super.create();
+////                SignModel.createInBackground(this, mBitmap, getWidth(), getHeight());
+////                SignModel.createInBackground(this, mTest2Bitmap, getWidth(), getHeight());
+////                SignModel.createInBackground(this, mTest3Bitmap, getWidth(), getHeight());
+////                SignModel.createInBackground(this, mTest3Bitmap, getWidth(), getHeight());
+//
+//                addModel(SignModel2.fromBitmap(ctx, mTest3Bitmap, getWidth(), getHeight()));
+//            }
+//        };
+//
+//        return new GLScene.Builder(ctx)
+//                .setWorld(world)
+//                .setCamera(GLMotionCamera.getDefault(ctx))
+//		        .build();
     }
 
     @Override
