@@ -70,11 +70,17 @@ public class SignScene extends GLScene {
 
     @Override
     public GLWorld createWorld() {
-        Bitmap bmp = BitmapFactory.decodeResource(getGLContext().getResources(), R.drawable.banner_texture);
+        Bitmap bmp1 = BitmapFactory.decodeResource(getGLContext().getResources(), R.drawable.banner_texture);
+        Bitmap bmp2 = BitmapFactory.decodeResource(getGLContext().getResources(), R.drawable.texture10);
+        Bitmap bmp3 = BitmapFactory.decodeResource(getGLContext().getResources(), R.drawable.texture8);
+        Bitmap bmp4 = BitmapFactory.decodeResource(getGLContext().getResources(), R.drawable.texture5);
         return new GLWorld(getGLContext()) {
             @Override
             public void create() {
-                addModel(SignModel2.fromBitmap(getGLContext(), bmp, getWidth(), getHeight()));
+                addModel(SignModel2.fromBitmap(getGLContext(), bmp1, getWidth(), getHeight()));
+                addModel(SignModel2.fromBitmap(getGLContext(), bmp2, getWidth(), getHeight()));
+                addModel(SignModel2.fromBitmap(getGLContext(), bmp3, getWidth(), getHeight()));
+                addModel(SignModel2.fromBitmap(getGLContext(), bmp4, getWidth(), getHeight()));
             }
         };
     }
@@ -90,6 +96,7 @@ public class SignScene extends GLScene {
             if (model.didTouch(pixel)) {
                 Log.i(TAG, "Model " + model.getId() + " touched!");
                 selectedModel = model;
+                getWorld().sendModelToFront(selectedModel);
                 break;
             }
         }

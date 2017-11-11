@@ -48,7 +48,7 @@ public abstract class GLWorld extends GLObject {
      * rendered last, appearing over any other models.
      * @param model Model to send to front
      */
-    protected void sendModelToFront(GLModel model) {
+    public void sendModelToFront(GLModel model) {
         int frontIndex = (mModels.size() - 1);
         GLModel frontModel = mModels.get(frontIndex);
 
