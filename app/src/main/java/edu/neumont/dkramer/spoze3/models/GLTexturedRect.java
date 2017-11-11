@@ -203,14 +203,6 @@ public abstract class GLTexturedRect extends GLModel {
         texImage2D(GL_TEXTURE_2D, 0, bmp, 0);
     }
 
-    @Override
-    protected void applyTransformations() {
-        super.applyTransformations();
-//        float transX = getf(CURRENT_TOUCH_NORMALIZED_X);
-//        float transY = getf(CURRENT_TOUCH_NORMALIZED_Y);
-//        Matrix.translateM(mModelMatrix, 0, transX, transY, 0);
-    }
-
     private static int createTextureHandle() {
         final int[] textureObjectIds = new int[1];
         glGenTextures(1, textureObjectIds, 0);

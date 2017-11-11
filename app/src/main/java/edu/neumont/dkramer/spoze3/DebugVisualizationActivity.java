@@ -4,16 +4,13 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
-import edu.neumont.dkramer.spoze3.converter.YUVToRGBAConverter;
 import edu.neumont.dkramer.spoze3.gl.deviceinfo.GLRotationVectorInfo;
 
-import static android.view.View.GONE;
 import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Type.ROTATION_VECTOR;
 
 /**

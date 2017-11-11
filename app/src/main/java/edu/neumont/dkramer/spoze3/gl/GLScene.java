@@ -1,16 +1,7 @@
 package edu.neumont.dkramer.spoze3.gl;
 
 import android.opengl.Matrix;
-import android.util.Log;
 
-import java.util.ArrayList;
-import java.util.ConcurrentModificationException;
-import java.util.Iterator;
-import java.util.List;
-import java.util.concurrent.ArrayBlockingQueue;
-
-import edu.neumont.dkramer.spoze3.GLPixelPicker;
-import edu.neumont.dkramer.spoze3.TouchSelectionHandler;
 import edu.neumont.dkramer.spoze3.geometry.Point3f;
 import edu.neumont.dkramer.spoze3.geometry.Ray;
 import edu.neumont.dkramer.spoze3.geometry.Vector3f;

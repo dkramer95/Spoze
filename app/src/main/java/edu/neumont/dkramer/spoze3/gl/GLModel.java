@@ -3,8 +3,6 @@ package edu.neumont.dkramer.spoze3.gl;
 import android.opengl.Matrix;
 import android.util.Log;
 
-import java.util.Random;
-
 /**
  * Created by dkramer on 10/20/17.
  */
@@ -39,6 +37,8 @@ public abstract class GLModel extends GLObject {
     protected float mTransX;
     protected float mTransY;
     protected float mTransZ;
+
+    protected float mRotation;
 
 
 
@@ -76,8 +76,9 @@ public abstract class GLModel extends GLObject {
 
 
     protected void applyTransformations() {
-        //TODO implement matrix operations in correct order to transform our GLModel
         Matrix.setIdentityM(mModelMatrix, 0);
+        Matrix.translateM(mModelMatrix, 0, mTransX, mTransY, mTransZ);
+        Matrix.rotateM(mModelMatrix, 0, mRotation, 0, 0, 1);
     }
 
     public void translate(float x, float y, float z) {

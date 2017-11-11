@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ViewFlipper;
 
 import java.util.Iterator;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -12,6 +13,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 import edu.neumont.dkramer.spoze3.GLPixelPicker;
 import edu.neumont.dkramer.spoze3.R;
 import edu.neumont.dkramer.spoze3.geometry.Point3f;
+import edu.neumont.dkramer.spoze3.gl.GLActivity;
 import edu.neumont.dkramer.spoze3.gl.GLCamera;
 import edu.neumont.dkramer.spoze3.gl.GLContext;
 import edu.neumont.dkramer.spoze3.gl.GLEvent;
@@ -38,6 +40,9 @@ import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.geti;
  */
 
 public class SignScene extends GLScene {
+    private static final int TOOLBAR_OBJECT = 0;
+    private static final int TOOLBAR_NORMAL = 1;
+
     private static final String TAG = "SignScene";
     private static final int EVENT_QUEUE_LIMIT = 8;
 
@@ -75,20 +80,21 @@ public class SignScene extends GLScene {
     }
 
     protected SignModel2 checkModelSelection() {
-        SignModel2 model = null;
+        SignModel2 selectedModel = null;
 
         int pixel = readTouchPixel();
         Iterator<GLModel> models = getWorld().getModelIterator();
 
         while (models.hasNext()) {
-            model = (SignModel2)models.next();
+            SignModel2 model = (SignModel2)models.next();
             if (model.didTouch(pixel)) {
-                Log.i(TAG, "Model touched!");
+                Log.i(TAG, "Model " + model.getId() + " touched!");
+                selectedModel = model;
                 break;
             }
         }
         Log.i(TAG, "Pixel Read => " + Integer.toHexString(pixel));
-        return model;
+        return selectedModel;
     }
 
 
@@ -121,6 +127,14 @@ public class SignScene extends GLScene {
         while ((e = mEventQueue.poll()) != null) {
             e.run();
         }
+    }
+
+    public void setUIToolbar(int type) {
+        GLActivity activity = getGLContext().getActivity();
+        activity.runOnUiThread(() -> {
+            ViewFlipper flipper = activity.findViewById(R.id.toolbarFlipper);
+            flipper.setDisplayedChild(type);
+        });
     }
 
     protected void queueEvent(GLEvent e) {
@@ -172,8 +186,17 @@ public class SignScene extends GLScene {
         protected void onTouchDown() {
             queueEvent(() -> {
                 SignModel2 model = checkModelSelection();
+
                 if (model != null) {
-                    mSelectedModel = model;
+                    if (model != mSelectedModel) {
+                        mSelectedModel = model;
+                        setUIToolbar(TOOLBAR_OBJECT);
+                    }
+                } else {
+                    if (mSelectedModel != null) {
+                        mSelectedModel = null;
+                        setUIToolbar(TOOLBAR_NORMAL);
+                    }
                 }
             });
             mMoveCount = 0;

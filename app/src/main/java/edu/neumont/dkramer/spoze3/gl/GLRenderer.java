@@ -3,9 +3,6 @@ package edu.neumont.dkramer.spoze3.gl;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-import edu.neumont.dkramer.spoze3.GLPixelPicker;
-import edu.neumont.dkramer.spoze3.TouchSelectionHandler;
-
 /**
  * Created by dkramer on 10/20/17.
  */

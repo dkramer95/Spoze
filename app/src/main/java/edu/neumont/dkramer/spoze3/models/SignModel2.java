@@ -1,10 +1,8 @@
 package edu.neumont.dkramer.spoze3.models;
 
 import android.graphics.Bitmap;
-import android.opengl.Matrix;
 
 import edu.neumont.dkramer.spoze3.R;
-import edu.neumont.dkramer.spoze3.geometry.Point3f;
 import edu.neumont.dkramer.spoze3.gl.GLCamera;
 import edu.neumont.dkramer.spoze3.gl.GLContext;
 import edu.neumont.dkramer.spoze3.gl.GLProgram;
@@ -16,7 +14,6 @@ import edu.neumont.dkramer.spoze3.util.TextResourceReader;
 
 public abstract class SignModel2 extends GLTexturedRect {
     protected GLPickerModel mPickerModel;
-    protected float mRotation;
 
 
     protected SignModel2(GLContext glContext, float[] vertexData) {
@@ -52,12 +49,6 @@ public abstract class SignModel2 extends GLTexturedRect {
         return mPickerModel.getPixelId() == (pixel >> 16);
     }
 
-    protected void applyTransformations() {
-        super.applyTransformations();
-        Matrix.translateM(mModelMatrix, 0, mTransX, mTransY, 0);
-        Matrix.rotateM(mModelMatrix, 0, mRotation, 0, 0, 1);
-    }
-
     protected GLProgram loadTextureProgram(GLContext ctx) {
         String vertexShaderCode =
                 TextResourceReader.readTextFileFromResource(ctx, R.raw.texture_vertex_shader);
@@ -72,5 +63,6 @@ public abstract class SignModel2 extends GLTexturedRect {
     public void handleTouchMove(float x, float y, float z, float eyeX, float eyeY, float eyeZ) {
         mTransX = x + (mWidth / 2) + eyeX;
         mTransY = (mHeight / 2) + (y * 2f) + eyeY;
+        mPickerModel.translate(mTransX, mTransY, 0);
     }
 }

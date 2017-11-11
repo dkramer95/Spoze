@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.PixelFormat;
 import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
-import android.util.Log;
 
 /**
  * Created by dkramer on 10/20/17.
