@@ -25,6 +25,19 @@ import edu.neumont.dkramer.spoze3.gl.GLWorld;
 import edu.neumont.dkramer.spoze3.gl.deviceinfo.GLTouchInfo;
 import edu.neumont.dkramer.spoze3.models.SignModel2;
 
+import static android.opengl.GLES10.GL_ONE_MINUS_DST_COLOR;
+import static android.opengl.GLES10.GL_SRC_ALPHA;
+import static android.opengl.GLES10.GL_ZERO;
+import static android.opengl.GLES20.GL_BLEND;
+import static android.opengl.GLES20.GL_DEPTH_TEST;
+import static android.opengl.GLES20.GL_DST_COLOR;
+import static android.opengl.GLES20.GL_ONE;
+import static android.opengl.GLES20.GL_ONE_MINUS_SRC_ALPHA;
+import static android.opengl.GLES20.GL_ONE_MINUS_SRC_COLOR;
+import static android.opengl.GLES20.GL_SRC_COLOR;
+import static android.opengl.GLES20.glBlendFunc;
+import static android.opengl.GLES20.glDisable;
+import static android.opengl.GLES20.glEnable;
 import static android.view.MotionEvent.ACTION_DOWN;
 import static android.view.MotionEvent.ACTION_MOVE;
 import static android.view.MotionEvent.ACTION_UP;
@@ -71,10 +84,10 @@ public class SignScene extends GLScene {
 
     @Override
     public GLWorld createWorld() {
-        Bitmap bmp1 = BitmapFactory.decodeResource(getGLContext().getResources(), R.drawable.banner_texture);
-        Bitmap bmp2 = BitmapFactory.decodeResource(getGLContext().getResources(), R.drawable.texture10);
-        Bitmap bmp3 = BitmapFactory.decodeResource(getGLContext().getResources(), R.drawable.texture8);
-        Bitmap bmp4 = BitmapFactory.decodeResource(getGLContext().getResources(), R.drawable.texture5);
+        Bitmap bmp1 = BitmapFactory.decodeResource(getGLContext().getResources(), R.drawable.painting_texture);
+        Bitmap bmp2 = BitmapFactory.decodeResource(getGLContext().getResources(), R.drawable.logo_texture);
+        Bitmap bmp3 = BitmapFactory.decodeResource(getGLContext().getResources(), R.drawable.menu_texture);
+        Bitmap bmp4 = BitmapFactory.decodeResource(getGLContext().getResources(), R.drawable.decal_texture);
         return new GLWorld(getGLContext()) {
             @Override
             public void create() {
@@ -84,6 +97,13 @@ public class SignScene extends GLScene {
                 addModel(SignModel2.fromBitmap(getGLContext(), bmp4, getWidth(), getHeight()));
             }
         };
+    }
+
+    public void deleteSelectedModel() {
+        if (mSelectedModel != null) {
+            getWorld().removeModel(mSelectedModel);
+            mSelectedModel = null;
+        }
     }
 
     protected SignModel2 checkModelSelection() {
@@ -128,7 +148,89 @@ public class SignScene extends GLScene {
         updateCamera();
         runEventsInQueue();
         renderWorld();
+
+        if (mSelectedModel != null) {
+            glEnable(GL_BLEND);
+            glEnable(GL_DEPTH_TEST);
+
+            // this one works pretty well for most part... trying to see better results for shaped PNG's
+//            glBlendFunc(GL_ONE_MINUS_DST_COLOR, GL_ZERO);
+
+
+            // I REALLY LIKE THIS ONE!!!... Very holographic looking! :D
+            glBlendFunc(GL_ZERO, GL_SRC_COLOR);
+
+//            glBlendFunc(sBlendFunc[0], sBlendFunc[1]);
+
+            mSelectedModel.drawSelector(getCamera());
+            glDisable(GL_BLEND);
+            glDisable(GL_DEPTH_TEST);
+        }
     }
+
+    /** BLENDING FUNCTION VISUALIZATION TESTING **/
+    /** Iterate over every combination on touch events, to determine what looks best **/
+    static final int[] sBlendFuncs =
+    {
+        // src factor, destination factor
+            GL_ZERO, GL_ZERO,
+            GL_ZERO, GL_ONE,
+            GL_ZERO, GL_SRC_COLOR,
+            GL_ZERO, GL_ONE_MINUS_SRC_COLOR,
+            GL_ZERO, GL_SRC_ALPHA,
+            GL_ZERO, GL_ONE_MINUS_SRC_ALPHA,
+
+            GL_ONE, GL_ZERO,
+            GL_ONE, GL_ONE,
+            GL_ONE, GL_SRC_COLOR,
+            GL_ONE, GL_ONE_MINUS_SRC_COLOR,
+            GL_ONE, GL_SRC_ALPHA,
+            GL_ONE, GL_ONE_MINUS_SRC_ALPHA,
+
+            GL_DST_COLOR, GL_ZERO,
+            GL_DST_COLOR, GL_ONE,
+            GL_DST_COLOR, GL_SRC_COLOR,
+            GL_DST_COLOR, GL_ONE_MINUS_SRC_COLOR,
+            GL_DST_COLOR, GL_SRC_ALPHA,
+            GL_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA,
+
+            GL_ONE_MINUS_DST_COLOR, GL_ZERO,
+            GL_ONE_MINUS_DST_COLOR, GL_ONE,
+            GL_ONE_MINUS_DST_COLOR, GL_SRC_COLOR,
+            GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_COLOR,
+            GL_ONE_MINUS_DST_COLOR, GL_SRC_ALPHA,
+            GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA,
+
+            GL_SRC_ALPHA, GL_ZERO,
+            GL_SRC_ALPHA, GL_ONE,
+            GL_SRC_ALPHA, GL_SRC_COLOR,
+            GL_SRC_ALPHA, GL_ONE_MINUS_SRC_COLOR,
+            GL_SRC_ALPHA, GL_SRC_ALPHA,
+            GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA,
+
+            GL_ONE_MINUS_SRC_ALPHA, GL_ZERO,
+            GL_ONE_MINUS_SRC_ALPHA, GL_ONE,
+            GL_ONE_MINUS_SRC_ALPHA, GL_SRC_COLOR,
+            GL_ONE_MINUS_SRC_ALPHA, GL_ONE_MINUS_SRC_COLOR,
+            GL_ONE_MINUS_SRC_ALPHA, GL_SRC_ALPHA,
+            GL_ONE_MINUS_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA,
+    };
+	protected static int sIndex;
+	protected static int[] sBlendFunc = changeBlendFunc();
+
+    protected static int[] changeBlendFunc() {
+		if (sIndex + 2 >= sBlendFuncs.length) {
+			sIndex = 0;
+		}
+		int[] blendFunc = new int[] { sBlendFuncs[sIndex], sBlendFuncs[sIndex + 1] };
+		Log.i(TAG, String.format("Using blend func index => %d => [%d],[%d]\n", sIndex, blendFunc[0], blendFunc[1]));
+		sIndex += 2;
+		sBlendFunc = blendFunc;
+		return blendFunc;
+    }
+    /** END BLENDING FUNCTION VISUALIZATION TESTING **/
+
+
 
     protected void runEventsInQueue() {
         GLEvent e;
@@ -210,15 +312,20 @@ public class SignScene extends GLScene {
             queueEvent(() -> {
                 SignModel2 model = checkModelSelection();
 
-                if (model != null) {
-                    if (model != mSelectedModel) {
+                if (mSelectedModel != null) {
+                    // deselect
+                    if (model == mSelectedModel || model == null) {
+                        mSelectedModel = null;
+                        changeBlendFunc();
+                        setUIToolbar(TOOLBAR_NORMAL);
+                    } else {
                         mSelectedModel = model;
                         setUIToolbar(TOOLBAR_OBJECT);
                     }
                 } else {
-                    if (mSelectedModel != null) {
-                        mSelectedModel = null;
-                        setUIToolbar(TOOLBAR_NORMAL);
+                    if (model != null) {
+                        mSelectedModel = model;
+                        setUIToolbar(TOOLBAR_OBJECT);
                     }
                 }
             });

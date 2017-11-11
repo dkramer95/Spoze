@@ -75,7 +75,7 @@ public class DebugVisualizationActivity extends VisualizationActivity {
     public void deleteModelButtonClicked(View view) {
         SignScene scene = (SignScene)getGLContext().getGLView().getScene();
         getGLContext().queueEvent(() -> {
-            scene.getWorld().removeModel(scene.getSelectedModel());
+            scene.deleteSelectedModel();
         });
         Toast.makeText(this, "Deleted Model", Toast.LENGTH_SHORT).show();
     }

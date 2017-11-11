@@ -50,7 +50,7 @@ public abstract class SignModel2 extends GLTexturedRect {
     }
 
     public boolean didTouch(int pixel) {
-        return mPickerModel.getPixelId() == (pixel >> 16);
+        return mPickerModel.getPixelId() == (pixel >> 8);
     }
 
     protected GLProgram loadTextureProgram(GLContext ctx) {
