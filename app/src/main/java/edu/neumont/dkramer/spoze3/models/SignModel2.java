@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import edu.neumont.dkramer.spoze3.R;
 import edu.neumont.dkramer.spoze3.gl.GLCamera;
 import edu.neumont.dkramer.spoze3.gl.GLContext;
+import edu.neumont.dkramer.spoze3.gl.GLModel;
 import edu.neumont.dkramer.spoze3.gl.GLProgram;
 import edu.neumont.dkramer.spoze3.util.TextResourceReader;
 
@@ -42,6 +43,11 @@ public abstract class SignModel2 extends GLTexturedRect {
                 return program;
             }
         };
+    }
+
+    @Override
+    public GLModel getSelector() {
+        return mPickerModel;
     }
 
     @Override

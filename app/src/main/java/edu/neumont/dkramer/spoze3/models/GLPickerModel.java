@@ -22,21 +22,28 @@ import static android.opengl.GLES20.glUniformMatrix4fv;
 public class GLPickerModel extends GLModel {
     // random number generator for creating pixel id's
     private static final Random rng = new Random();
+    private static final float SELECTION_COLOR = 1.0f;
+
+
 
     protected int mPickerHandle;
     protected int mPickingMVPMatrixHandle;
     protected int mPickingPositionHandle;
     protected GLModel mSourceModel;
     protected final FloatBuffer mColorBuffer;
+    protected float mRenderValue;
     protected final int mPixelId;
+
+
+
 
 
     public GLPickerModel(GLContext glContext, GLModel sourceModel) {
         super(glContext, sourceModel.getVertexData());
         mPixelId = rng.nextInt(255);
-        float value = mPixelId / 255.0f;
+        mRenderValue = mPixelId / 255.0f;
 
-        mColorBuffer = FloatBuffer.wrap(new float[]{ value });
+        mColorBuffer = FloatBuffer.wrap(new float[]{ mRenderValue });
         mSourceModel = sourceModel;
     }
 
@@ -51,6 +58,19 @@ public class GLPickerModel extends GLModel {
                 TextResourceReader.readTextFileFromResource(ctx, R.raw.picking_fragment_shader);
 
         return GLProgram.create(vertexShaderCode, fragmentShaderCode);
+    }
+
+    public void enableSelected() {
+        updateBuffColor(SELECTION_COLOR);
+    }
+
+    public void reset() {
+        updateBuffColor(mRenderValue);
+    }
+
+    protected void updateBuffColor(float value) {
+        mColorBuffer.rewind();
+        mColorBuffer.put(0, value);
     }
 
     @Override

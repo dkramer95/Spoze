@@ -23,6 +23,7 @@ import edu.neumont.dkramer.spoze3.gl.GLMotionCamera;
 import edu.neumont.dkramer.spoze3.gl.GLScene;
 import edu.neumont.dkramer.spoze3.gl.GLWorld;
 import edu.neumont.dkramer.spoze3.gl.deviceinfo.GLTouchInfo;
+import edu.neumont.dkramer.spoze3.models.GLPickerModel;
 import edu.neumont.dkramer.spoze3.models.SignModel2;
 
 import static android.opengl.GLES10.GL_ONE_MINUS_DST_COLOR;
@@ -84,17 +85,11 @@ public class SignScene extends GLScene {
 
     @Override
     public GLWorld createWorld() {
-        Bitmap bmp1 = BitmapFactory.decodeResource(getGLContext().getResources(), R.drawable.painting_texture);
-        Bitmap bmp2 = BitmapFactory.decodeResource(getGLContext().getResources(), R.drawable.logo_texture);
-        Bitmap bmp3 = BitmapFactory.decodeResource(getGLContext().getResources(), R.drawable.menu_texture);
-        Bitmap bmp4 = BitmapFactory.decodeResource(getGLContext().getResources(), R.drawable.decal_texture);
+        Bitmap bmp1 = BitmapFactory.decodeResource(getGLContext().getResources(), R.drawable.vim_texture);
         return new GLWorld(getGLContext()) {
             @Override
             public void create() {
                 addModel(SignModel2.fromBitmap(getGLContext(), bmp1, getWidth(), getHeight()));
-                addModel(SignModel2.fromBitmap(getGLContext(), bmp2, getWidth(), getHeight()));
-                addModel(SignModel2.fromBitmap(getGLContext(), bmp3, getWidth(), getHeight()));
-                addModel(SignModel2.fromBitmap(getGLContext(), bmp4, getWidth(), getHeight()));
             }
         };
     }
@@ -150,22 +145,26 @@ public class SignScene extends GLScene {
         renderWorld();
 
         if (mSelectedModel != null) {
-            glEnable(GL_BLEND);
-            glEnable(GL_DEPTH_TEST);
+            drawSelection();
+        }
+    }
 
-            // this one works pretty well for most part... trying to see better results for shaped PNG's
-//            glBlendFunc(GL_ONE_MINUS_DST_COLOR, GL_ZERO);
-
-
-            // I REALLY LIKE THIS ONE!!!... Very holographic looking! :D
-            glBlendFunc(GL_ZERO, GL_SRC_COLOR);
+    protected void drawSelection() {
+        glEnable(GL_BLEND);
+        glEnable(GL_DEPTH_TEST);
+        glBlendFunc(GL_ZERO, GL_SRC_COLOR);
 
 //            glBlendFunc(sBlendFunc[0], sBlendFunc[1]);
 
-            mSelectedModel.drawSelector(getCamera());
-            glDisable(GL_BLEND);
-            glDisable(GL_DEPTH_TEST);
-        }
+        // ensure that our selector uses the brightest color (not the random unique) color
+        // so that selection is more apparent
+        GLPickerModel pickerModel = (GLPickerModel)mSelectedModel.getSelector();
+        pickerModel.enableSelected();
+        pickerModel.render(getCamera());
+        pickerModel.reset();
+
+        glDisable(GL_BLEND);
+        glDisable(GL_DEPTH_TEST);
     }
 
     /** BLENDING FUNCTION VISUALIZATION TESTING **/
@@ -355,6 +354,7 @@ public class SignScene extends GLScene {
                 mSelectedModel.scale(scaleFactor);
             }
             Log.i(TAG, "OnScale --> Factor => " + scaleFactor);
+            mScalingFlag = true;
             return true;
         }
 

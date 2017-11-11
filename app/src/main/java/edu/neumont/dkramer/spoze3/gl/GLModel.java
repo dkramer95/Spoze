@@ -109,7 +109,12 @@ public abstract class GLModel extends GLObject {
      */
     public void drawSelector(GLCamera camera) {
         draw(camera);
-        Log.w(TAG, "Warning... Using default draw selector");
+        Log.w(TAG, "Warning... Using default drawSelector()");
+    }
+
+    public GLModel getSelector() {
+        Log.w(TAG, "Warning... Returning self on getSelector()");
+        return this;
     }
 
     /*
