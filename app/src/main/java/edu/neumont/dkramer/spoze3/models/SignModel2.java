@@ -13,6 +13,10 @@ import edu.neumont.dkramer.spoze3.util.TextResourceReader;
  */
 
 public abstract class SignModel2 extends GLTexturedRect {
+    protected static final float MIN_SCALE = 0.5f;
+    protected static final float MAX_SCALE = 3.5f;
+
+
     protected GLPickerModel mPickerModel;
 
 
@@ -72,7 +76,10 @@ public abstract class SignModel2 extends GLTexturedRect {
     }
 
     public void scale(float scaleFactor) {
-        super.scale(scaleFactor);
-        mPickerModel.scale(scaleFactor);
+        float scaleValue = (mScaleFactor + scaleFactor);
+        if (scaleValue > MIN_SCALE && scaleValue < MAX_SCALE) {
+            super.scale(scaleFactor);
+            mPickerModel.scale(scaleFactor);
+        }
     }
 }

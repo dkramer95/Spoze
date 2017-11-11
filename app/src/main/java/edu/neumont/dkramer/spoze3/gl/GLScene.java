@@ -2,9 +2,6 @@ package edu.neumont.dkramer.spoze3.gl;
 
 import android.opengl.Matrix;
 
-import edu.neumont.dkramer.spoze3.geometry.Point3f;
-import edu.neumont.dkramer.spoze3.geometry.Ray;
-import edu.neumont.dkramer.spoze3.geometry.Vector3f;
 import edu.neumont.dkramer.spoze3.util.FPSCounter;
 
 import static android.opengl.GLES20.GL_BLEND;
@@ -50,7 +47,6 @@ public abstract class GLScene extends GLObject {
 
     public abstract GLWorld createWorld();
 
-
     public void render() {
         clearScreen();
         updateCamera();
@@ -74,10 +70,6 @@ public abstract class GLScene extends GLObject {
     public void refreshSize(int width, int height) {
         getWorld().setSize(width, height);
         getCamera().refreshSize(width, height);
-//        mPixelPicker = new GLPixelPicker(width, height);
-
-        // TODO probably shouldn't be here
-//        mTouchHandler = new TouchSelectionHandler(getGLContext().getGLView(), mPixelPicker);
     }
 
     protected void clearScreen() {
@@ -89,18 +81,6 @@ public abstract class GLScene extends GLObject {
         glClearColor(0f, 0f, 0f, 0f);
         glDisable(GL_BLEND);
     }
-
-//    public void readPixel(int x, int y) {
-//        mPixelPicker.enable();
-//        Iterator<GLModel> models = getWorld().getModelIterator();
-//        while (models.hasNext()) {
-//            GLModel model = models.next();
-//            model.drawSelector(getCamera());
-//        }
-//        int pixel = mPixelPicker.readPixel(x, y);
-//        Log.i(TAG, "Pixel value readout => " + Integer.toHexString(pixel));
-//        mPixelPicker.disable();
-//    }
 
     public GLWorld getWorld() {
         return mWorld;
@@ -123,88 +103,7 @@ public abstract class GLScene extends GLObject {
     }
 
 
-//    public void addGLEvent(GLEvent e) {
-//        mEvents.add(e);
-//    }
-
-    public void handleTouchPress(float normalizedX, float normalizedY) {
-        Ray ray = convertNormalized2DPointToRay(normalizedX, normalizedY);
-
-        // ray exists in 3D world space... we need to check to see if the box containing
-        // our model intersects with this ray
-    }
-
-    public void handleTouchDrag(float normalizedX, float normalizedY) {
-        Ray ray = convertNormalized2DPointToRay(normalizedX, normalizedY);
-        // TODO check against objects in world to see if ray collides
-    }
-
-    protected Ray convertNormalized2DPointToRay(float normalizedX, float normalizedY) {
-        // Convert normalized device coordinates into 3D world space coordinates
-        final float[] nearPointNdc = { normalizedX, normalizedY, -1, 1 };
-        final float[] farPointNdc = { normalizedX, normalizedY, 1, 1 };
-        final float[] nearPointWorld = new float[4];
-        final float[] farPointWorld = new float[4];
-
-        Matrix.multiplyMV(nearPointWorld, 0, mInvertedViewProjectionMatrix, 0, nearPointNdc, 0);
-        Matrix.multiplyMV(farPointWorld, 0, mInvertedViewProjectionMatrix, 0, farPointNdc, 0);
-
-        divideByW(nearPointWorld);
-        divideByW(farPointWorld);
-
-        Point3f nearPointRay =
-                new Point3f(nearPointWorld[0], nearPointWorld[1], nearPointWorld[2]);
-
-        Point3f farPointRay =
-                new Point3f(farPointWorld[0], farPointWorld[1], farPointWorld[2]);
-
-        return new Ray(nearPointRay, Vector3f.between(nearPointRay, farPointRay));
-    }
-
-    protected void divideByW(float[] vector) {
-        vector[0] /= vector[3];
-        vector[1] /= vector[3];
-        vector[2] /= vector[3];
-    }
-
     public void stop() {
         getWorld().removeAllModels();
-    }
-
-    public static class Builder {
-    	private GLWorld mWorld;
-    	private GLCamera mCamera;
-    	private GLContext mGLContext;
-
-        public Builder(GLContext ctx) {
-            mGLContext = ctx;
-        }
-
-        public Builder setWorld(GLWorld world) {
-        	mWorld = world;
-        	return this;
-        }
-
-        public Builder setCamera(GLCamera camera) {
-            mCamera = camera;
-            return this;
-        }
-
-        public GLScene build() {
-            final GLWorld world = mWorld;
-            final GLCamera camera = mCamera;
-
-            return new GLScene(mGLContext) {
-                @Override
-                public GLWorld createWorld() {
-                	return world;
-                }
-
-                @Override
-                public GLCamera createGLCamera() {
-                	return camera != null ? camera : super.createGLCamera();
-                }
-            };
-        }
     }
 }
