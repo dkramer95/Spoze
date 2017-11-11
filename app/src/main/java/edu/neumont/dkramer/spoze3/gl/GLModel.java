@@ -39,6 +39,7 @@ public abstract class GLModel extends GLObject {
     protected float mTransZ;
 
     protected float mRotation;
+    protected float mScaleFactor;
 
 
 
@@ -49,6 +50,7 @@ public abstract class GLModel extends GLObject {
         mGLProgram = createGLProgram();
         mWorld = glContext.getGLView().getScene().getWorld();
         mId = ++sInstanceCounter;
+        mScaleFactor = 1.0f;
     }
 
     /*
@@ -79,6 +81,7 @@ public abstract class GLModel extends GLObject {
         Matrix.setIdentityM(mModelMatrix, 0);
         Matrix.translateM(mModelMatrix, 0, mTransX, mTransY, mTransZ);
         Matrix.rotateM(mModelMatrix, 0, mRotation, 0, 0, 1);
+        Matrix.scaleM(mModelMatrix, 0, mScaleFactor, mScaleFactor, mScaleFactor);
     }
 
     public void translate(float x, float y, float z) {
@@ -159,5 +162,9 @@ public abstract class GLModel extends GLObject {
 
     public void rotate(float angle) {
         mRotation += angle;
+    }
+
+    public void scale(float scaleFactor) {
+        mScaleFactor += scaleFactor;
     }
 }

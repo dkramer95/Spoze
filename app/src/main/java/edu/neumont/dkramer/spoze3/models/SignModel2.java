@@ -70,4 +70,9 @@ public abstract class SignModel2 extends GLTexturedRect {
         super.rotate(angle);
         mPickerModel.rotate(angle);
     }
+
+    public void scale(float scaleFactor) {
+        super.scale(scaleFactor);
+        mPickerModel.scale(scaleFactor);
+    }
 }

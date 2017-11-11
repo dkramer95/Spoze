@@ -87,6 +87,10 @@ public final class GLContext extends Context {
         getGLView().stop();
     }
 
+    public void runOnUiThread(Runnable r) {
+        mActivity.runOnUiThread(r);
+    }
+
     public GLActivity getActivity() {
         return mActivity;
     }

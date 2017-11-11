@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.widget.ViewFlipper;
 
@@ -160,14 +161,19 @@ public class SignScene extends GLScene {
 
     /* Touch Handler for our scene */
 
-    class TouchHandler implements View.OnTouchListener {
+    class TouchHandler implements View.OnTouchListener, ScaleGestureDetector.OnScaleGestureListener {
+        private static final String TAG = "TouchHandler";
+
         // number of ACTION_MOVE events that need to be called before we
         // actually allow movement to occur
         private static final int ACTION_MOVE_THRESHOLD = 3;
 
         // help prevent jittery, unintended movements
-        protected boolean mReleaseFlag;
-        protected int mMoveCount;
+        private boolean mReleaseFlag;
+        private int mMoveCount;
+        private boolean mScalingFlag;
+
+        private ScaleGestureDetector mScaleGestureDetector;
 
 
 
@@ -175,6 +181,12 @@ public class SignScene extends GLScene {
         public TouchHandler() {
             GLTouchInfo touchInfo = (GLTouchInfo)getGLContext().getDeviceInfo(TOUCH_INPUT);
             touchInfo.addOnTouchListener(this);
+
+            final TouchHandler touchHandler = this;
+
+            getGLContext().runOnUiThread(() -> {
+                mScaleGestureDetector = new ScaleGestureDetector(getGLContext().getActivity(), touchHandler);
+            });
         }
 
         @Override
@@ -186,11 +198,12 @@ public class SignScene extends GLScene {
                 case ACTION_MOVE: onTouchMove(); break;
                 case ACTION_UP: onTouchRelease(); break;
             }
+            mScaleGestureDetector.onTouchEvent(e);
             return false;
         }
 
         protected boolean canMove() {
-            return (!mReleaseFlag && mMoveCount > ACTION_MOVE_THRESHOLD);
+            return (!mReleaseFlag && !mScalingFlag && mMoveCount > ACTION_MOVE_THRESHOLD);
         }
 
         protected void onTouchDown() {
@@ -225,6 +238,28 @@ public class SignScene extends GLScene {
 
         protected void onTouchRelease() {
             mReleaseFlag = true;
+        }
+
+        @Override
+        public boolean onScale(ScaleGestureDetector detector) {
+            // pinch to zoom is backwards, so we invert it here
+            float scaleFactor = (1.0f - detector.getScaleFactor()) * -1.25f;
+            if (mSelectedModel != null) {
+                mSelectedModel.scale(scaleFactor);
+            }
+            Log.i(TAG, "OnScale --> Factor => " + scaleFactor);
+            return true;
+        }
+
+        @Override
+        public boolean onScaleBegin(ScaleGestureDetector detector) {
+            mScalingFlag = true;
+            return true;
+        }
+
+        @Override
+        public void onScaleEnd(ScaleGestureDetector detector) {
+            mScalingFlag = false;
         }
     }
 }
