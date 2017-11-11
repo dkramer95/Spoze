@@ -146,6 +146,9 @@ public class SignScene extends GLScene {
     }
 
 
+    public GLModel getSelectedModel() {
+        return mSelectedModel;
+    }
 
 
     /* Touch Handler for our scene */

@@ -156,4 +156,8 @@ public abstract class GLModel extends GLObject {
     public int getStride() {
         throw new UnsupportedOperationException(getClass() + "should implement me to return correct value!");
     }
+
+    public void rotate(float angle) {
+        mRotation += angle;
+    }
 }

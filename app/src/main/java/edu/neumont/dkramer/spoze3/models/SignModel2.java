@@ -65,4 +65,9 @@ public abstract class SignModel2 extends GLTexturedRect {
         mTransY = (mHeight / 2) + (y * 2f) + eyeY;
         mPickerModel.translate(mTransX, mTransY, 0);
     }
+
+    public void rotate(float angle) {
+        super.rotate(angle);
+        mPickerModel.rotate(angle);
+    }
 }

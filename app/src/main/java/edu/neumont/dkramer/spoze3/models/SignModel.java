@@ -15,6 +15,7 @@ import edu.neumont.dkramer.spoze3.gl.GLWorld;
  * Created by dkramer on 11/2/17.
  */
 
+@Deprecated
 public abstract class SignModel extends GLTexturedRect {
     /*
      * Special bits that targets the last bits of RED, GREEN, and BLUE to

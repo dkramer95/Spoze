@@ -10,6 +10,7 @@ import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import edu.neumont.dkramer.spoze3.gl.deviceinfo.GLRotationVectorInfo;
+import edu.neumont.dkramer.spoze3.scene.SignScene;
 
 import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Type.ROTATION_VECTOR;
 
@@ -25,7 +26,7 @@ public class DebugVisualizationActivity extends VisualizationActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         findViewById(R.id.hiddenOverlay).setVisibility(View.INVISIBLE);
-        ViewFlipper vf = (ViewFlipper)findViewById(R.id.toolbarFlipper);
+        ViewFlipper vf = findViewById(R.id.toolbarFlipper);
         vf.setDisplayedChild(1);
 //        initThresholdSeekbar();
     }
@@ -72,24 +73,24 @@ public class DebugVisualizationActivity extends VisualizationActivity {
     }
 
     public void deleteModelButtonClicked(View view) {
-        TouchableWorld world = (TouchableWorld)getGLContext().getGLView().getScene().getWorld();
+        SignScene scene = (SignScene)getGLContext().getGLView().getScene();
         getGLContext().queueEvent(() -> {
-            world.removeModel(world.getSelectedModel());
+            scene.getWorld().removeModel(scene.getSelectedModel());
         });
         Toast.makeText(this, "Deleted Model", Toast.LENGTH_SHORT).show();
     }
 
     public void rotateClockwiseButtonClicked(View view) {
-        TouchableWorld world = (TouchableWorld)getGLContext().getGLView().getScene().getWorld();
+        SignScene scene = (SignScene)getGLContext().getGLView().getScene();
         getGLContext().queueEvent(() -> {
-            world.getSelectedModel().rotate(-90);
+            scene.getSelectedModel().rotate(-90);
         });
     }
 
     public void rotateCounterClockwiseButtonClicked(View view) {
-        TouchableWorld world = (TouchableWorld)getGLContext().getGLView().getScene().getWorld();
+        SignScene scene = (SignScene)getGLContext().getGLView().getScene();
         getGLContext().queueEvent(() -> {
-            world.getSelectedModel().rotate(90);
+            scene.getSelectedModel().rotate(90);
         });
     }
 
