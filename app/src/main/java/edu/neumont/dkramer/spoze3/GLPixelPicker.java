@@ -55,7 +55,6 @@ public class GLPixelPicker {
     // buffer to hold single pixel value reading
     private ByteBuffer mColorBuffer;
     private byte[] mColorArray;
-    private OnPixelReadListener mPixelReadListener;
 
 
 
@@ -65,19 +64,10 @@ public class GLPixelPicker {
         init(viewWidth, viewHeight);
     }
 
-    public GLPixelPicker() {
-        init(0, 0);
-    }
-
     protected void init(int viewWidth, int viewHeight) {
         mColorBuffer = ByteBuffer.allocate(VALUES_PER_PIXEL).order(ByteOrder.nativeOrder());
         mColorArray = new byte[VALUES_PER_PIXEL];
-
         createOffScreenBuffer(viewWidth, viewHeight);
-
-
-        // default just does nothing
-        mPixelReadListener = (p) -> { };
     }
 
     /**
@@ -109,7 +99,6 @@ public class GLPixelPicker {
     public void enable() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glBindFramebuffer(GL_FRAMEBUFFER, frameBufferId[0]);
-        //TODO here is where objects should render their pixel id's and we should read pixel
     }
 
     public void disable() {
@@ -138,20 +127,8 @@ public class GLPixelPicker {
 
         int pixel = (a << 24) + (r << 16) + (g << 8) + b;
 
-        // notify pixel read listener
-        mPixelReadListener.onPixelRead(pixel);
-
         // put each byte value in correct position to create ARGB pixel
         return pixel;
     }
-
-    public void setOnPixelReadListener(OnPixelReadListener listener) {
-        mPixelReadListener = listener;
-    }
-
-    public interface OnPixelReadListener {
-        void onPixelRead(int pixel);
-    }
-
 
 }

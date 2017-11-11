@@ -22,7 +22,7 @@ import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.geti;
  * Created by dkramer on 11/4/17.
  */
 
-public class TouchSelectionHandler implements View.OnTouchListener, GLPixelPicker.OnPixelReadListener {
+public class TouchSelectionHandler implements View.OnTouchListener {
     // number of ACTION_MOVE events that need to be called before we
     // actually allow movement to occur
     private static final int ACTION_MOVE_THRESHOLD = 3;
@@ -46,7 +46,7 @@ public class TouchSelectionHandler implements View.OnTouchListener, GLPixelPicke
 //        mView.setOnTouchListener(this);
         mPixelPicker = picker;
         mWorld = view.getScene().getWorld();
-        picker.setOnPixelReadListener(this);
+//        picker.setOnPixelReadListener(this);
 
         GLTouchInfo info = (GLTouchInfo)view.getGLContext().getDeviceInfo(TOUCH_INPUT);
         info.addOnTouchListener(this);
@@ -112,7 +112,6 @@ public class TouchSelectionHandler implements View.OnTouchListener, GLPixelPicke
         return (!mReleaseFlag && mMoveCount > ACTION_MOVE_THRESHOLD);
     }
 
-    @Override
     public void onPixelRead(int pixel) {
         if (mSelectedModel != null) {
             // check to see if we still tapped on our selected model

@@ -40,13 +40,8 @@ public abstract class GLScene extends GLObject {
     protected FPSCounter mFPSCounter;
     protected GLCamera mGLCamera;
     protected GLWorld mWorld;
-//    protected GLPixelPicker mPixelPicker;
-//    protected TouchSelectionHandler mTouchHandler;
     protected int mWidth;
     protected int mHeight;
-
-    // special events that need to be executed during rendering (i.e. pixel selection)
-//    protected ArrayBlockingQueue<GLEvent> mEvents;
 
 
 
@@ -55,7 +50,11 @@ public abstract class GLScene extends GLObject {
         mGLCamera = createGLCamera();
         mWorld = createWorld();
         mFPSCounter = new FPSCounter();
-//        mEvents = new ArrayBlockingQueue(8);
+    }
+
+    public void init(int viewWidth, int viewHeight) {
+        getWorld().setSize(viewWidth, viewHeight);
+        getWorld().create();
     }
 
     public abstract GLWorld createWorld();
@@ -63,16 +62,22 @@ public abstract class GLScene extends GLObject {
 
     public void render() {
         clearScreen();
-        mGLCamera.update();
-
-//        for (GLEvent e : mEvents) {
-//            e.run();
-//            mEvents.remove(e);
-//        }
-
-        mWorld.render(mGLCamera);
-        mFPSCounter.logFrame();
+        updateCamera();
+        renderWorld();
+        logFrame();
         Matrix.invertM(mInvertedViewProjectionMatrix, 0, mGLCamera.getProjectionMatrix(), 0);
+    }
+
+    protected void updateCamera() {
+        mGLCamera.update();
+    }
+
+    protected void renderWorld() {
+        mWorld.render(mGLCamera);
+    }
+
+    protected void logFrame() {
+        mFPSCounter.logFrame();
     }
 
     public void refreshSize(int width, int height) {
