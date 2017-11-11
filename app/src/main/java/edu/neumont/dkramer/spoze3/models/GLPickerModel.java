@@ -33,8 +33,8 @@ public class GLPickerModel extends GLModel {
 
     public GLPickerModel(GLContext glContext, GLModel sourceModel) {
         super(glContext, sourceModel.getVertexData());
-        float value = rng.nextFloat();
-        mPixelId = Math.round(Integer.MAX_VALUE * value) & 0xFF000000;
+        mPixelId = rng.nextInt(255);
+        float value = mPixelId / 255.0f;
 
         mColorBuffer = FloatBuffer.wrap(new float[]{ value });
         mSourceModel = sourceModel;

@@ -1,6 +1,7 @@
 package edu.neumont.dkramer.spoze3.gl;
 
 import android.opengl.Matrix;
+import android.util.Log;
 
 import java.util.Random;
 
@@ -9,6 +10,8 @@ import java.util.Random;
  */
 
 public abstract class GLModel extends GLObject {
+    private static final String TAG = "GLModel";
+
     // counter that will be used to assign ID's to all created models
 	private static int sInstanceCounter;
 
@@ -78,7 +81,9 @@ public abstract class GLModel extends GLObject {
     }
 
     public void translate(float x, float y, float z) {
-        //TODO implement this better
+        mTransX = x;
+        mTransY = y;
+        mTransZ = z;
     }
 
     /*
@@ -95,12 +100,12 @@ public abstract class GLModel extends GLObject {
     }
 
     /*
-     * Method to be implemented that handles drawing our pixel identifier
+     * Method to be implemented that handles drawing our pixel identifier.. Default
+     * implementation just calls our regular draw method.
      */
     public void drawSelector(GLCamera camera) {
-        //TODO implement me! -- just drawing normal for now
         draw(camera);
-//        render(camera);
+        Log.w(TAG, "Warning... Using default draw selector");
     }
 
     /*
@@ -110,6 +115,14 @@ public abstract class GLModel extends GLObject {
     public void delete() {
 
     }
+
+    /*
+     * Method that can be overwritten to active touch move event
+     */
+    public void handleTouchMove(float touchX, float touchY, float touchZ, float eyeX, float eyeY, float eyeZ) {
+
+    }
+
 
     public float[] getModelMatrix() {
         return mModelMatrix;

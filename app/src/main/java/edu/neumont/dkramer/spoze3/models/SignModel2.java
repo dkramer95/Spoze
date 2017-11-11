@@ -49,7 +49,7 @@ public abstract class SignModel2 extends GLTexturedRect {
     }
 
     public boolean didTouch(int pixel) {
-        return mPickerModel.getPixelId() == pixel;
+        return mPickerModel.getPixelId() == (pixel >> 16);
     }
 
     protected void applyTransformations() {
@@ -69,14 +69,8 @@ public abstract class SignModel2 extends GLTexturedRect {
         return mGLProgram;
     }
 
-    public void translate(float x, float y, float z) {
-        Point3f cameraEye = getWorld().getCamera().getEye();
-
-        //TODO this works fine in portrait mode, but in landscape it is off!!
-        //TODO::: determine the orientation and determine the scale factor to apply
-        mTransX = x + (mWidth / 2) + cameraEye.x;
-
-        // this works well
-        mTransY = (mHeight / 2) + (y * 2f) + cameraEye.y;
+    public void handleTouchMove(float x, float y, float z, float eyeX, float eyeY, float eyeZ) {
+        mTransX = x + (mWidth / 2) + eyeX;
+        mTransY = (mHeight / 2) + (y * 2f) + eyeY;
     }
 }
