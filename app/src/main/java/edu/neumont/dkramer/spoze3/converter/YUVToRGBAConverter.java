@@ -17,7 +17,7 @@ import edu.neumont.dkramer.spoze3.ScriptC_diff;
 
 public class YUVToRGBAConverter extends ImageConverter {
     //TODO create toggle to change this... this is the motion sensitivity threshold
-    private static float sThreshold = 10;
+    private static float sThreshold = 1;
 
     private Allocation mAllocInPrev;
     private Allocation mAllocInCurrent;

@@ -9,6 +9,8 @@ import edu.neumont.dkramer.spoze3.util.FPSCounter;
 
 import static android.opengl.GLES20.GL_BLEND;
 import static android.opengl.GLES20.GL_COLOR_BUFFER_BIT;
+import static android.opengl.GLES20.GL_DEPTH_BUFFER_BIT;
+import static android.opengl.GLES20.GL_DITHER;
 import static android.opengl.GLES20.GL_ONE_MINUS_SRC_ALPHA;
 import static android.opengl.GLES20.GL_SRC_ALPHA;
 import static android.opengl.GLES20.glBlendFunc;
@@ -22,11 +24,15 @@ import static android.opengl.GLES20.glEnable;
  */
 
 public abstract class GLScene extends GLObject {
+    private static final String TAG = "GLScene";
+
     protected final float[] mInvertedViewProjectionMatrix = new float[16];
 
     protected FPSCounter mFPSCounter;
     protected GLCamera mGLCamera;
     protected GLWorld mWorld;
+    protected int mWidth;
+    protected int mHeight;
 
 
 
@@ -37,30 +43,64 @@ public abstract class GLScene extends GLObject {
         mFPSCounter = new FPSCounter();
     }
 
+    public void init(int viewWidth, int viewHeight) {
+        getWorld().setSize(viewWidth, viewHeight);
+        getWorld().create();
+    }
+
     public abstract GLWorld createWorld();
+
 
     public void render() {
         clearScreen();
-        mGLCamera.update();
-        mWorld.render(mGLCamera);
-        mFPSCounter.logFrame();
-
+        updateCamera();
+        renderWorld();
+        logFrame();
         Matrix.invertM(mInvertedViewProjectionMatrix, 0, mGLCamera.getProjectionMatrix(), 0);
+    }
+
+    protected void updateCamera() {
+        mGLCamera.update();
+    }
+
+    protected void renderWorld() {
+        mWorld.render(mGLCamera);
+    }
+
+    protected void logFrame() {
+        mFPSCounter.logFrame();
     }
 
     public void refreshSize(int width, int height) {
         getWorld().setSize(width, height);
         getCamera().refreshSize(width, height);
+//        mPixelPicker = new GLPixelPicker(width, height);
+
+        // TODO probably shouldn't be here
+//        mTouchHandler = new TouchSelectionHandler(getGLContext().getGLView(), mPixelPicker);
     }
 
     protected void clearScreen() {
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glDisable(GL_DITHER);
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glClearColor(0f, 0f, 0f, 0f);
         glDisable(GL_BLEND);
     }
+
+//    public void readPixel(int x, int y) {
+//        mPixelPicker.enable();
+//        Iterator<GLModel> models = getWorld().getModelIterator();
+//        while (models.hasNext()) {
+//            GLModel model = models.next();
+//            model.drawSelector(getCamera());
+//        }
+//        int pixel = mPixelPicker.readPixel(x, y);
+//        Log.i(TAG, "Pixel value readout => " + Integer.toHexString(pixel));
+//        mPixelPicker.disable();
+//    }
 
     public GLWorld getWorld() {
         return mWorld;
@@ -73,6 +113,19 @@ public abstract class GLScene extends GLObject {
     public GLCamera getCamera() {
         return mGLCamera;
     }
+
+    public int getWidth() {
+        return mWidth;
+    }
+
+    public int getHeight() {
+        return mHeight;
+    }
+
+
+//    public void addGLEvent(GLEvent e) {
+//        mEvents.add(e);
+//    }
 
     public void handleTouchPress(float normalizedX, float normalizedY) {
         Ray ray = convertNormalized2DPointToRay(normalizedX, normalizedY);
@@ -112,5 +165,46 @@ public abstract class GLScene extends GLObject {
         vector[0] /= vector[3];
         vector[1] /= vector[3];
         vector[2] /= vector[3];
+    }
+
+    public void stop() {
+        getWorld().removeAllModels();
+    }
+
+    public static class Builder {
+    	private GLWorld mWorld;
+    	private GLCamera mCamera;
+    	private GLContext mGLContext;
+
+        public Builder(GLContext ctx) {
+            mGLContext = ctx;
+        }
+
+        public Builder setWorld(GLWorld world) {
+        	mWorld = world;
+        	return this;
+        }
+
+        public Builder setCamera(GLCamera camera) {
+            mCamera = camera;
+            return this;
+        }
+
+        public GLScene build() {
+            final GLWorld world = mWorld;
+            final GLCamera camera = mCamera;
+
+            return new GLScene(mGLContext) {
+                @Override
+                public GLWorld createWorld() {
+                	return world;
+                }
+
+                @Override
+                public GLCamera createGLCamera() {
+                	return camera != null ? camera : super.createGLCamera();
+                }
+            };
+        }
     }
 }

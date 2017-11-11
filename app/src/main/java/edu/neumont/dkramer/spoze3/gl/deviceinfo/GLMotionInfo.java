@@ -65,6 +65,7 @@ public abstract class GLMotionInfo extends GLDeviceInfo implements SensorEventLi
     public void onSensorChanged(SensorEvent sensorEvent) {
         updatePreviousValues();
         updateCurrentValues(sensorEvent);
+        notifyUpdateListeners();
     }
 
     // unused

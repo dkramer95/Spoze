@@ -1,11 +1,12 @@
 package edu.neumont.dkramer.spoze3.gl;
 
+import android.util.Log;
+
 import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Value.CALIBRATED_PITCH;
 import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Value.CALIBRATED_YAW;
-import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Value.CURRENT_ACCEL_Z;
 import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Value.CURRENT_PITCH;
 import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Value.CURRENT_YAW;
-import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.get;
+import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.getf;
 
 /**
  * Created by dkramer on 10/25/17.
@@ -20,16 +21,19 @@ public class GLMotionCamera extends GLCamera {
 	@Override
 	public void update() {
 //		//TODO apply gyro values to camera matrix
-//		float yaw = GLDeviceInfo.get(CURRENT_YAW);
-//		float pitch = GLDeviceInfo.get(CURRENT_PITCH);
-//		float roll = GLDeviceInfo.get(CURRENT_ROLL);
+//		float yaw = GLDeviceInfo.getf(CURRENT_YAW);
+//		float pitch = GLDeviceInfo.getf(CURRENT_PITCH);
+//		float roll = GLDeviceInfo.getf(CURRENT_ROLL);
 //
 //		Log.i("GLMotionCamera", String.format("Yaw = %f, Pitch = %f, Roll = %f", yaw, pitch, roll));
 
-//		mEye.x = (mLook.x + (get(CURRENT_ACCEL_Z) * -1f));
+//		mEye.x = (mLook.x + (getf(CURRENT_ACCEL_Z) * -1f));
 
-		mEye.x = (mLook.x + (get(CALIBRATED_YAW) - get(CURRENT_YAW)) * -5f);
-		mEye.y = (mLook.y + (get(CALIBRATED_PITCH) - get(CURRENT_PITCH)));
+        //TODO check orientation to determine offset value... instead of magic 5
+		mEye.x = (mLook.x + (getf(CALIBRATED_YAW) - getf(CURRENT_YAW)) * -5f);
+		mEye.y = (mLook.y + (getf(CALIBRATED_PITCH) - getf(CURRENT_PITCH)) * 5f);
+
+		Log.i("GL_MOTION", String.format("EyeX: %f, EyeY: %f, EyeZ: %f\n", mEye.x, mEye.y, mEye.z));
 
 		super.update();
 	}

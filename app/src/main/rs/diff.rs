@@ -27,7 +27,8 @@ uchar4 __attribute__((kernel)) convert(uint32_t x, uint32_t y) {
 
     //out.rgb = result < (threshold * threshold) ? 0 : 255;
     out.g = result < (threshold * threshold) ? 0 : 255;
-    out.a = 255;
+    out.b = result < (threshold * threshold) ? 0 : 255;
+    out.a = 0;
 
     return out;
 }

@@ -21,7 +21,7 @@ public class GLVertexArray {
 
 
 
-    protected GLVertexArray(float[] data) {
+    public GLVertexArray(float[] data) {
         mData = data;
         mBuffer = ByteBuffer
                 .allocateDirect(data.length * BYTES_PER_FLOAT)

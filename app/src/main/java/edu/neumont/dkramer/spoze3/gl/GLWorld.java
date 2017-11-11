@@ -1,6 +1,7 @@
 package edu.neumont.dkramer.spoze3.gl;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -11,6 +12,7 @@ public abstract class GLWorld extends GLObject {
     protected int mWidth;
     protected int mHeight;
     protected List<GLModel> mModels;
+    protected GLCamera mCamera;
 
 
 
@@ -23,7 +25,9 @@ public abstract class GLWorld extends GLObject {
      * Method to be implemented that creates all necessary models
      * for this world
      */
-    public abstract void create();
+    public void create() {
+        mCamera = getGLContext().getGLView().getScene().getCamera();
+    }
 
     public void setSize(int width, int height) {
         mWidth = width;
@@ -36,6 +40,29 @@ public abstract class GLWorld extends GLObject {
 
     public void removeModel(GLModel model) {
         mModels.remove(model);
+        model.delete();
+    }
+
+    /**
+     * Sends the specified model to the front, by ensuring that it is
+     * rendered last, appearing over any other models.
+     * @param model Model to send to front
+     */
+    public void sendModelToFront(GLModel model) {
+        int frontIndex = (mModels.size() - 1);
+        GLModel frontModel = mModels.get(frontIndex);
+
+        if (model != frontModel) {
+            int modelIndex = mModels.indexOf(model);
+
+            // swap model position rendering order
+            mModels.set(modelIndex, frontModel);
+            mModels.set(frontIndex, model);
+        }
+    }
+
+    public Iterator<GLModel> getModelIterator() {
+        return mModels.iterator();
     }
 
     public int getWidth() {
@@ -52,4 +79,16 @@ public abstract class GLWorld extends GLObject {
         }
     }
 
+    public void removeAllModels() {
+        Iterator<GLModel> iter = getModelIterator();
+        while (iter.hasNext()) {
+            GLModel model = iter.next();
+            iter.remove();
+            model.delete();
+        }
+    }
+
+    public GLCamera getCamera() {
+        return mCamera;
+    }
 }

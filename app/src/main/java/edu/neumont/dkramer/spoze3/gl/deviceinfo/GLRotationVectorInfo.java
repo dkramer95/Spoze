@@ -3,7 +3,6 @@ package edu.neumont.dkramer.spoze3.gl.deviceinfo;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
 
 import edu.neumont.dkramer.spoze3.gl.GLContext;
 
@@ -42,16 +41,16 @@ public class GLRotationVectorInfo extends GLMotionInfo implements SensorEventLis
 
     @Override
     protected void updatePreviousValues() {
-        set(LAST_YAW,   get(CURRENT_YAW));
-        set(LAST_PITCH, get(CURRENT_PITCH));
-        set(LAST_ROLL,  get(CURRENT_ROLL));
+        set(LAST_YAW,   getf(CURRENT_YAW));
+        set(LAST_PITCH, getf(CURRENT_PITCH));
+        set(LAST_ROLL,  getf(CURRENT_ROLL));
     }
 
     @Override
     public void calibrate() {
-        set(CALIBRATED_YAW,   get(CURRENT_YAW));
-        set(CALIBRATED_PITCH, get(CURRENT_PITCH));
-        set(CALIBRATED_ROLL,  get(CURRENT_ROLL));
+        set(CALIBRATED_YAW,   getf(CURRENT_YAW));
+        set(CALIBRATED_PITCH, getf(CURRENT_PITCH));
+        set(CALIBRATED_ROLL,  getf(CURRENT_ROLL));
     }
 
     protected void updateCurrentValues(SensorEvent event) {

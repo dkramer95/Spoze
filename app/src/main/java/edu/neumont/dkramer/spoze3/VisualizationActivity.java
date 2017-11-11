@@ -1,6 +1,7 @@
 package edu.neumont.dkramer.spoze3;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -8,25 +9,31 @@ import android.widget.Toast;
 
 import java.io.IOException;
 
-import edu.neumont.dkramer.spoze3.gl.GLCamera;
 import edu.neumont.dkramer.spoze3.gl.GLCameraActivity;
 import edu.neumont.dkramer.spoze3.gl.GLContext;
 import edu.neumont.dkramer.spoze3.gl.GLMotionCamera;
 import edu.neumont.dkramer.spoze3.gl.GLScene;
-import edu.neumont.dkramer.spoze3.gl.GLWorld;
-import edu.neumont.dkramer.spoze3.models.GLTexturedRect;
+import edu.neumont.dkramer.spoze3.models.SignModel;
+import edu.neumont.dkramer.spoze3.models.SignModel2;
+import edu.neumont.dkramer.spoze3.scene.SignScene;
 
-import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Type.ACCELEROMETER;
 import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Type.ROTATION_VECTOR;
 import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Type.TOUCH_INPUT;
 
 public class VisualizationActivity extends GLCameraActivity {
     protected Bitmap mBitmap;
+//    protected Bitmap mTestBitmap;
+    protected Bitmap mTest2Bitmap;
+    protected Bitmap mTest3Bitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mBitmap = loadBitmap();
+//        mTestBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.texture_2);
+//        mTest2Bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.texture_3);
+//        mTest3Bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.texture_4);
+
+//        mBitmap = loadBitmap();
     }
 
     protected Bitmap loadBitmap() {
@@ -53,42 +60,30 @@ public class VisualizationActivity extends GLCameraActivity {
 
     @Override
     protected GLScene createGLScene() {
-        return new MyScene(getGLContext());
+        return new SignScene(getGLContext());
+//        final GLContext ctx = getGLContext();
+//
+//        TouchableWorld world = new TouchableWorld(ctx) {
+//        	@Override
+//            public void create() {
+//                super.create();
+////                SignModel.createInBackground(this, mBitmap, getWidth(), getHeight());
+////                SignModel.createInBackground(this, mTest2Bitmap, getWidth(), getHeight());
+////                SignModel.createInBackground(this, mTest3Bitmap, getWidth(), getHeight());
+////                SignModel.createInBackground(this, mTest3Bitmap, getWidth(), getHeight());
+//
+//                addModel(SignModel2.fromBitmap(ctx, mTest3Bitmap, getWidth(), getHeight()));
+//            }
+//        };
+//
+//        return new GLScene.Builder(ctx)
+//                .setWorld(world)
+//                .setCamera(GLMotionCamera.getDefault(ctx))
+//		        .build();
     }
 
     @Override
     protected int getLayoutId() {
-        return R.layout.gl_motion_camera_layout;
-    }
-
-
-
-    private class MyScene extends GLScene {
-
-        public MyScene(GLContext ctx) {
-            super(ctx);
-        }
-
-        @Override
-        public GLWorld createWorld() {
-            final GLContext ctx = getGLContext();
-        	return new GLWorld(ctx) {
-        		float angle = 0f;
-                @Override
-                public void create() {
-                    addModel(GLTexturedRect.createFromBitmap(ctx, mBitmap, getWidth(), getHeight()));
-                }
-                @Override
-                public void render(GLCamera camera) {
-                    ++angle;
-                    camera.rotate(angle, 1f, 1f, 0f);
-                    super.render(camera);
-                }
-            };
-        }
-
-        public GLCamera createGLCamera() {
-        	return GLMotionCamera.getDefault(getGLContext());
-        }
+        return R.layout.gl_camera_layout;
     }
 }

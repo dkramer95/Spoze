@@ -49,4 +49,10 @@ public class GLView extends GLSurfaceView {
     public void setScene(GLScene scene) {
         mScene = scene;
     }
+
+    public void stop() {
+        // stop continuous rendering!
+        setRenderMode(RENDERMODE_WHEN_DIRTY);
+        getScene().stop();
+    }
 }

@@ -100,4 +100,8 @@ public class GLCamera extends GLObject {
         return mProjectionMatrix;
     }
 
+    public Point3f getEye() {
+        return mEye;
+    }
+
 }

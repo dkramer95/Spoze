@@ -16,32 +16,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <LinearLayout
+
+        <!-- Swap between different toolbar layouts -->
+        <ViewFlipper
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/background_dark"
-            android:orientation="horizontal">
+            android:id="@+id/toolbarFlipper">
 
-            <Button
-                android:id="@+id/calibrateButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:onClick="calibrateButtonClicked"
-                android:text="Calibrate" />
-
-            <Button
-                android:id="@+id/button2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:onClick="testButtonClicked"
-                android:text="TEST" />
-
-        </LinearLayout>
+            <include layout="@layout/sign_toolbar"/>
+            <include layout="@layout/normal_toolbar"/>
+        </ViewFlipper>
 
         <android.support.constraint.ConstraintLayout
-            android:id="@+id/constraintLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -64,6 +50,25 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <LinearLayout
+                android:id="@+id/hiddenOverlay"
+                android:layout_width="250dp"
+                android:layout_height="match_parent"
+                android:background="@color/color_overlay_trans_black"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <Button
+                    android:id="@+id/hiddenButton1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="hiddenButtonClicked"
+                    android:text="Button" />
+            </LinearLayout>
 
         </android.support.constraint.ConstraintLayout>
 

@@ -2,9 +2,10 @@
 <resources>
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#12303f9f</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorAccent">#18ffff</color>
     <color name="buttonColorNormal">#66FFFFFF</color>
     <color name="buttonColorActive">#b9ffffff</color>
 
-    <color name="black_overlay">#66cd3838</color>
+    <color name="black_overlay">#0000ff00</color>
+    <color name="color_overlay_trans_black">#65000000</color>
 </resources>

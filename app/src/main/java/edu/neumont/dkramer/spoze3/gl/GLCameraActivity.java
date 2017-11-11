@@ -65,6 +65,10 @@ public abstract class GLCameraActivity extends GLActivity {
 		mCameraPreview.startPreviewing();
 	}
 
+	protected CameraPreview getCameraPreview() {
+		return mCameraPreview;
+	}
+
 	/**
 	 * Checks to see if we have been granted permission to use the camera
 	 * @return true if we have permission, false otherwise

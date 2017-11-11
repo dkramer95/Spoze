@@ -1,9 +1,13 @@
 package edu.neumont.dkramer.spoze3.gl.deviceinfo;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 import edu.neumont.dkramer.spoze3.gl.GLContext;
 import edu.neumont.dkramer.spoze3.gl.GLObject;
+
+import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Type.TOUCH_INPUT;
 
 /**
  * Created by dkramer on 10/20/17.
@@ -24,11 +28,12 @@ public abstract class GLDeviceInfo extends GLObject {
         }
     }
 
-
+    protected List<OnUpdateListener> mUpdateListeners;
 
 
     public GLDeviceInfo(GLContext ctx) {
         super(ctx);
+        mUpdateListeners = new ArrayList<>();
     }
 
 
@@ -36,15 +41,39 @@ public abstract class GLDeviceInfo extends GLObject {
 
     public abstract void stop();
 
+    public void addOnUpdateListener(OnUpdateListener listener) {
+    	mUpdateListeners.add(listener);
+    }
 
-    public static float get(Value valueType) {
+    public void removeOnUpdateListener(OnUpdateListener listenerToRemove) {
+        mUpdateListeners.remove(listenerToRemove);
+    }
+
+    protected void notifyUpdateListeners() {
+        for(OnUpdateListener listener : mUpdateListeners) {
+            listener.onUpdate(TOUCH_INPUT);
+        }
+    }
+
+
+    public static float getf(Value valueType) {
         return sValues.get(valueType);
+    }
+
+    public static int geti(Value valueType) {
+        float value = sValues.get(valueType);
+        return (int)value;
     }
 
     protected static void set(Value key, float value) {
         sValues.put(key, value);
     }
 
+
+    /* Interface to allow users to do things when an update occurs */
+    public interface OnUpdateListener {
+        void onUpdate(GLDeviceInfo.Type sender);
+    }
 
 
     /**
@@ -79,9 +108,13 @@ public abstract class GLDeviceInfo extends GLObject {
 
         LAST_TOUCH_X,
         LAST_TOUCH_Y,
+        LAST_TOUCH_NORMALIZED_X,
+        LAST_TOUCH_NORMALIZED_Y,
 
         CURRENT_TOUCH_X,
         CURRENT_TOUCH_Y,
+        CURRENT_TOUCH_NORMALIZED_X,
+        CURRENT_TOUCH_NORMALIZED_Y,
 
         /* Values for Type.ACCELEROMETER */
 
