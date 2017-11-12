@@ -2,7 +2,6 @@ package edu.neumont.dkramer.spoze3;
 
 import android.app.DialogFragment;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Environment;
@@ -173,6 +172,16 @@ public class GalleryFragment extends DialogFragment {
         return imageList;
     }
 
+    public List<GalleryItemView> getSelectedItems() {
+        return mNormalSelected;
+    }
+
+    public void clearSelectedItems() {
+        for (GalleryItemView item : mNormalSelected) {
+            item.clear();
+        }
+        mNormalSelected.clear();
+    }
 
 
     private class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {

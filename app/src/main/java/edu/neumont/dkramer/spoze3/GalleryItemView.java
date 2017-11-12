@@ -61,6 +61,12 @@ public class GalleryItemView extends AppCompatImageView implements View.OnClickL
         }
     }
 
+    public void clear() {
+        getBackground().setColorFilter(null);
+        normalSelectFlag = false;
+        deleteSelectFlag = false;
+    }
+
     public void onDelete() {
         clearColorFilter();
         animate().alpha(0).setDuration(5).start();

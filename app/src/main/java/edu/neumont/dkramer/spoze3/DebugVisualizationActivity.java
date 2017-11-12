@@ -13,7 +13,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
+import java.util.List;
+
+import edu.neumont.dkramer.spoze3.gl.GLWorld;
 import edu.neumont.dkramer.spoze3.gl.deviceinfo.GLRotationVectorInfo;
+import edu.neumont.dkramer.spoze3.models.SignModel2;
 import edu.neumont.dkramer.spoze3.scene.SignScene;
 
 import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Type.ROTATION_VECTOR;
@@ -102,6 +106,7 @@ public class DebugVisualizationActivity extends VisualizationActivity {
             scene.deleteSelectedModel();
         });
         Toast.makeText(this, "Deleted Model", Toast.LENGTH_SHORT).show();
+        mToolbarFlipper.setDisplayedChild(1);
     }
 
     public void rotateClockwiseButtonClicked(View view) {
@@ -120,6 +125,22 @@ public class DebugVisualizationActivity extends VisualizationActivity {
 
     public void deleteSelectedButtonClicked(View view) {
         mGalleryFragment.deleteSelected();
+    }
+
+    public void loadSelectedButtonClicked(View view) {
+        closeButtonClicked(view);
+
+        List<GalleryItemView> items = mGalleryFragment.getSelectedItems();
+        GLWorld world = getGLContext().getGLView().getScene().getWorld();
+
+
+        for (GalleryItemView item : items) {
+            Bitmap bmp = BitmapFactory.decodeFile(item.getResourceString());
+            getGLContext().queueEvent(() -> {
+                world.addModel(SignModel2.fromBitmap(getGLContext(), bmp, world.getWidth(), world.getHeight()));
+            });
+        }
+        mGalleryFragment.clearSelectedItems();
     }
 
     public void hiddenButtonClicked(View view) {
