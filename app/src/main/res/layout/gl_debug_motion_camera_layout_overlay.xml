@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -50,25 +51,16 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
-            <LinearLayout
-                android:id="@+id/hiddenOverlay"
+
+            <fragment
+                android:id="@+id/gallery"
+                android:name="edu.neumont.dkramer.spoze3.GalleryFragment"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.75"
-                android:background="@color/color_overlay_trans_black"
-                android:orientation="vertical"
+                android:layout_height="match_parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-                <Button
-                    android:id="@+id/hiddenButton1"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:onClick="hiddenButtonClicked"
-                    android:text="Button" />
-            </LinearLayout>
-
+                app:layout_constraintTop_toTopOf="parent" />
         </android.support.constraint.ConstraintLayout>
 
     </LinearLayout>

@@ -1,10 +1,12 @@
 package edu.neumont.dkramer.spoze3;
 
+import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -21,15 +23,24 @@ import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Type.ROTATIO
  */
 
 public class DebugVisualizationActivity extends VisualizationActivity {
+    private static final String TAG = "VisualizationActivity";
+
     protected SeekBar mThresholdSeekBar;
     protected TextView mThresholdTextView;
+    protected Fragment mGalleryFragment;
+    protected ViewFlipper mToolbarFlipper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        findViewById(R.id.hiddenOverlay).setVisibility(View.INVISIBLE);
-        ViewFlipper vf = findViewById(R.id.toolbarFlipper);
-        vf.setDisplayedChild(1);
+//        findViewById(R.id.hiddenOverlay).setVisibility(View.INVISIBLE);
+        mToolbarFlipper = findViewById(R.id.toolbarFlipper);
+        mToolbarFlipper.setDisplayedChild(1);
+        mGalleryFragment = getFragmentManager().findFragmentById(R.id.gallery);
+
+        getFragmentManager().beginTransaction()
+                .hide(mGalleryFragment)
+                .commit();
 //        initThresholdSeekbar();
     }
 
@@ -65,6 +76,7 @@ public class DebugVisualizationActivity extends VisualizationActivity {
         return R.layout.gl_debug_motion_camera_layout_overlay;
     }
 
+
     public void calibrateButtonClicked(View view) {
         //TODO perform calibration
         GLRotationVectorInfo rotationVectorInfo
@@ -72,6 +84,16 @@ public class DebugVisualizationActivity extends VisualizationActivity {
         rotationVectorInfo.calibrate();
 
         Toast.makeText(this, "Calibrated!", Toast.LENGTH_SHORT).show();
+    }
+
+    public void closeButtonClicked(View view) {
+        mToolbarFlipper.setVisibility(View.VISIBLE);
+        getFragmentManager().beginTransaction()
+                .setCustomAnimations(R.animator.fade_in, R.animator.fade_out)
+                .hide(mGalleryFragment)
+                .commit();
+        getGLContext().getGLView().setVisibility(View.VISIBLE);
+        getGLContext().getGLView().setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
     }
 
     public void deleteModelButtonClicked(View view) {
@@ -99,19 +121,19 @@ public class DebugVisualizationActivity extends VisualizationActivity {
     public void hiddenButtonClicked(View view) {
         getGLContext().getGLView().setVisibility(View.VISIBLE);
         getGLContext().getGLView().setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
-        findViewById(R.id.hiddenOverlay).setVisibility(View.INVISIBLE);
+//        findViewById(R.id.hiddenOverlay).setVisibility(View.INVISIBLE);
     }
 
     public void importButtonClicked(View view) {
         getGLContext().getGLView().setVisibility(View.GONE);
+
         // pause rendering
         getGLContext().getGLView().setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
 
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        GalleryFragment galleryFragment = new GalleryFragment();
-        ft.add(R.id.hiddenOverlay, galleryFragment);
-//        setContentView(R.layout.gl_debug_motion_camera_layout_overlay);
-        findViewById(R.id.hiddenOverlay).setVisibility(View.VISIBLE);
-        ft.commit();
+        mToolbarFlipper.setVisibility(View.GONE);
+        getFragmentManager().beginTransaction()
+                .setCustomAnimations(R.animator.fade_in, R.animator.fade_out)
+                .show(mGalleryFragment)
+                .commit();
     }
 }

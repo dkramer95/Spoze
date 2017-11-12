@@ -65,7 +65,15 @@ public class GalleryFragment extends DialogFragment {
         ArrayList<Integer> createLists = prepareData();
         MyAdapter adapter = new MyAdapter(getActivity(), createLists);
         mRecyclerView.setAdapter(adapter);
+
         return view;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // stop progress bar
+//        getActivity().findViewById(R.id.galleryLoadProgressBar).setVisibility(View.GONE);
     }
 
     @Override
