@@ -18,12 +18,12 @@ public class MenuActivity extends AppCompatActivity {
 	}
 
 	public void visualizeButtonClicked(View view) {
-//		Intent intent = new Intent(this, ImportBitmapActivity.class);
-//		startActivity(intent);
-
-		// TESTING --> TODO make button for this action
-		Intent intent = new Intent(this, GalleryActivity.class);
+		Intent intent = new Intent(this, ImportBitmapActivity.class);
 		startActivity(intent);
+
+//		// TESTING --> TODO make button for this action
+//		Intent intent = new Intent(this, GalleryFragment.class);
+//		startActivity(intent);
 	}
 
 	public void debugButtonClicked(View view) {

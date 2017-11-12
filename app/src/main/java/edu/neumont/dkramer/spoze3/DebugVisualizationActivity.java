@@ -1,7 +1,9 @@
 package edu.neumont.dkramer.spoze3;
 
+import android.app.FragmentTransaction;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.SeekBar;
@@ -96,12 +98,20 @@ public class DebugVisualizationActivity extends VisualizationActivity {
 
     public void hiddenButtonClicked(View view) {
         getGLContext().getGLView().setVisibility(View.VISIBLE);
+        getGLContext().getGLView().setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
         findViewById(R.id.hiddenOverlay).setVisibility(View.INVISIBLE);
     }
 
     public void testButtonClicked(View view) {
         getGLContext().getGLView().setVisibility(View.GONE);
+        // pause rendering
+        getGLContext().getGLView().setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
+
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        GalleryFragment galleryFragment = new GalleryFragment();
+        ft.add(R.id.hiddenOverlay, galleryFragment);
 //        setContentView(R.layout.gl_debug_motion_camera_layout_overlay);
         findViewById(R.id.hiddenOverlay).setVisibility(View.VISIBLE);
+        ft.commit();
     }
 }

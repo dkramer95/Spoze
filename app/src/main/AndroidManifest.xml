@@ -19,7 +19,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".GalleryActivity"/>
+        <activity android:name=".GalleryFragment"/>
         <activity android:name=".VisualizationActivity"
                   android:theme="@style/FullscreenTheme"
                   android:configChanges="orientation|screenSize"/>

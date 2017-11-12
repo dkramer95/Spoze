@@ -1,9 +1,10 @@
 package edu.neumont.dkramer.spoze3;
 
+import android.app.DialogFragment;
+import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -19,7 +20,7 @@ import static android.widget.ImageView.ScaleType.CENTER_CROP;
  * Created by dkramer on 11/11/17.
  */
 
-public class GalleryActivity extends AppCompatActivity {
+public class GalleryFragment extends DialogFragment {
     protected RecyclerView mRecyclerView;
 
     static int[] imageIds =
@@ -30,19 +31,48 @@ public class GalleryActivity extends AppCompatActivity {
         R.drawable.logo_texture
     };
 
+
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.gallery_layout);
-        mRecyclerView = findViewById(R.id.imagegallery);
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.gallery_layout, container, false);
+        mRecyclerView = view.findViewById(R.id.imagegallery);
 
-
-        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this, 1);
+        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), 1);
         mRecyclerView.setLayoutManager(layoutManager);
         ArrayList<Integer> createLists = prepareData();
-        MyAdapter adapter = new MyAdapter(this, createLists);
+        MyAdapter adapter = new MyAdapter(getActivity(), createLists);
         mRecyclerView.setAdapter(adapter);
+        return view;
     }
+
+
+//    @Override
+//    public void onCreate(@Nullable Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+
+//        mRecyclerView = findViewById(R.id.imagegallery);
+//
+//
+//        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), 1);
+//        mRecyclerView.setLayoutManager(layoutManager);
+//        ArrayList<Integer> createLists = prepareData();
+//        MyAdapter adapter = new MyAdapter(getActivity(), createLists);
+//        mRecyclerView.setAdapter(adapter);
+//    }
+
+    //    @Override
+//    protected void onCreate(@Nullable Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+////        setContentView(R.layout.gallery_layout);
+////        mRecyclerView = findViewById(R.id.imagegallery);
+//
+//
+//        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), 1);
+//        mRecyclerView.setLayoutManager(layoutManager);
+//        ArrayList<Integer> createLists = prepareData();
+//        MyAdapter adapter = new MyAdapter(getActivity(), createLists);
+//        mRecyclerView.setAdapter(adapter);
+//    }
 
     private ArrayList<Integer> prepareData() {
         ArrayList<Integer> imageList = new ArrayList<>();

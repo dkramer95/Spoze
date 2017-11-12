@@ -7,6 +7,7 @@
     <color name="buttonColorActive">#b9ffffff</color>
 
     <color name="black_overlay">#0000ff00</color>
-    <color name="color_overlay_trans_black">#65000000</color>
+    <color name="color_overlay_trans_black">#66000000</color>
     <color name="gallery_item_bg">#14ffffff</color>
+    <color name="overlay_color">#14000000</color>
 </resources>
