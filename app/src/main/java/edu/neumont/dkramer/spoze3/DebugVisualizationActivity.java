@@ -102,7 +102,7 @@ public class DebugVisualizationActivity extends VisualizationActivity {
         findViewById(R.id.hiddenOverlay).setVisibility(View.INVISIBLE);
     }
 
-    public void testButtonClicked(View view) {
+    public void importButtonClicked(View view) {
         getGLContext().getGLView().setVisibility(View.GONE);
         // pause rendering
         getGLContext().getGLView().setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
