@@ -17,6 +17,7 @@ public class GalleryItemView extends AppCompatImageView implements View.OnClickL
 
     protected boolean normalSelectFlag;
     protected boolean deleteSelectFlag;
+    protected String mResourceString;
 
 
 
@@ -58,6 +59,19 @@ public class GalleryItemView extends AppCompatImageView implements View.OnClickL
                 normalSelectFlag = true;
             }
         }
+    }
+
+    public void onDelete() {
+        clearColorFilter();
+        animate().alpha(0).setDuration(5).start();
+    }
+
+    public void setResourceString(String str) {
+        mResourceString = str;
+    }
+
+    public String getResourceString() {
+        return mResourceString;
     }
 
     public boolean isNormalSelected() {

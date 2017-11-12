@@ -27,7 +27,7 @@ public class DebugVisualizationActivity extends VisualizationActivity {
 
     protected SeekBar mThresholdSeekBar;
     protected TextView mThresholdTextView;
-    protected Fragment mGalleryFragment;
+    protected GalleryFragment mGalleryFragment;
     protected ViewFlipper mToolbarFlipper;
 
     @Override
@@ -36,7 +36,7 @@ public class DebugVisualizationActivity extends VisualizationActivity {
 //        findViewById(R.id.hiddenOverlay).setVisibility(View.INVISIBLE);
         mToolbarFlipper = findViewById(R.id.toolbarFlipper);
         mToolbarFlipper.setDisplayedChild(1);
-        mGalleryFragment = getFragmentManager().findFragmentById(R.id.gallery);
+        mGalleryFragment = (GalleryFragment) getFragmentManager().findFragmentById(R.id.gallery);
 
         getFragmentManager().beginTransaction()
                 .hide(mGalleryFragment)
@@ -116,6 +116,10 @@ public class DebugVisualizationActivity extends VisualizationActivity {
         getGLContext().queueEvent(() -> {
             scene.getSelectedModel().rotate(90);
         });
+    }
+
+    public void deleteSelectedButtonClicked(View view) {
+        mGalleryFragment.deleteSelected();
     }
 
     public void hiddenButtonClicked(View view) {

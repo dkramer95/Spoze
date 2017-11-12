@@ -2,29 +2,38 @@ package edu.neumont.dkramer.spoze3;
 
 import android.app.DialogFragment;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import static android.content.res.Configuration.ORIENTATION_LANDSCAPE;
 import static android.content.res.Configuration.ORIENTATION_PORTRAIT;
-import static android.widget.ImageView.ScaleType.FIT_CENTER;
 
 /**
  * Created by dkramer on 11/11/17.
  */
 
 public class GalleryFragment extends DialogFragment {
+    private static final String TAG = "Gallery Fragment";
+    private static final String SPOZE_DIRECTORY = "SpozeGallery";
+
     protected RecyclerView mRecyclerView;
     protected ButtonClickHandler mButtonClickHandler;
     protected Button mLoadSelectedButton;
@@ -34,18 +43,49 @@ public class GalleryFragment extends DialogFragment {
     protected List<GalleryItemView> mDeleteSelected;
 
 
-    static int[] imageIds =
-    {
-        R.drawable.banner_texture,
-        R.drawable.decal_texture,
-        R.drawable.logo_texture,
-        R.drawable.texture7,
-        R.drawable.texture_3,
-        R.drawable.texture_4,
-        R.drawable.vim_texture,
-        R.drawable.texture10,
-    };
+//    static int[] imageIds =
+//    {
+//        R.drawable.banner_texture,
+//        R.drawable.decal_texture,
+//        R.drawable.logo_texture,
+//        R.drawable.texture7,
+//        R.drawable.texture_3,
+//        R.drawable.texture_4,
+//        R.drawable.vim_texture,
+//        R.drawable.texture10,
+//    };
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        ensureCanWriteToExternalStorage();
+    }
+
+    protected void ensureCanWriteToExternalStorage() {
+        if (isExternalStorageWritable()) {
+            File dir = getGalleryDir();
+            dir.mkdirs();
+            if (!dir.exists()) {
+                Toast.makeText(getActivity(), "Spoze Gallery Missing!", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    protected File getGalleryDir() {
+        return new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+                + File.separator + SPOZE_DIRECTORY);
+    }
+
+    public boolean isExternalStorageWritable() {
+        String state = Environment.getExternalStorageState();
+        return state.equals(Environment.MEDIA_MOUNTED);
+    }
+
+    public boolean isExternalStorageReadable() {
+        String state = Environment.getExternalStorageState();
+        return state.equals(Environment.MEDIA_MOUNTED)
+               || state.equals(Environment.MEDIA_MOUNTED_READ_ONLY);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -53,6 +93,19 @@ public class GalleryFragment extends DialogFragment {
         mRecyclerView = view.findViewById(R.id.imagegallery);
         updateLayoutManager(getActivity().getResources().getConfiguration().orientation);
 
+        initButtons(view);
+        initGalleryView();
+
+        return view;
+    }
+
+    protected void initGalleryView() {
+        List<String> createLists = prepareData();
+        MyAdapter adapter = new MyAdapter(getActivity(), createLists);
+        mRecyclerView.setAdapter(adapter);
+    }
+
+    protected void initButtons(View view) {
         // Button stuff
         mLoadSelectedButton = view.findViewById(R.id.loadSelectedButton);
         mDeleteSelectedButton = view.findViewById(R.id.deleteSelectedButton);
@@ -61,12 +114,6 @@ public class GalleryFragment extends DialogFragment {
         mNormalSelected = new ArrayList<>();
         mDeleteSelected = new ArrayList<>();
         refreshButtons();
-
-        ArrayList<Integer> createLists = prepareData();
-        MyAdapter adapter = new MyAdapter(getActivity(), createLists);
-        mRecyclerView.setAdapter(adapter);
-
-        return view;
     }
 
     @Override
@@ -82,6 +129,32 @@ public class GalleryFragment extends DialogFragment {
         updateLayoutManager(newConfig.orientation);
     }
 
+    public void deleteSelected() {
+        MyAdapter adapter = (MyAdapter)mRecyclerView.getAdapter();
+        for (GalleryItemView g : mDeleteSelected) {
+            g.setOnClickListener(null);
+        }
+
+        Iterator<GalleryItemView> itemIterator = mDeleteSelected.iterator();
+        while (itemIterator.hasNext()) {
+            GalleryItemView g = itemIterator.next();
+            String resStr = g.getResourceString();
+
+            File f = new File(resStr);
+            if (f.exists()) {
+                f.delete();
+            }
+            g.onDelete();
+            adapter.remove(resStr);
+            g.animate().alpha(0).setDuration(500).withEndAction(() -> {
+                adapter.notifyDataSetChanged();
+            });
+            itemIterator.remove();
+        }
+
+        mDeleteSelectedButton.setEnabled(false);
+    }
+
     protected void updateLayoutManager(int orientation) {
         if (orientation == ORIENTATION_PORTRAIT) {
             mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
@@ -90,10 +163,12 @@ public class GalleryFragment extends DialogFragment {
         }
     }
 
-    private ArrayList<Integer> prepareData() {
-        ArrayList<Integer> imageList = new ArrayList<>();
-        for (int j = 0; j < imageIds.length; ++j) {
-            imageList.add(imageIds[j]);
+    private List<String> prepareData() {
+        List<String> imageList = new ArrayList<>();
+        File[] files = getGalleryDir().listFiles();
+        for (File f : files) {
+            imageList.add(f.getAbsolutePath());
+            Log.i(TAG, "Added File => " + f);
         }
         return imageList;
     }
@@ -102,9 +177,9 @@ public class GalleryFragment extends DialogFragment {
 
     private class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         private Context mContext;
-        private ArrayList<Integer> mGalleryList;
+        private List<String> mGalleryList;
 
-        public MyAdapter(Context ctx, ArrayList<Integer> galleryList) {
+        public MyAdapter(Context ctx, List<String> galleryList) {
             mContext = ctx;
             mGalleryList = galleryList;
         }
@@ -117,10 +192,22 @@ public class GalleryFragment extends DialogFragment {
 
         @Override
         public void onBindViewHolder(MyAdapter.ViewHolder holder, int index) {
-            holder.mImgView.setScaleType(FIT_CENTER);
-            holder.mImgView.setImageResource(mGalleryList.get(index));
-            holder.mImgView.setOnClickListener(mButtonClickHandler);
-            holder.mImgView.setOnLongClickListener(mButtonClickHandler);
+            String filePath = mGalleryList.get(index);
+            GalleryItemView galleryItem = holder.mImgView;
+
+            Glide.with(getActivity())
+                    .load(filePath)
+                    .placeholder(R.drawable.ic_launcher_background)
+                    .fitCenter()
+                    .into(galleryItem);
+
+            galleryItem.setOnClickListener(mButtonClickHandler);
+            galleryItem.setOnLongClickListener(mButtonClickHandler);
+            galleryItem.setResourceString(filePath);
+        }
+
+        public boolean remove(String item) {
+            return mGalleryList.remove(item);
         }
 
         @Override
@@ -129,7 +216,7 @@ public class GalleryFragment extends DialogFragment {
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
-            private ImageView mImgView;
+            private GalleryItemView mImgView;
 
             public ViewHolder(View view) {
                 super(view);

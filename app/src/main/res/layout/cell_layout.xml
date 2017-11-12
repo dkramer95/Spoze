@@ -6,10 +6,9 @@
 
     <edu.neumont.dkramer.spoze3.GalleryItemView
         android:id="@+id/img"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="175dp"
+        android:layout_height="175dp"
         android:layout_margin="16dp"
-        android:maxHeight="175dp"
         android:adjustViewBounds="true"
         android:background="@drawable/ripple_effect"
         android:clickable="true"
