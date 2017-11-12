@@ -2,10 +2,12 @@ package edu.neumont.dkramer.spoze3.gl;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.util.Size;
 
 import edu.neumont.dkramer.spoze3.R;
 import edu.neumont.dkramer.spoze3.camera.Camera;
@@ -57,12 +59,22 @@ public abstract class GLCameraActivity extends GLActivity {
 	protected void init() {
 		mCameraPreview = findViewById(R.id.cameraPreview);
 		mCameraPreview.setCameraType(Camera.CAM_REAR);
+		mCameraPreview.setPreferredSize(getDisplaySize());
 
 		if (!hasGrantedCameraPermission()) {
 			requestCameraPermission();
 			return;
 		}
 		mCameraPreview.startPreviewing();
+	}
+
+	/**
+	 * @return size of physical device display in pixels
+	 */
+	protected Size getDisplaySize() {
+		Point outSize = new Point();
+		getWindowManager().getDefaultDisplay().getSize(outSize);
+		return new Size(outSize.x, outSize.y);
 	}
 
 	protected CameraPreview getCameraPreview() {

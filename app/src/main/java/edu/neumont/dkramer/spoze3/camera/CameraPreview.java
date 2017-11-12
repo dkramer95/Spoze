@@ -14,8 +14,13 @@ import android.view.SurfaceView;
 public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
     protected static final int CAMERA_TYPE_UNDEFINED = -1;
 
+
+
     protected Camera mCamera;
     protected int mCameraType = CAMERA_TYPE_UNDEFINED;
+
+    // preferred size, not necessary the size obtained from this view
+    protected Size mPreferredSize;
 
 
 
@@ -41,7 +46,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     }
 
     public void startPreviewing() {
-        if (mCameraType == -1) {
+        if (mCameraType == CAMERA_TYPE_UNDEFINED) {
             throw new IllegalStateException("Must call setCameraType() before previewing!");
         }
         getHolder().addCallback(this);
@@ -65,7 +70,19 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 
     protected Size getOptimalPreviewSize() {
         Size[] sizes = mCamera.getAvailablePreviewSizes();
-        return Camera.getOptimalPreviewSize(getWidth(), getHeight(), sizes);
+        return Camera.getOptimalPreviewSize(getPreviewWidth(), getPreviewHeight(), sizes);
+    }
+
+    public void setPreferredSize(Size size) {
+        mPreferredSize = size;
+    }
+
+    public int getPreviewWidth() {
+        return mPreferredSize != null ? mPreferredSize.getWidth() : super.getWidth();
+    }
+
+    public int getPreviewHeight() {
+        return mPreferredSize != null ? mPreferredSize.getHeight() : super.getHeight();
     }
 
     @Override
