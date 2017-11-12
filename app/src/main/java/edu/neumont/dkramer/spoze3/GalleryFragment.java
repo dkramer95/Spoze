@@ -1,7 +1,6 @@
 package edu.neumont.dkramer.spoze3;
 
 import android.app.DialogFragment;
-import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -14,7 +13,7 @@ import android.widget.ImageView;
 
 import java.util.ArrayList;
 
-import static android.widget.ImageView.ScaleType.CENTER_CROP;
+import static android.widget.ImageView.ScaleType.FIT_CENTER;
 
 /**
  * Created by dkramer on 11/11/17.
@@ -26,9 +25,12 @@ public class GalleryFragment extends DialogFragment {
     static int[] imageIds =
     {
         R.drawable.banner_texture,
-        R.drawable.vim_texture,
         R.drawable.decal_texture,
-        R.drawable.logo_texture
+        R.drawable.logo_texture,
+        R.drawable.texture7,
+        R.drawable.texture_3,
+        R.drawable.texture_4,
+        R.drawable.vim_texture,
     };
 
 
@@ -37,42 +39,13 @@ public class GalleryFragment extends DialogFragment {
         View view = inflater.inflate(R.layout.gallery_layout, container, false);
         mRecyclerView = view.findViewById(R.id.imagegallery);
 
-        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), 1);
+        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
         mRecyclerView.setLayoutManager(layoutManager);
         ArrayList<Integer> createLists = prepareData();
         MyAdapter adapter = new MyAdapter(getActivity(), createLists);
         mRecyclerView.setAdapter(adapter);
         return view;
     }
-
-
-//    @Override
-//    public void onCreate(@Nullable Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-
-//        mRecyclerView = findViewById(R.id.imagegallery);
-//
-//
-//        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), 1);
-//        mRecyclerView.setLayoutManager(layoutManager);
-//        ArrayList<Integer> createLists = prepareData();
-//        MyAdapter adapter = new MyAdapter(getActivity(), createLists);
-//        mRecyclerView.setAdapter(adapter);
-//    }
-
-    //    @Override
-//    protected void onCreate(@Nullable Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-////        setContentView(R.layout.gallery_layout);
-////        mRecyclerView = findViewById(R.id.imagegallery);
-//
-//
-//        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), 1);
-//        mRecyclerView.setLayoutManager(layoutManager);
-//        ArrayList<Integer> createLists = prepareData();
-//        MyAdapter adapter = new MyAdapter(getActivity(), createLists);
-//        mRecyclerView.setAdapter(adapter);
-//    }
 
     private ArrayList<Integer> prepareData() {
         ArrayList<Integer> imageList = new ArrayList<>();
@@ -99,7 +72,7 @@ public class GalleryFragment extends DialogFragment {
 
         @Override
         public void onBindViewHolder(MyAdapter.ViewHolder holder, int index) {
-            holder.mImgView.setScaleType(CENTER_CROP);
+            holder.mImgView.setScaleType(FIT_CENTER);
             holder.mImgView.setImageResource(mGalleryList.get(index));
         }
 

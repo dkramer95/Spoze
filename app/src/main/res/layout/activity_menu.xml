@@ -41,7 +41,7 @@
             android:onClick="visualizeButtonClicked"
             android:text="@string/visualize_button"
             android:textColor="@android:color/white"
-            android:textSize="22sp"/>
+            android:textSize="22sp" />
 
         <Button
             android:id="@+id/debugButton"
