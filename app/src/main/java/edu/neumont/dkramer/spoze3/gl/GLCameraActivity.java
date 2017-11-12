@@ -13,6 +13,9 @@ import edu.neumont.dkramer.spoze3.R;
 import edu.neumont.dkramer.spoze3.camera.Camera;
 import edu.neumont.dkramer.spoze3.camera.CameraPreview;
 
+import static android.hardware.camera2.CameraMetadata.CONTROL_AF_MODE_CONTINUOUS_PICTURE;
+import static android.hardware.camera2.CaptureRequest.CONTROL_AF_MODE;
+
 /**
  * Created by dkramer on 10/23/17.
  */
@@ -60,6 +63,7 @@ public abstract class GLCameraActivity extends GLActivity {
 		mCameraPreview = findViewById(R.id.cameraPreview);
 		mCameraPreview.setCameraType(Camera.CAM_REAR);
 		mCameraPreview.setPreferredSize(getDisplaySize());
+		mCameraPreview.setPreviewOption(CONTROL_AF_MODE, CONTROL_AF_MODE_CONTINUOUS_PICTURE);
 
 		if (!hasGrantedCameraPermission()) {
 			requestCameraPermission();

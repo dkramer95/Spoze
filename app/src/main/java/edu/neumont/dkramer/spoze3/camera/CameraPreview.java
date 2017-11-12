@@ -1,20 +1,28 @@
 package edu.neumont.dkramer.spoze3.camera;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.hardware.camera2.CameraAccessException;
+import android.hardware.camera2.CaptureRequest;
 import android.util.AttributeSet;
 import android.util.Size;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by dkramer on 10/24/17.
  */
 
-public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
+public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback, Camera.OnCaptureRequestConfigure {
     protected static final int CAMERA_TYPE_UNDEFINED = -1;
 
 
+
+    // map containing configuration flags for our camera
+    protected Map<CaptureRequest.Key<Integer>, Integer> mPreviewOptions = new HashMap<>();
 
     protected Camera mCamera;
     protected int mCameraType = CAMERA_TYPE_UNDEFINED;
@@ -73,6 +81,15 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         return Camera.getOptimalPreviewSize(getPreviewWidth(), getPreviewHeight(), sizes);
     }
 
+    /**
+     * Set a specific CaptureRequest option
+     * @param key
+     * @param value
+     */
+    public void setPreviewOption(CaptureRequest.Key<Integer> key, Integer value) {
+        mPreviewOptions.put(key, value);
+    }
+
     public void setPreferredSize(Size size) {
         mPreferredSize = size;
     }
@@ -83,6 +100,14 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 
     public int getPreviewHeight() {
         return mPreferredSize != null ? mPreferredSize.getHeight() : super.getHeight();
+    }
+
+    @SuppressLint("NewApi")
+    @Override
+    public void onConfigure(CaptureRequest.Builder requestBuilder) {
+        mPreviewOptions.forEach((k, v) -> {
+            requestBuilder.set(k, v);
+        });
     }
 
     @Override
@@ -96,10 +121,12 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     }
 
     protected void attachCamera(SurfaceHolder holder) throws CameraAccessException {
-        mCamera = Camera.acquire(getContext(), getCameraType());
+        mCamera = Camera.acquire(getContext(), getCameraType())
+                .setOnCaptureRequestListener(this)
+                .addTarget(holder.getSurface());
+
         Size size = getOptimalPreviewSize();
         holder.setFixedSize(size.getWidth(), size.getHeight());
-        mCamera.addTarget(holder.getSurface());
     }
 
     protected void openCamera() throws CameraAccessException {

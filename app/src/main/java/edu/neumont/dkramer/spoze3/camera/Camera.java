@@ -17,9 +17,7 @@ import android.view.SurfaceHolder;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by dkramer on 9/18/17.
@@ -60,8 +58,8 @@ public class Camera {
     // all possible outputs that we can be sending our preview frames to
     private List<Surface> mOutputTargets = new ArrayList<>();
 
-    // map containing configuration flags for our camera
-    private Map<CaptureRequest.Key<Integer>, Integer> mPreviewOptions = new HashMap<>();
+    // listener for when we creating our capture request
+    private OnCaptureRequestConfigure mCaptureRequestListener = (r) -> { };
 
     // our current camera capture session
     private CameraCaptureSession mCaptureSession;
@@ -86,8 +84,9 @@ public class Camera {
      * Adds a surface target to display image data to
      * @param surface
      */
-    public void addTarget(Surface surface) {
+    public Camera addTarget(Surface surface) {
         mOutputTargets.add(surface);
+        return this;
     }
 
     /**
@@ -136,13 +135,9 @@ public class Camera {
         }
     }
 
-    /**
-     * Set a specific CaptureRequest option
-     * @param key
-     * @param value
-     */
-    public void setPreviewOption(CaptureRequest.Key<Integer> key, Integer value) {
-        mPreviewOptions.put(key, value);
+    public Camera setOnCaptureRequestListener(OnCaptureRequestConfigure listener) {
+        mCaptureRequestListener = listener;
+        return this;
     }
 
     /**
@@ -230,6 +225,10 @@ public class Camera {
     }
 
 
+    /* Interface that allows us to modify our CaptureRequest that we are configuring */
+    public interface OnCaptureRequestConfigure {
+        void onConfigure(CaptureRequest.Builder requestBuilder);
+    }
 
 
     private class CameraStateCallback extends CameraDevice.StateCallback {
@@ -263,7 +262,6 @@ public class Camera {
 
 
 
-
     private class CameraCaptureSessionCallback extends CameraCaptureSession.StateCallback {
 
         @Override
@@ -278,9 +276,7 @@ public class Camera {
         }
 
         @Override
-        public void onConfigureFailed(@NonNull CameraCaptureSession session) {
-
-        }
+        public void onConfigureFailed(@NonNull CameraCaptureSession session) { }
 
         @SuppressLint("NewApi")
         private void buildCaptureRequest() throws CameraAccessException {
@@ -290,10 +286,9 @@ public class Camera {
             // add output targets to capture session
             mOutputTargets.forEach((t) -> previewRequestBuilder.addTarget(t));
 
-            // add all the preview option flags
-            mPreviewOptions.forEach((k, v) -> {
-                previewRequestBuilder.set(k, v);
-            });
+            // notify listener about our soon to be created capture request
+            mCaptureRequestListener.onConfigure(previewRequestBuilder);
+
             CaptureRequest request = previewRequestBuilder.build();
             mCaptureSession.setRepeatingRequest(request, null, null);
             mCapturingFlag = true;
