@@ -3,7 +3,6 @@ package edu.neumont.dkramer.spoze3.converter;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.hardware.camera2.CameraAccessException;
 import android.media.Image;
 import android.media.ImageReader;
@@ -19,7 +18,7 @@ import edu.neumont.dkramer.spoze3.camera.CameraPreview;
 
 public class MotionCameraPreview extends CameraPreview {
 
-    protected YUVToRGBAConverter mImageConverter;
+    protected YUVToRGBAMotionConverter mImageConverter;
     protected ImageReader mImageReader;
     protected OnBitmapAvailableListener mBitmapAvailableListener;
     protected Bitmap mImageToDraw;
@@ -66,7 +65,7 @@ public class MotionCameraPreview extends CameraPreview {
 
     protected void initImageConverter() {
         // create our image converter that will track pixel motion
-        mImageConverter = new YUVToRGBAConverter(getContext());
+        mImageConverter = new YUVToRGBAMotionConverter(getContext());
         mImageReader = createImageReader(getWidth(), getHeight());
         mCamera.addTarget(mImageReader.getSurface());
     }

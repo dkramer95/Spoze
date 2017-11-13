@@ -66,7 +66,7 @@ public class DebugVisualizationActivity extends VisualizationActivity implements
 //        mThresholdSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 //            @Override
 //            public void onProgressChanged(SeekBar seekBar, int value, boolean b) {
-//                YUVToRGBAConverter.setThreshold(value);
+//                YUVToRGBAMotionConverter.setThreshold(value);
 //                mThresholdTextView.setText("" + value);
 //            }
 //
@@ -163,6 +163,10 @@ public class DebugVisualizationActivity extends VisualizationActivity implements
         getGLContext().getGLView().setVisibility(View.VISIBLE);
         getGLContext().getGLView().setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
 //        findViewById(R.id.hiddenOverlay).setVisibility(View.INVISIBLE);
+    }
+
+    public void captureButtonClicked(View view) {
+        Bitmap bmp = getCameraPreview().getBitmap();
     }
 
 

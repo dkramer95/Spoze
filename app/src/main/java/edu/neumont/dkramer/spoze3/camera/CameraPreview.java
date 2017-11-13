@@ -2,6 +2,7 @@ package edu.neumont.dkramer.spoze3.camera;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CaptureRequest;
 import android.util.AttributeSet;
@@ -70,6 +71,10 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
             }
         }
         getHolder().removeCallback(this);
+    }
+
+    public Bitmap getBitmap() {
+        return null;
     }
 
     protected int getCameraType() {

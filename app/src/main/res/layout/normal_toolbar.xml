@@ -31,7 +31,8 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:background="@android:color/background_dark"
-        android:text="REM"
+        android:onClick="captureButtonClicked"
+        android:text="CAP"
         android:textColor="@android:color/background_light" />
 
 </LinearLayout>

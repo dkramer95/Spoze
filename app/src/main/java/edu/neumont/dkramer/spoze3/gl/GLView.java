@@ -1,6 +1,7 @@
 package edu.neumont.dkramer.spoze3.gl;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.PixelFormat;
 import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
