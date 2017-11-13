@@ -1,11 +1,17 @@
 package edu.neumont.dkramer.spoze3;
 
+import android.Manifest;
 import android.app.DialogFragment;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -30,6 +36,8 @@ import static android.content.res.Configuration.ORIENTATION_PORTRAIT;
  */
 
 public class GalleryFragment extends DialogFragment {
+    private static final int PERMISSION_CODE = 5813;
+
     private static final String TAG = "Gallery Fragment";
     private static final String SPOZE_DIRECTORY = "SpozeGallery";
 
@@ -60,7 +68,15 @@ public class GalleryFragment extends DialogFragment {
         ensureCanWriteToExternalStorage();
     }
 
-    protected void ensureCanWriteToExternalStorage() {
+    protected boolean ensureCanWriteToExternalStorage() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (!hasGrantedWriteExternalStoragePermission()) {
+                Toast.makeText(getContext(), "Please grant permission to write to external storage", Toast.LENGTH_LONG).show();
+                requestWriteExternalStoragePermission();
+                return false;
+            }
+        }
+
         if (isExternalStorageWritable()) {
             File dir = getGalleryDir();
             dir.mkdirs();
@@ -68,6 +84,7 @@ public class GalleryFragment extends DialogFragment {
                 Toast.makeText(getActivity(), "Spoze Gallery Missing!", Toast.LENGTH_LONG).show();
             }
         }
+        return true;
     }
 
     protected File getGalleryDir() {
@@ -92,8 +109,10 @@ public class GalleryFragment extends DialogFragment {
         mRecyclerView = view.findViewById(R.id.imagegallery);
         updateLayoutManager(getActivity().getResources().getConfiguration().orientation);
 
-        initButtons(view);
-        initGalleryView();
+        if (ensureCanWriteToExternalStorage()) {
+            initButtons(view);
+            initGalleryView();
+        }
 
         return view;
     }
@@ -159,6 +178,26 @@ public class GalleryFragment extends DialogFragment {
             mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
         } else if (orientation == ORIENTATION_LANDSCAPE) {
             mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 4));
+        }
+    }
+
+    protected boolean hasGrantedWriteExternalStoragePermission() {
+        return ContextCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    protected void requestWriteExternalStoragePermission() {
+        ActivityCompat.requestPermissions(getActivity(),
+                new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE }, PERMISSION_CODE);
+    }
+
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSION_CODE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(getActivity(), "Write External Storage Permission Granted!", Toast.LENGTH_SHORT).show();
+                }
+                break;
         }
     }
 
