@@ -27,24 +27,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:background="@android:color/background_dark"
                 android:onClick="loadSelectedButtonClicked"
-                android:text="Load Selected" />
-
-            <Button
-                android:id="@+id/deleteSelectedButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:onClick="deleteSelectedButtonClicked"
-                android:text="Delete Selected" />
+                android:text="Load"
+                android:textColor="@android:color/background_light" />
 
             <Button
                 android:id="@+id/closeButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:background="@android:color/background_dark"
                 android:onClick="closeButtonClicked"
-                android:text="Close" />
+                android:text="Close"
+                android:textColor="@android:color/background_light" />
         </LinearLayout>
 
         <android.support.v7.widget.RecyclerView

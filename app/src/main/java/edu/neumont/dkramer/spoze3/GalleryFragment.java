@@ -19,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -30,6 +31,7 @@ import java.util.List;
 
 import static android.content.res.Configuration.ORIENTATION_LANDSCAPE;
 import static android.content.res.Configuration.ORIENTATION_PORTRAIT;
+import static android.view.View.GONE;
 
 /**
  * Created by dkramer on 11/11/17.
@@ -47,7 +49,7 @@ public class GalleryFragment extends DialogFragment {
     protected Button mDeleteSelectedButton;
 
     protected List<GalleryItemView> mNormalSelected;
-    protected List<GalleryItemView> mDeleteSelected;
+//    protected List<GalleryItemView> mDeleteSelected;
 
 
 //    static int[] imageIds =
@@ -126,11 +128,11 @@ public class GalleryFragment extends DialogFragment {
     protected void initButtons(View view) {
         // Button stuff
         mLoadSelectedButton = view.findViewById(R.id.loadSelectedButton);
-        mDeleteSelectedButton = view.findViewById(R.id.deleteSelectedButton);
+//        mDeleteSelectedButton = view.findViewById(R.id.deleteSelectedButton);
         mButtonClickHandler = new ButtonClickHandler();
 
         mNormalSelected = new ArrayList<>();
-        mDeleteSelected = new ArrayList<>();
+//        mDeleteSelected = new ArrayList<>();
         refreshButtons();
     }
 
@@ -148,29 +150,28 @@ public class GalleryFragment extends DialogFragment {
     }
 
     public void deleteSelected() {
-        MyAdapter adapter = (MyAdapter)mRecyclerView.getAdapter();
-        for (GalleryItemView g : mDeleteSelected) {
-            g.setOnClickListener(null);
-        }
-
-        Iterator<GalleryItemView> itemIterator = mDeleteSelected.iterator();
-        while (itemIterator.hasNext()) {
-            GalleryItemView g = itemIterator.next();
-            String resStr = g.getResourceString();
-
-            File f = new File(resStr);
-            if (f.exists()) {
-                f.delete();
-            }
-            g.onDelete();
-            adapter.remove(resStr);
-            g.animate().alpha(0).setDuration(500).withEndAction(() -> {
-                adapter.notifyDataSetChanged();
-            });
-            itemIterator.remove();
-        }
-
-        mDeleteSelectedButton.setEnabled(false);
+//        MyAdapter adapter = (MyAdapter)mRecyclerView.getAdapter();
+//        for (GalleryItemView g : mDeleteSelected) {
+//            g.setOnClickListener(null);
+//        }
+//
+//        Iterator<GalleryItemView> itemIterator = mDeleteSelected.iterator();
+//        while (itemIterator.hasNext()) {
+//            GalleryItemView g = itemIterator.next();
+//            String resStr = g.getResourceString();
+//
+//            File f = new File(resStr);
+//            if (f.exists()) {
+//                f.delete();
+//            }
+//            g.onDelete();
+//            adapter.remove(resStr);
+//            g.animate().alpha(0).setDuration(500).withEndAction(() -> {
+//                adapter.notifyDataSetChanged();
+//            });
+//            itemIterator.remove();
+//        }
+//        mDeleteSelectedButton.setEnabled(false);
     }
 
     protected void updateLayoutManager(int orientation) {
@@ -222,6 +223,19 @@ public class GalleryFragment extends DialogFragment {
         mNormalSelected.clear();
     }
 
+    public void delete(View view) {
+        RelativeLayout layout = (RelativeLayout)view.getParent();
+        MyAdapter adapter = (MyAdapter)mRecyclerView.getAdapter();
+        GalleryItemView item = (GalleryItemView) layout.getChildAt(0);
+
+        layout.animate().alpha(0).setDuration(500).withEndAction(() -> {
+            adapter.remove(item.getResourceString());
+//            adapter.notifyDataSetChanged();
+            adapter.notifyChange();
+            view.setVisibility(GONE);
+        }).start();
+    }
+
 
     private class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         private Context mContext;
@@ -236,6 +250,14 @@ public class GalleryFragment extends DialogFragment {
         public MyAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.cell_layout, parent, false);
             return new ViewHolder(view);
+        }
+
+        public void notifyChange() {
+            notifyDataSetChanged();
+
+            if (getItemCount() == 0) {
+                Toast.makeText(getActivity(), "You deleted everything", Toast.LENGTH_LONG).show();
+            }
         }
 
         @Override
@@ -269,13 +291,15 @@ public class GalleryFragment extends DialogFragment {
             public ViewHolder(View view) {
                 super(view);
                 mImgView = view.findViewById(R.id.img);
+                mImgView.mDeleteButton = view.findViewById(R.id.deleteItemButton);
+                mImgView.mDeleteButton.setVisibility(View.INVISIBLE);
             }
         }
     }
 
     protected void refreshButtons() {
         mLoadSelectedButton.setEnabled(!mNormalSelected.isEmpty());
-        mDeleteSelectedButton.setEnabled(!mDeleteSelected.isEmpty());
+//        mDeleteSelectedButton.setEnabled(!mDeleteSelected.isEmpty());
     }
 
 
@@ -288,7 +312,7 @@ public class GalleryFragment extends DialogFragment {
             itemView.onClick(view);
             if (itemView.isNormalSelected()) {
                 mNormalSelected.add(itemView);
-                mDeleteSelected.remove(itemView);
+//                mDeleteSelected.remove(itemView);
                 // enable load button if not already
             } else {
                 mNormalSelected.remove(itemView);
@@ -302,10 +326,10 @@ public class GalleryFragment extends DialogFragment {
             itemView.onLongClick(view);
             if (itemView.isDeleteSelected()) {
                 mNormalSelected.remove(itemView);
-                mDeleteSelected.add(itemView);
+//                mDeleteSelected.add(itemView);
                 // enable delete button if not already
             } else {
-                mDeleteSelected.remove(itemView);
+//                mDeleteSelected.remove(itemView);
             }
             refreshButtons();
             return true;

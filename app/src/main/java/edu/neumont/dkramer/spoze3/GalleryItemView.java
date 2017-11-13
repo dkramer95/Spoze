@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.Button;
 
 /**
  * Created by dkramer on 11/11/17.
@@ -18,6 +19,7 @@ public class GalleryItemView extends AppCompatImageView implements View.OnClickL
     protected boolean normalSelectFlag;
     protected boolean deleteSelectFlag;
     protected String mResourceString;
+    protected Button mDeleteButton;
 
 
 
@@ -40,9 +42,13 @@ public class GalleryItemView extends AppCompatImageView implements View.OnClickL
         if (deleteSelectFlag) {
             getBackground().setColorFilter(null);
             deleteSelectFlag = false;
+            mDeleteButton.animate().alpha(0).setDuration(250).withEndAction(() -> mDeleteButton.setVisibility(INVISIBLE));
         } else {
             getBackground().setColorFilter(Color.RED, PorterDuff.Mode.MULTIPLY);
             deleteSelectFlag = true;
+            mDeleteButton.setVisibility(VISIBLE);
+            mDeleteButton.animate().alpha(0).start();
+            mDeleteButton.animate().alpha(1).setDuration(250).start();
             normalSelectFlag = false;
         }
         return true;
@@ -58,6 +64,11 @@ public class GalleryItemView extends AppCompatImageView implements View.OnClickL
                 getBackground().setColorFilter(Color.GREEN, PorterDuff.Mode.MULTIPLY);
                 normalSelectFlag = true;
             }
+        } else {
+            // clear delete
+            getBackground().setColorFilter(null);
+            deleteSelectFlag = false;
+            mDeleteButton.animate().alpha(0).setDuration(250).withEndAction(() -> mDeleteButton.setVisibility(INVISIBLE));
         }
     }
 

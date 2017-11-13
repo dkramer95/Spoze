@@ -31,7 +31,7 @@ public class GLSquare extends GLModel {
     protected static final int COLOR_OFFSET = 3;
 
     private static final float[] VERTEX_DATA = {
-            // X, Y, Z,
+            // x, Y, Z,
             // R, G, B, A
             1.0f, -1.0f, 0.0f,
             1.0f, 0.0f, 0.0f, 1.0f,

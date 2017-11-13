@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -131,6 +132,11 @@ public class DebugVisualizationActivity extends VisualizationActivity implements
         getGLContext().queueEvent(() -> {
             scene.getSelectedModel().rotate(90);
         });
+    }
+
+    public void deleteItemButtonClicked(View view) {
+        mGalleryFragment.delete(view);
+        Log.i(TAG, "Should delete item");
     }
 
     public void deleteSelectedButtonClicked(View view) {

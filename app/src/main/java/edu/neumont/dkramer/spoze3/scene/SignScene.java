@@ -359,14 +359,12 @@ public class SignScene extends GLScene {
                 mSelectedModel.scale(scaleFactor);
             }
             Log.i(TAG, "OnScale --> Factor => " + scaleFactor);
-            mScalingFlag = true;
-            return true;
+            return mScalingFlag = true;
         }
 
         @Override
         public boolean onScaleBegin(ScaleGestureDetector detector) {
-            mScalingFlag = true;
-            return true;
+            return mScalingFlag = true;
         }
 
         @Override
@@ -376,9 +374,13 @@ public class SignScene extends GLScene {
 
         @Override
         public boolean onFling(MotionEvent e, MotionEvent e1, float v, float v1) {
+            float deltaX = Math.abs(e1.getX() - e.getX());
+
+            Log.i("ONFLIG", "DeltaX => " + deltaX);
+
             float startY = e.getY();
 
-            if (startY <= getHeight() && startY >= getHeight() - (getHeight() * .15f)) {
+            if (startY <= getHeight() && startY >= getHeight() - (getHeight() * .15f) && deltaX < 50) {
                 float endY = e1.getY();
                 float velocity = v1 - v;
                 Log.i("OnFling", String.format("StartY: %f, EndY: %f, Vel: %f, Height: %d\n", startY, endY, velocity, getHeight()));
