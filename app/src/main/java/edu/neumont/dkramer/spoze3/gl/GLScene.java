@@ -70,6 +70,9 @@ public abstract class GLScene extends GLObject {
     public void refreshSize(int width, int height) {
         getWorld().setSize(width, height);
         getCamera().refreshSize(width, height);
+
+        mWidth = width;
+        mHeight = height;
     }
 
     protected void clearScreen() {

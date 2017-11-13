@@ -5,6 +5,7 @@ import android.hardware.SensorEvent;
 
 import edu.neumont.dkramer.spoze3.gl.GLContext;
 
+import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Type.ACCELEROMETER;
 import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Value.CALIBRATED_ACCEL_X;
 import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Value.CALIBRATED_ACCEL_Y;
 import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Value.CALIBRATED_ACCEL_Z;
@@ -50,5 +51,13 @@ public class GLAccelerometerInfo extends GLMotionInfo {
         set(CURRENT_ACCEL_X, values[0]);
         set(CURRENT_ACCEL_Y, values[1]);
         set(CURRENT_ACCEL_Z, values[2]);
+    }
+
+
+    @Override
+    protected void notifyUpdateListeners() {
+        for(OnUpdateListener listener : mUpdateListeners) {
+            listener.onUpdate(ACCELEROMETER);
+        }
     }
 }

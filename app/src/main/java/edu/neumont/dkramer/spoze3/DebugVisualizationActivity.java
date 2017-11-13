@@ -1,12 +1,9 @@
 package edu.neumont.dkramer.spoze3;
 
-import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -15,24 +12,28 @@ import android.widget.ViewFlipper;
 
 import java.util.List;
 
+import edu.neumont.dkramer.spoze3.gesture.DeviceShake;
 import edu.neumont.dkramer.spoze3.gl.GLWorld;
 import edu.neumont.dkramer.spoze3.gl.deviceinfo.GLRotationVectorInfo;
 import edu.neumont.dkramer.spoze3.models.SignModel2;
 import edu.neumont.dkramer.spoze3.scene.SignScene;
 
+import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Type.ACCELEROMETER;
 import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Type.ROTATION_VECTOR;
 
 /**
  * Created by dkramer on 10/25/17.
  */
 
-public class DebugVisualizationActivity extends VisualizationActivity {
+public class DebugVisualizationActivity extends VisualizationActivity implements DeviceShake.OnShakeListener {
     private static final String TAG = "VisualizationActivity";
 
     protected SeekBar mThresholdSeekBar;
     protected TextView mThresholdTextView;
     protected GalleryFragment mGalleryFragment;
     protected ViewFlipper mToolbarFlipper;
+    protected DeviceShake mDeviceShake;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +46,15 @@ public class DebugVisualizationActivity extends VisualizationActivity {
         getFragmentManager().beginTransaction()
                 .hide(mGalleryFragment)
                 .commit();
+
+        mDeviceShake = new DeviceShake(this);
+
+        getGLContext().getDeviceInfo(ACCELEROMETER).addOnUpdateListener(mDeviceShake);
+
+//        mDeviceShake = new DeviceShake(this, () -> {
+////            Log.i("SHAKE", "Device Shake Detected");
+//            foo();
+//        }).register();
 //        initThresholdSeekbar();
     }
 
@@ -149,6 +159,16 @@ public class DebugVisualizationActivity extends VisualizationActivity {
 //        findViewById(R.id.hiddenOverlay).setVisibility(View.INVISIBLE);
     }
 
+
+    /** USING FOR EXPERIMENTAL FEATURES such as SHAKE, and SWIPE... just so that something happens **/
+    /* TODO this should be better named, and used properly after experimental phase is over! :) */
+    public void foo() {
+        getFragmentManager().beginTransaction()
+                .setCustomAnimations(R.animator.fade_in, R.animator.fade_out)
+                .show(mGalleryFragment)
+                .commit();
+    }
+
     public void importButtonClicked(View view) {
         getGLContext().getGLView().setVisibility(View.GONE);
 
@@ -156,9 +176,15 @@ public class DebugVisualizationActivity extends VisualizationActivity {
         getGLContext().getGLView().setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
 
         mToolbarFlipper.setVisibility(View.GONE);
-        getFragmentManager().beginTransaction()
-                .setCustomAnimations(R.animator.fade_in, R.animator.fade_out)
-                .show(mGalleryFragment)
-                .commit();
+        foo();
+//        getFragmentManager().beginTransaction()
+//                .setCustomAnimations(R.animator.fade_in, R.animator.fade_out)
+//                .show(mGalleryFragment)
+//                .commit();
+    }
+
+    @Override
+    public void onShake() {
+        foo();
     }
 }

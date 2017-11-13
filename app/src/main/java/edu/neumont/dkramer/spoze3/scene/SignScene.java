@@ -3,6 +3,7 @@ package edu.neumont.dkramer.spoze3.scene;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
@@ -11,9 +12,11 @@ import android.widget.ViewFlipper;
 import java.util.Iterator;
 import java.util.concurrent.ArrayBlockingQueue;
 
+import edu.neumont.dkramer.spoze3.DebugVisualizationActivity;
 import edu.neumont.dkramer.spoze3.GLPixelPicker;
 import edu.neumont.dkramer.spoze3.R;
 import edu.neumont.dkramer.spoze3.geometry.Point3f;
+import edu.neumont.dkramer.spoze3.gesture.GestureDetectorAdapter;
 import edu.neumont.dkramer.spoze3.gl.GLActivity;
 import edu.neumont.dkramer.spoze3.gl.GLCamera;
 import edu.neumont.dkramer.spoze3.gl.GLContext;
@@ -85,11 +88,11 @@ public class SignScene extends GLScene {
 
     @Override
     public GLWorld createWorld() {
-        Bitmap bmp1 = BitmapFactory.decodeResource(getGLContext().getResources(), R.drawable.vim_texture);
+//        Bitmap bmp1 = BitmapFactory.decodeResource(getGLContext().getResources(), R.drawable.vim_texture);
         return new GLWorld(getGLContext()) {
             @Override
             public void create() {
-                addModel(SignModel2.fromBitmap(getGLContext(), bmp1, getWidth(), getHeight()));
+//                addModel(SignModel2.fromBitmap(getGLContext(), bmp1, getWidth(), getHeight()));
             }
         };
     }
@@ -262,7 +265,7 @@ public class SignScene extends GLScene {
 
     /* Touch Handler for our scene */
 
-    class TouchHandler implements View.OnTouchListener, ScaleGestureDetector.OnScaleGestureListener {
+    class TouchHandler implements View.OnTouchListener, ScaleGestureDetector.OnScaleGestureListener, GestureDetectorAdapter {
         private static final String TAG = "TouchHandler";
 
         // number of ACTION_MOVE events that need to be called before we
@@ -275,7 +278,7 @@ public class SignScene extends GLScene {
         private boolean mScalingFlag;
 
         private ScaleGestureDetector mScaleGestureDetector;
-
+        private GestureDetector mGestureDetector;
 
 
 
@@ -287,6 +290,7 @@ public class SignScene extends GLScene {
 
             getGLContext().runOnUiThread(() -> {
                 mScaleGestureDetector = new ScaleGestureDetector(getGLContext().getActivity(), touchHandler);
+                mGestureDetector = new GestureDetector(getGLContext().getActivity(), touchHandler);
             });
         }
 
@@ -299,6 +303,7 @@ public class SignScene extends GLScene {
                 case ACTION_MOVE: onTouchMove(); break;
                 case ACTION_UP: onTouchRelease(); break;
             }
+            mGestureDetector.onTouchEvent(e);
             mScaleGestureDetector.onTouchEvent(e);
             return false;
         }
@@ -367,6 +372,31 @@ public class SignScene extends GLScene {
         @Override
         public void onScaleEnd(ScaleGestureDetector detector) {
             mScalingFlag = false;
+        }
+
+        @Override
+        public boolean onFling(MotionEvent e, MotionEvent e1, float v, float v1) {
+            float startY = e.getY();
+
+            if (startY <= getHeight() && startY >= getHeight() - (getHeight() * .15f)) {
+                float endY = e1.getY();
+                float velocity = v1 - v;
+                Log.i("OnFling", String.format("StartY: %f, EndY: %f, Vel: %f, Height: %d\n", startY, endY, velocity, getHeight()));
+
+                if (Math.abs(velocity) > 4000) {
+//                    Log.i("OnFling", String.format("StartY: %f, EndY: %f, Vel: %f\n", startY, endY, velocity));
+                    Log.i("OnFling", "Swipe up detected");
+
+                    DebugVisualizationActivity activity = (DebugVisualizationActivity)getGLContext().getActivity();
+                    activity.runOnUiThread(() -> {
+                        activity.foo();
+//                        activity.getFragmentManager().beginTransaction();
+//                        ViewFlipper flipper = activity.findViewById(R.id.toolbarFlipper);
+//                        flipper.setDisplayedChild(type);
+                    });
+                }
+            }
+            return false;
         }
     }
 }

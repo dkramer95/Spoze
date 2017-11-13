@@ -18,6 +18,7 @@ import edu.neumont.dkramer.spoze3.models.SignModel;
 import edu.neumont.dkramer.spoze3.models.SignModel2;
 import edu.neumont.dkramer.spoze3.scene.SignScene;
 
+import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Type.ACCELEROMETER;
 import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Type.ROTATION_VECTOR;
 import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Type.TOUCH_INPUT;
 
@@ -54,7 +55,7 @@ public class VisualizationActivity extends GLCameraActivity {
     protected GLContext createGLContext() {
         GLContext ctx = new GLContext(this);
         ctx.enableDeviceInfo(ROTATION_VECTOR);
-//        ctx.enableDeviceInfo(ACCELEROMETER);
+        ctx.enableDeviceInfo(ACCELEROMETER);
         ctx.enableDeviceInfo(TOUCH_INPUT);
         return ctx;
     }
