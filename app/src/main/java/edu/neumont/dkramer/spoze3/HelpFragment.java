@@ -9,21 +9,70 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
-import edu.neumont.dkramer.spoze3.R;
+import edu.neumont.dkramer.spoze3.gesture.DeviceShake;
+import edu.neumont.dkramer.spoze3.util.Preferences;
+
+import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Type.ACCELEROMETER;
+import static edu.neumont.dkramer.spoze3.util.Preferences.Key.SHAKE_FOR_HELP;
 
 /**
  * Created by dkramer on 11/14/17.
  */
 
-public class HelpFragment extends DialogFragment {
+public class HelpFragment extends DialogFragment implements DeviceShake.OnShakeListener {
 	private Button mGotItButton;
 	private Button mStopShowButton;
+	private DeviceShake mDeviceShake;
+
+
+
 
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.help_layout, container, false);
-		mGotItButton = view.findViewById(R.id.gotItButton);
-		mStopShowButton = view.findViewById(R.id.stopShowButton);
-
+		init(view);
 		return view;
+	}
+
+	private void init(View view) {
+		DebugVisualizationActivity activity = (DebugVisualizationActivity)getActivity();
+
+		if (Preferences.getBoolean(SHAKE_FOR_HELP)) {
+			mDeviceShake = new DeviceShake(this);
+			activity.getGLContext().getDeviceInfo(ACCELEROMETER).addOnUpdateListener(mDeviceShake);
+
+			mGotItButton = view.findViewById(R.id.gotItButton);
+			mGotItButton.setOnClickListener((v) -> {
+				hide();
+			});
+
+			mStopShowButton = view.findViewById(R.id.stopShowButton);
+			mStopShowButton.setOnClickListener((v) -> {
+				Preferences.putBoolean(SHAKE_FOR_HELP, false).save();
+				activity.getGLContext().getDeviceInfo(ACCELEROMETER).removeOnUpdateListener(mDeviceShake);
+				hide();
+				Toast.makeText(activity, "Shake for help disabled", Toast.LENGTH_LONG).show();
+			});
+		}
+	}
+
+	public void hide() {
+		getFragmentManager()
+			.beginTransaction()
+			.setCustomAnimations(R.animator.fade_in, R.animator.fade_out)
+			.hide(this)
+			.commit();
+	}
+
+	public void show() {
+		getFragmentManager()
+			.beginTransaction()
+			.setCustomAnimations(R.animator.fade_in, R.animator.fade_out)
+			.show(this)
+			.commit();
+	}
+
+	@Override
+	public void onShake() {
+		show();
 	}
 }

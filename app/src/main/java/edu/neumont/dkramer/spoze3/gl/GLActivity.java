@@ -3,6 +3,8 @@ package edu.neumont.dkramer.spoze3.gl;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import edu.neumont.dkramer.spoze3.util.Preferences;
+
 /**
  * Created by dkramer on 10/20/17.
  */
@@ -96,7 +98,7 @@ public abstract class GLActivity extends AppCompatActivity {
         return NULL_LAYOUT;
     }
 
-    protected GLContext getGLContext() {
+    public GLContext getGLContext() {
         return mGLContext;
     }
 }

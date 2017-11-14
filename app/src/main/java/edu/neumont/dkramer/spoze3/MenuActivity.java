@@ -6,6 +6,8 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
+import edu.neumont.dkramer.spoze3.util.Preferences;
+
 /**
  * Created by dkramer on 10/24/17.
  */
@@ -15,6 +17,12 @@ public class MenuActivity extends AppCompatActivity {
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_menu);
+		Preferences.init(this);
+	}
+
+	protected void onDestroy() {
+		super.onDestroy();
+		Preferences.finish();
 	}
 
 	public void visualizeButtonClicked(View view) {

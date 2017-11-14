@@ -26,15 +26,12 @@ import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Type.ROTATIO
  * Created by dkramer on 10/25/17.
  */
 
-public class DebugVisualizationActivity extends VisualizationActivity implements DeviceShake.OnShakeListener {
+public class DebugVisualizationActivity extends VisualizationActivity {
     private static final String TAG = "VisualizationActivity";
 
-    protected SeekBar mThresholdSeekBar;
-    protected TextView mThresholdTextView;
     protected GalleryFragment mGalleryFragment;
     protected HelpFragment mHelpFragment;
     protected ViewFlipper mToolbarFlipper;
-    protected DeviceShake mDeviceShake;
 
 
     @Override
@@ -46,14 +43,17 @@ public class DebugVisualizationActivity extends VisualizationActivity implements
 
         if (findViewById(R.id.fragment_container) != null) {
             mGalleryFragment = (GalleryFragment) getFragmentManager().findFragmentById(R.id.gallery);
-            getFragmentManager().beginTransaction()
+            getFragmentManager()
+                    .beginTransaction()
                     .hide(mGalleryFragment)
                     .commit();
-            mHelpFragment = new HelpFragment();
-            getFragmentManager().beginTransaction().add(R.id.fragment_container, mHelpFragment).hide(mHelpFragment).commit();
 
-            mDeviceShake = new DeviceShake(this);
-            getGLContext().getDeviceInfo(ACCELEROMETER).addOnUpdateListener(mDeviceShake);
+            mHelpFragment = new HelpFragment();
+            getFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.fragment_container, mHelpFragment)
+                    .hide(mHelpFragment)
+                    .commit();
         }
     }
 
@@ -116,10 +116,6 @@ public class DebugVisualizationActivity extends VisualizationActivity implements
         Log.i(TAG, "Should delete item");
     }
 
-    public void deleteSelectedButtonClicked(View view) {
-        mGalleryFragment.deleteSelected();
-    }
-
     public void loadSelectedButtonClicked(View view) {
         closeButtonClicked(view);
 
@@ -136,39 +132,8 @@ public class DebugVisualizationActivity extends VisualizationActivity implements
         mGalleryFragment.clearSelectedItems();
     }
 
-    public void hiddenButtonClicked(View view) {
-        getGLContext().getGLView().setVisibility(View.VISIBLE);
-        getGLContext().getGLView().setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
-//        findViewById(R.id.hiddenOverlay).setVisibility(View.INVISIBLE);
-    }
-
     public void captureButtonClicked(View view) {
         Bitmap bmp = getCameraPreview().getBitmap();
-    }
-
-
-    public void gotItButtonClicked(View view) {
-    	hideHelpFragment();
-    }
-
-    public void stopShowButtonClicked(View view) {
-        getGLContext().getDeviceInfo(ACCELEROMETER).removeOnUpdateListener(mDeviceShake);
-        hideHelpFragment();
-        Toast.makeText(this, "Shake for help disabled", Toast.LENGTH_LONG).show();
-    }
-
-    public void hideHelpFragment() {
-        getFragmentManager().beginTransaction()
-                .setCustomAnimations(R.animator.fade_in, R.animator.fade_out)
-                .hide(mHelpFragment)
-                .commit();
-    }
-
-    public void showHelpFragment() {
-        getFragmentManager().beginTransaction()
-                .setCustomAnimations(R.animator.fade_in, R.animator.fade_out)
-                .show(mHelpFragment)
-                .commit();
     }
 
 
@@ -193,11 +158,5 @@ public class DebugVisualizationActivity extends VisualizationActivity implements
 //                .setCustomAnimations(R.animator.fade_in, R.animator.fade_out)
 //                .show(mGalleryFragment)
 //                .commit();
-    }
-
-    @Override
-    public void onShake() {
-        showHelpFragment();
-//        foo();
     }
 }

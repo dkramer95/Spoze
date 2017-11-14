@@ -1,14 +1,13 @@
 package edu.neumont.dkramer.spoze3;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
-import android.widget.Switch;
 
-import edu.neumont.dkramer.spoze3.util.PreferenceKeys;
+import edu.neumont.dkramer.spoze3.util.Preferences;
+
+import static edu.neumont.dkramer.spoze3.util.Preferences.Key.SHAKE_FOR_HELP;
 
 /**
  * Created by dkramer on 11/13/17.
@@ -33,20 +32,10 @@ public class SettingsActivity extends AppCompatActivity {
 
 	protected void init() {
 		mShakeHelpSwitch = findViewById(R.id.shakeHelpSwitch);
-		openPreferences();
-	}
-
-	protected void openPreferences() {
-		SharedPreferences prefs = getPreferences(Context.MODE_PRIVATE);
-		boolean shakeToHelp = prefs.getBoolean(PreferenceKeys.SHAKE_FOR_HELP, true);
-		mShakeHelpSwitch.setChecked(shakeToHelp);
+		mShakeHelpSwitch.setChecked(Preferences.getBoolean(SHAKE_FOR_HELP));
 	}
 
 	protected void savePreferences() {
-		SharedPreferences prefs = getPreferences(Context.MODE_PRIVATE);
-		SharedPreferences.Editor editor = prefs.edit();
-		editor.putBoolean(PreferenceKeys.SHAKE_FOR_HELP, mShakeHelpSwitch.isChecked());
-		editor.commit();
+		Preferences.putBoolean(SHAKE_FOR_HELP, mShakeHelpSwitch.isChecked()).save();
 	}
-
 }
