@@ -9,7 +9,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:background="@android:color/background_dark"
+        android:background="@color/overlay_color"
         android:onClick="rotateCounterClockwiseButtonClicked"
         android:text="CCW"
         android:textColor="@android:color/background_light" />
@@ -19,7 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:background="@android:color/background_dark"
+        android:background="@color/overlay_color"
         android:onClick="rotateClockwiseButtonClicked"
         android:text="CW"
         android:textColor="@android:color/background_light" />
@@ -29,7 +29,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:background="@android:color/background_dark"
+        android:background="@color/overlay_color"
         android:text="MIRROR"
         android:textColor="@android:color/background_light" />
 
@@ -38,7 +38,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:background="@android:color/background_dark"
+        android:background="@color/overlay_color"
         android:onClick="deleteModelButtonClicked"
         android:text="x"
         android:textColor="@android:color/background_light" />

@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:layout_width="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@android:color/background_dark"
-    android:orientation="horizontal"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:orientation="horizontal">
 
     <Button
         android:id="@+id/calibrateButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:background="@android:color/background_dark"
+        android:background="@color/overlay_color"
         android:onClick="calibrateButtonClicked"
         android:text="Calibrate"
         android:textColor="@android:color/background_light" />
@@ -20,7 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:background="@android:color/background_dark"
+        android:background="@color/overlay_color"
         android:onClick="importButtonClicked"
         android:text="IMPORT"
         android:textColor="@android:color/background_light" />
@@ -30,7 +29,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:background="@android:color/background_dark"
+        android:background="@color/overlay_color"
         android:onClick="captureButtonClicked"
         android:text="CAP"
         android:textColor="@android:color/background_light" />
