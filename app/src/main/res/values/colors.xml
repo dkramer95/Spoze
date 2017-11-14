@@ -10,4 +10,6 @@
     <color name="color_overlay_trans_black">#66000000</color>
     <color name="gallery_item_bg">#14ffffff</color>
     <color name="overlay_color">#c3000000</color>
+    <color name="white">#ffffffff</color>
+    <color name="gray">#33333333</color>
 </resources>

@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Size;
+import android.widget.Toast;
 
 import edu.neumont.dkramer.spoze3.R;
 import edu.neumont.dkramer.spoze3.camera.Camera;
@@ -67,7 +68,10 @@ public abstract class GLCameraActivity extends GLActivity {
 
 		if (!hasGrantedCameraPermission()) {
 			requestCameraPermission();
-			return;
+			//TODO try to make it so that activity can continue after permission is granted
+			// rather than going back... Currently this does fix crash on first use w/ permission
+			Toast.makeText(this, "You must grant permission to use the camera!", Toast.LENGTH_LONG).show();
+			finish();
 		}
 		mCameraPreview.startPreviewing();
 	}

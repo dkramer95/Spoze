@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/overlay_color">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/helpTitleTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Help"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="24sp"/>
+
+        <TextView
+            android:id="@+id/helpDescriptionTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:text="@string/help_description"
+            android:textAlignment="center"
+            android:textColor="@color/white"/>
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:text="TODO show help here"
+            android:textAlignment="center"
+            android:textColor="@color/white"/>
+
+        <Button
+            android:id="@+id/gotItButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:background="@drawable/ripple_effect"
+            android:onClick="gotItButtonClicked"
+            android:text="Got It!"
+            android:textColor="@color/white"/>
+
+        <Button
+            android:id="@+id/stopShowButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:background="@drawable/ripple_effect"
+            android:onClick="stopShowButtonClicked"
+            android:text="Don't Show This Again"
+            android:textColor="@color/white"/>
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>

@@ -11,7 +11,8 @@ import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.getf;
  */
 
 public class DeviceShake implements GLDeviceInfo.OnUpdateListener {
-    private static final float SHAKE_THRESHOLD = 12f;
+	// TODO make this adjustable in settings
+    private static final float SHAKE_THRESHOLD = 15f;
 
     private float mAccel;
     private float mAccelCurrent;

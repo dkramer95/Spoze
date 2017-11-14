@@ -376,7 +376,8 @@ public class SignScene extends GLScene {
         public boolean onFling(MotionEvent e, MotionEvent e1, float v, float v1) {
             float deltaX = Math.abs(e1.getX() - e.getX());
 
-            Log.i("ONFLIG", "DeltaX => " + deltaX);
+            Log.i("OnFling", "DeltaX => " + deltaX);
+            Log.i("OnFling", String.format("X1: %f, Y1: %f, X2: %f, Y2: %f\n", e.getX(), e.getY(), e1.getX(), e1.getY()));
 
             float startY = e.getY();
 
@@ -396,6 +397,7 @@ public class SignScene extends GLScene {
 //                        ViewFlipper flipper = activity.findViewById(R.id.toolbarFlipper);
 //                        flipper.setDisplayedChild(type);
                     });
+                    return true;
                 }
             }
             return false;

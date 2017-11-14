@@ -1,7 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/main_header_selector"
+    android:theme="@style/Base.Theme.AppCompat.Light.DarkActionBar">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/settingsTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:padding="8dp"
+            android:text="@string/settings_title"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            tools:layout_editor_absoluteX="29dp"
+            tools:layout_editor_absoluteY="49dp"/>
+
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/shakeHelpSwitch"
+            style="@style/SwitchStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="24dp"
+            android:text="@string/shake_for_help_switch"/>
+
+    </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

@@ -32,6 +32,7 @@ public class DebugVisualizationActivity extends VisualizationActivity implements
     protected SeekBar mThresholdSeekBar;
     protected TextView mThresholdTextView;
     protected GalleryFragment mGalleryFragment;
+    protected HelpFragment mHelpFragment;
     protected ViewFlipper mToolbarFlipper;
     protected DeviceShake mDeviceShake;
 
@@ -39,46 +40,22 @@ public class DebugVisualizationActivity extends VisualizationActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        findViewById(R.id.hiddenOverlay).setVisibility(View.INVISIBLE);
         mToolbarFlipper = findViewById(R.id.toolbarFlipper);
         mToolbarFlipper.setDisplayedChild(1);
-        mGalleryFragment = (GalleryFragment) getFragmentManager().findFragmentById(R.id.gallery);
 
-        getFragmentManager().beginTransaction()
-                .hide(mGalleryFragment)
-                .commit();
 
-        mDeviceShake = new DeviceShake(this);
+        if (findViewById(R.id.fragment_container) != null) {
+            mGalleryFragment = (GalleryFragment) getFragmentManager().findFragmentById(R.id.gallery);
+            getFragmentManager().beginTransaction()
+                    .hide(mGalleryFragment)
+                    .commit();
+            mHelpFragment = new HelpFragment();
+            getFragmentManager().beginTransaction().add(R.id.fragment_container, mHelpFragment).hide(mHelpFragment).commit();
 
-        getGLContext().getDeviceInfo(ACCELEROMETER).addOnUpdateListener(mDeviceShake);
-
-//        mDeviceShake = new DeviceShake(this, () -> {
-////            Log.i("SHAKE", "Device Shake Detected");
-//            foo();
-//        }).register();
-//        initThresholdSeekbar();
+            mDeviceShake = new DeviceShake(this);
+            getGLContext().getDeviceInfo(ACCELEROMETER).addOnUpdateListener(mDeviceShake);
+        }
     }
-
-//    protected void initThresholdSeekbar() {
-//        mThresholdSeekBar = (SeekBar)findViewById(R.id.thresholdSeekBar);
-//        mThresholdTextView = (TextView)findViewById(R.id.thresholdTextView);
-//
-//        mThresholdSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-//            @Override
-//            public void onProgressChanged(SeekBar seekBar, int value, boolean b) {
-//                YUVToRGBAMotionConverter.setThreshold(value);
-//                mThresholdTextView.setText("" + value);
-//            }
-//
-//            // unused
-//            @Override
-//            public void onStartTrackingTouch(SeekBar seekBar) { }
-//
-//            @Override
-//            public void onStopTrackingTouch(SeekBar seekBar) { }
-//        });
-//    }
-
 
     @Override
     protected Bitmap loadBitmap() {
@@ -170,6 +147,31 @@ public class DebugVisualizationActivity extends VisualizationActivity implements
     }
 
 
+    public void gotItButtonClicked(View view) {
+    	hideHelpFragment();
+    }
+
+    public void stopShowButtonClicked(View view) {
+        getGLContext().getDeviceInfo(ACCELEROMETER).removeOnUpdateListener(mDeviceShake);
+        hideHelpFragment();
+        Toast.makeText(this, "Shake for help disabled", Toast.LENGTH_LONG).show();
+    }
+
+    public void hideHelpFragment() {
+        getFragmentManager().beginTransaction()
+                .setCustomAnimations(R.animator.fade_in, R.animator.fade_out)
+                .hide(mHelpFragment)
+                .commit();
+    }
+
+    public void showHelpFragment() {
+        getFragmentManager().beginTransaction()
+                .setCustomAnimations(R.animator.fade_in, R.animator.fade_out)
+                .show(mHelpFragment)
+                .commit();
+    }
+
+
     /** USING FOR EXPERIMENTAL FEATURES such as SHAKE, and SWIPE... just so that something happens **/
     /* TODO this should be better named, and used properly after experimental phase is over! :) */
     public void foo() {
@@ -195,6 +197,7 @@ public class DebugVisualizationActivity extends VisualizationActivity implements
 
     @Override
     public void onShake() {
-        foo();
+        showHelpFragment();
+//        foo();
     }
 }

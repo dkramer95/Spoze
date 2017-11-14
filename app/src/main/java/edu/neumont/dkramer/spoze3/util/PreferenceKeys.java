@@ -5,4 +5,8 @@ package edu.neumont.dkramer.spoze3.util;
  */
 
 public class PreferenceKeys {
+	public static final String SHAKE_FOR_HELP = "ShakeForHelp";
+
+	// don't instantiate this!!
+	private PreferenceKeys() { }
 }

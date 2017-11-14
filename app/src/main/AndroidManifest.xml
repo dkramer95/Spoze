@@ -25,6 +25,7 @@
             android:theme="@style/FullscreenTheme"
             android:configChanges="orientation|screenSize"/>
         <activity android:name="edu.neumont.dkramer.spoze3.ImportBitmapActivity" />
+        <activity android:name=".SettingsActivity"/>
     </application>
     <uses-feature android:glEsVersion="0x0020000" android:required="true"/>
 

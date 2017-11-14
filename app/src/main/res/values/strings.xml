@@ -8,4 +8,8 @@
     <string name="help_button">Help / About</string>
 
     <string name="title_activity_visualize">VisualizeActivity</string>
+    <string name="settings_button">Settings</string>
+    <string name="shake_for_help_switch">Shake For Help</string>
+    <string name="settings_title">Settings</string>
+    <string name="help_description">You have activated help by shaking your device</string>
 </resources>
