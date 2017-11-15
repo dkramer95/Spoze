@@ -16,6 +16,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 import edu.neumont.dkramer.spoze3.DebugVisualizationActivity;
 import edu.neumont.dkramer.spoze3.GLPixelPicker;
 import edu.neumont.dkramer.spoze3.R;
+import edu.neumont.dkramer.spoze3.VisualizationActivity;
 import edu.neumont.dkramer.spoze3.geometry.Point3f;
 import edu.neumont.dkramer.spoze3.gesture.GestureDetectorAdapter;
 import edu.neumont.dkramer.spoze3.gl.GLActivity;
@@ -387,13 +388,17 @@ public class SignScene extends GLScene {
                 float velocity = v1 - v;
                 Log.i("OnFling", String.format("StartY: %f, EndY: %f, Vel: %f, Height: %d\n", startY, endY, velocity, getHeight()));
 
-                if (Math.abs(velocity) > 4000) {
+                if (Math.abs(velocity) > 3000) {
 //                    Log.i("OnFling", String.format("StartY: %f, EndY: %f, Vel: %f\n", startY, endY, velocity));
                     Log.i("OnFling", "Swipe up detected");
 
-                    GLActivity activity = getGLContext().getActivity();
+//                    GLActivity activity = getGLContext().getActivity();
+                    VisualizationActivity activity = (VisualizationActivity)getGLContext().getActivity();
                     activity.runOnUiThread(() -> {
                         Toast.makeText(activity, "Swipe up action", Toast.LENGTH_SHORT).show();
+//                        activity.showModelFragment();
+//                        activity.TEST_LOAD_DATA();
+                        activity.showModelFragment();
 //                        activity.foo();
 //                        activity.getFragmentManager().beginTransaction();
 //                        ViewFlipper flipper = activity.findViewById(R.id.toolbarFlipper);

@@ -1,6 +1,6 @@
 <objectAnimator xmlns:android="http://schemas.android.com/apk/res/android"
     android:interpolator="@android:interpolator/accelerate_quad"
-    android:valueFrom="1280"
+    android:valueFrom="300"
     android:valueTo="0"
     android:propertyName="y"
     android:valueType="floatType"

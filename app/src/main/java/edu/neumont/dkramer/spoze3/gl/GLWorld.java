@@ -61,6 +61,10 @@ public abstract class GLWorld extends GLObject {
         }
     }
 
+    public List<GLModel> getModels() {
+        return mModels;
+    }
+
     public Iterator<GLModel> getModelIterator() {
         return mModels.iterator();
     }

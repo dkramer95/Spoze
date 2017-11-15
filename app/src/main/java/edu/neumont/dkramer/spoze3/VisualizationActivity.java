@@ -9,14 +9,19 @@ import android.view.View;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import edu.neumont.dkramer.spoze3.gesture.DeviceShake;
+import edu.neumont.dkramer.spoze3.gl.GLCamera;
 import edu.neumont.dkramer.spoze3.gl.GLCameraActivity;
 import edu.neumont.dkramer.spoze3.gl.GLContext;
+import edu.neumont.dkramer.spoze3.gl.GLModel;
+import edu.neumont.dkramer.spoze3.gl.GLProgram;
 import edu.neumont.dkramer.spoze3.gl.GLScene;
 import edu.neumont.dkramer.spoze3.gl.GLWorld;
 import edu.neumont.dkramer.spoze3.gl.deviceinfo.GLRotationVectorInfo;
+import edu.neumont.dkramer.spoze3.models.GLSquare;
 import edu.neumont.dkramer.spoze3.models.SignModel2;
 import edu.neumont.dkramer.spoze3.scene.SignScene;
 import edu.neumont.dkramer.spoze3.util.Preferences;
@@ -36,6 +41,7 @@ public class VisualizationActivity extends GLCameraActivity {
 	private static final String TAG = "VisualizationActivity";
 	protected DeviceShake mDeviceShake;
 	protected GalleryFragment mGalleryFragment;
+	protected ModelFragment mModelFragment;
 	protected ToolbarManager mToolbarManager;
 
 
@@ -80,6 +86,7 @@ public class VisualizationActivity extends GLCameraActivity {
 				world.addModel(SignModel2.fromBitmap(getGLContext(), bmp, world.getWidth(), world.getHeight()));
 			});
 		}
+		mModelFragment.setModelData(world.getModels());
 	}
 
 	public void calibrateButtonClicked(View view) {
@@ -111,7 +118,8 @@ public class VisualizationActivity extends GLCameraActivity {
 			scene.deleteSelectedModel();
 		});
 		Toast.makeText(this, "Deleted Model", Toast.LENGTH_SHORT).show();
-		getToolbarManager().showToolbar(TOOLBAR_OBJECT);
+		getToolbarManager().showToolbar(TOOLBAR_NORMAL);
+		mModelFragment.setModelData(scene.getWorld().getModels());
 	}
 
 	public void deleteItemButtonClicked(View view) {
@@ -149,7 +157,48 @@ public class VisualizationActivity extends GLCameraActivity {
 					.beginTransaction()
 					.hide(mGalleryFragment)
 					.commit();
+
+			mModelFragment = new ModelFragment();
+			getFragmentManager()
+					.beginTransaction()
+					.add(R.id.fragment_container, mModelFragment)
+					.hide(mModelFragment)
+					.commit();
+			// testing -- should load from world
 		}
+	}
+
+	public void TEST_LOAD_DATA() {
+		// testing -- should load from world
+		List<GLModel> modelTest = new ArrayList<>();
+
+		for (int j = 0; j < 100; ++j) {
+			modelTest.add(new GLModel(getGLContext(), new float[] { 1.0f, 1.0f, 1.0f }) {
+				@Override
+				protected GLProgram createGLProgram() {
+					return null;
+				}
+
+				@Override
+				protected void draw(GLCamera camera) {
+
+				}
+
+				@Override
+				protected void bindHandles() {
+
+				}
+
+				@Override
+				protected void enableAttributes() {
+
+				}
+			});
+		}
+
+		mModelFragment.setModelData(modelTest);
+		mModelFragment.show();
+//		showModelFragment();
 	}
 
 	public void initShakeAction() {
@@ -211,6 +260,9 @@ public class VisualizationActivity extends GLCameraActivity {
 		return mToolbarManager;
 	}
 
+	public void showModelFragment() {
+		mModelFragment.show();
+	}
 
 
 	/* Class that handles switching between different toolbars */
