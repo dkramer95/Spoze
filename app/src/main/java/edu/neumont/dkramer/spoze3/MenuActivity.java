@@ -26,7 +26,7 @@ public class MenuActivity extends AppCompatActivity {
 	}
 
 	public void visualizeButtonClicked(View view) {
-		Intent intent = new Intent(this, ImportBitmapActivity.class);
+		Intent intent = new Intent(this, VisualizationActivity2.class);
 		startActivity(intent);
 	}
 

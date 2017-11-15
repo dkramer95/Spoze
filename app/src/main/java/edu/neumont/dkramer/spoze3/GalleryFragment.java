@@ -5,6 +5,9 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.opengl.GLSurfaceView;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -29,6 +32,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import edu.neumont.dkramer.spoze3.gl.GLActivity;
+import edu.neumont.dkramer.spoze3.gl.GLContext;
+import edu.neumont.dkramer.spoze3.gl.GLWorld;
+import edu.neumont.dkramer.spoze3.models.SignModel2;
+
 import static android.content.res.Configuration.ORIENTATION_LANDSCAPE;
 import static android.content.res.Configuration.ORIENTATION_PORTRAIT;
 import static android.view.View.GONE;
@@ -46,7 +54,7 @@ public class GalleryFragment extends DialogFragment {
     protected RecyclerView mRecyclerView;
     protected ButtonClickHandler mButtonClickHandler;
     protected Button mLoadSelectedButton;
-    protected Button mDeleteSelectedButton;
+    protected Button mCloseButton;
 
     protected List<GalleryItemView> mNormalSelected;
 //    protected List<GalleryItemView> mDeleteSelected;
@@ -128,7 +136,11 @@ public class GalleryFragment extends DialogFragment {
     protected void initButtons(View view) {
         // Button stuff
         mLoadSelectedButton = view.findViewById(R.id.loadSelectedButton);
-//        mDeleteSelectedButton = view.findViewById(R.id.deleteSelectedButton);
+//        mLoadSelectedButton.setOnClickListener((v) -> loadSelectedItems());
+
+        mCloseButton = view.findViewById(R.id.closeButton);
+//        mCloseButton.setOnClickListener((v) -> hide());
+
         mButtonClickHandler = new ButtonClickHandler();
 
         mNormalSelected = new ArrayList<>();
@@ -136,42 +148,38 @@ public class GalleryFragment extends DialogFragment {
         refreshButtons();
     }
 
+//    protected void loadSelectedItems() {
+//    	final GLContext ctx = ((GLActivity)getActivity()).getGLContext();
+//    	final GLWorld world = ctx.getGLView().getScene().getWorld();
+//        ctx.getGLView().setVisibility(View.VISIBLE);
+//        ctx.getGLView().setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
+//
+//    	for (GalleryItemView item : mNormalSelected) {
+//            Bitmap bmp = BitmapFactory.decodeFile(item.getResourceString());
+//            ctx.queueEvent(() -> {
+//                world.addModel(SignModel2.fromBitmap(ctx, bmp, world.getWidth(), world.getHeight()));
+//            });
+//        }
+//        hide();
+//    }
+
+    public void hide() {
+        getFragmentManager()
+			.beginTransaction()
+			.setCustomAnimations(R.animator.fade_in, R.animator.fade_out)
+			.hide(this)
+			.commit();
+    }
+
     @Override
     public void onStart() {
         super.onStart();
-        // stop progress bar
-//        getActivity().findViewById(R.id.galleryLoadProgressBar).setVisibility(View.GONE);
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         updateLayoutManager(newConfig.orientation);
-    }
-
-    public void deleteSelected() {
-//        MyAdapter adapter = (MyAdapter)mRecyclerView.getAdapter();
-//        for (GalleryItemView g : mDeleteSelected) {
-//            g.setOnClickListener(null);
-//        }
-//
-//        Iterator<GalleryItemView> itemIterator = mDeleteSelected.iterator();
-//        while (itemIterator.hasNext()) {
-//            GalleryItemView g = itemIterator.next();
-//            String resStr = g.getResourceString();
-//
-//            File f = new File(resStr);
-//            if (f.exists()) {
-//                f.delete();
-//            }
-//            g.onDelete();
-//            adapter.remove(resStr);
-//            g.animate().alpha(0).setDuration(500).withEndAction(() -> {
-//                adapter.notifyDataSetChanged();
-//            });
-//            itemIterator.remove();
-//        }
-//        mDeleteSelectedButton.setEnabled(false);
     }
 
     protected void updateLayoutManager(int orientation) {

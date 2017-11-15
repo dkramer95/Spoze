@@ -116,21 +116,21 @@ public class DebugVisualizationActivity extends VisualizationActivity {
         Log.i(TAG, "Should delete item");
     }
 
-    public void loadSelectedButtonClicked(View view) {
-        closeButtonClicked(view);
-
-        List<GalleryItemView> items = mGalleryFragment.getSelectedItems();
-        GLWorld world = getGLContext().getGLView().getScene().getWorld();
-
-
-        for (GalleryItemView item : items) {
-            Bitmap bmp = BitmapFactory.decodeFile(item.getResourceString());
-            getGLContext().queueEvent(() -> {
-                world.addModel(SignModel2.fromBitmap(getGLContext(), bmp, world.getWidth(), world.getHeight()));
-            });
-        }
-        mGalleryFragment.clearSelectedItems();
-    }
+//    public void loadSelectedButtonClicked(View view) {
+//        closeButtonClicked(view);
+//
+//        List<GalleryItemView> items = mGalleryFragment.getSelectedItems();
+//        GLWorld world = getGLContext().getGLView().getScene().getWorld();
+//
+//
+//        for (GalleryItemView item : items) {
+//            Bitmap bmp = BitmapFactory.decodeFile(item.getResourceString());
+//            getGLContext().queueEvent(() -> {
+//                world.addModel(SignModel2.fromBitmap(getGLContext(), bmp, world.getWidth(), world.getHeight()));
+//            });
+//        }
+//        mGalleryFragment.clearSelectedItems();
+//    }
 
     public void captureButtonClicked(View view) {
         Bitmap bmp = getCameraPreview().getBitmap();

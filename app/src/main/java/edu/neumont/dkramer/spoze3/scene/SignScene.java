@@ -7,6 +7,7 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
+import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import java.util.Iterator;
@@ -381,7 +382,7 @@ public class SignScene extends GLScene {
 
             float startY = e.getY();
 
-            if (startY <= getHeight() && startY >= getHeight() - (getHeight() * .15f) && deltaX < 50) {
+            if (startY <= getHeight() && startY >= (getHeight() - (getHeight() * .15f)) && deltaX < 75) {
                 float endY = e1.getY();
                 float velocity = v1 - v;
                 Log.i("OnFling", String.format("StartY: %f, EndY: %f, Vel: %f, Height: %d\n", startY, endY, velocity, getHeight()));
@@ -390,9 +391,10 @@ public class SignScene extends GLScene {
 //                    Log.i("OnFling", String.format("StartY: %f, EndY: %f, Vel: %f\n", startY, endY, velocity));
                     Log.i("OnFling", "Swipe up detected");
 
-                    DebugVisualizationActivity activity = (DebugVisualizationActivity)getGLContext().getActivity();
+                    GLActivity activity = getGLContext().getActivity();
                     activity.runOnUiThread(() -> {
-                        activity.foo();
+                        Toast.makeText(activity, "Swipe up action", Toast.LENGTH_SHORT).show();
+//                        activity.foo();
 //                        activity.getFragmentManager().beginTransaction();
 //                        ViewFlipper flipper = activity.findViewById(R.id.toolbarFlipper);
 //                        flipper.setDisplayedChild(type);

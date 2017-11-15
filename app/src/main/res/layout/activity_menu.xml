@@ -5,12 +5,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/main_background"
     tools:context="edu.neumont.dkramer.spoze3.MenuActivity">
 
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="@drawable/main_background"
+        android:layout_marginTop="32dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -41,7 +42,7 @@
             android:onClick="visualizeButtonClicked"
             android:text="@string/visualize_button"
             android:textColor="@android:color/white"
-            android:textSize="22sp" />
+            android:textSize="22sp"/>
 
         <Button
             android:id="@+id/debugButton"
@@ -55,7 +56,7 @@
             android:onClick="debugButtonClicked"
             android:text="@string/debug_button"
             android:textColor="@android:color/white"
-            android:textSize="22sp" />
+            android:textSize="22sp"/>
 
         <Button
             android:id="@+id/settingsButton"

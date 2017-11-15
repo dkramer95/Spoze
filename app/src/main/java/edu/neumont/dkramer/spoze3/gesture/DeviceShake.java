@@ -1,5 +1,7 @@
 package edu.neumont.dkramer.spoze3.gesture;
 
+import edu.neumont.dkramer.spoze3.gl.GLActivity;
+import edu.neumont.dkramer.spoze3.gl.GLContext;
 import edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo;
 
 import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Type.ACCELEROMETER;
@@ -18,14 +20,13 @@ public class DeviceShake implements GLDeviceInfo.OnUpdateListener {
     private float mAccelCurrent;
     private float mAccelLast;
     private OnShakeListener mOnShakeListener = () -> { };
+    private GLActivity mActivity;
 
 
-    public DeviceShake() {
-
-    }
-
-    public DeviceShake(OnShakeListener listener) {
+    public DeviceShake(GLActivity activity, OnShakeListener listener) {
+        activity.getGLContext().getDeviceInfo(ACCELEROMETER).addOnUpdateListener(this);
         mOnShakeListener = listener;
+        mActivity = activity;
     }
 
 
@@ -51,6 +52,10 @@ public class DeviceShake implements GLDeviceInfo.OnUpdateListener {
 
     public void setOnShakeListener(OnShakeListener listener) {
         mOnShakeListener = listener;
+    }
+
+    public void stopListening() {
+        mActivity.getGLContext().getDeviceInfo(ACCELEROMETER).removeOnUpdateListener(this);
     }
 
 

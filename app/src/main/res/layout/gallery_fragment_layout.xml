@@ -28,9 +28,9 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@android:color/background_dark"
-                android:onClick="loadSelectedButtonClicked"
+                android:onClick="loadGalleryItemsButtonClicked"
                 android:text="Load"
-                android:textColor="@android:color/background_light" />
+                android:textColor="@android:color/background_light"/>
 
             <Button
                 android:id="@+id/closeButton"
@@ -38,9 +38,9 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@android:color/background_dark"
-                android:onClick="closeButtonClicked"
+                android:onClick="closeGalleryButtonClicked"
                 android:text="Close"
-                android:textColor="@android:color/background_light" />
+                android:textColor="@android:color/background_light"/>
         </LinearLayout>
 
         <android.support.v7.widget.RecyclerView

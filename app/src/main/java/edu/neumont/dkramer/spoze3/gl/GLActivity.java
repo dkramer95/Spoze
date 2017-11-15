@@ -101,4 +101,12 @@ public abstract class GLActivity extends AppCompatActivity {
     public GLContext getGLContext() {
         return mGLContext;
     }
+
+    public GLView getGLView() {
+        return mGLContext.getGLView();
+    }
+
+    public GLScene getScene() {
+        return mGLContext.getGLView().getScene();
+    }
 }

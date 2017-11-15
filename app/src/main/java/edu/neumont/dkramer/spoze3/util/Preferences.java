@@ -82,7 +82,8 @@ public class Preferences {
 
 	/* Preference Keys */
 	public enum Key {
-		SHAKE_FOR_HELP,
-		SHAKE_FOR_HELP_SENSITIVITY
+		SHAKE_ACTION,
+		SHAKE_SENSITIVITY,
+		SWIPE_ACTION,
 	}
 }
