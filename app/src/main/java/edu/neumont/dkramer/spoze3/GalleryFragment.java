@@ -5,9 +5,6 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.opengl.GLSurfaceView;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -29,13 +26,7 @@ import com.bumptech.glide.Glide;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-
-import edu.neumont.dkramer.spoze3.gl.GLActivity;
-import edu.neumont.dkramer.spoze3.gl.GLContext;
-import edu.neumont.dkramer.spoze3.gl.GLWorld;
-import edu.neumont.dkramer.spoze3.models.SignModel2;
 
 import static android.content.res.Configuration.ORIENTATION_LANDSCAPE;
 import static android.content.res.Configuration.ORIENTATION_PORTRAIT;
@@ -56,21 +47,8 @@ public class GalleryFragment extends DialogFragment {
     protected Button mLoadSelectedButton;
     protected Button mCloseButton;
 
-    protected List<GalleryItemView> mNormalSelected;
-//    protected List<GalleryItemView> mDeleteSelected;
+    protected List<GalleryItemView> mSelectedItems;
 
-
-//    static int[] imageIds =
-//    {
-//        R.drawable.banner_texture,
-//        R.drawable.decal_texture,
-//        R.drawable.logo_texture,
-//        R.drawable.texture7,
-//        R.drawable.texture_3,
-//        R.drawable.texture_4,
-//        R.drawable.vim_texture,
-//        R.drawable.texture10,
-//    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -136,32 +114,12 @@ public class GalleryFragment extends DialogFragment {
     protected void initButtons(View view) {
         // Button stuff
         mLoadSelectedButton = view.findViewById(R.id.loadSelectedButton);
-//        mLoadSelectedButton.setOnClickListener((v) -> loadSelectedItems());
-
         mCloseButton = view.findViewById(R.id.closeButton);
-//        mCloseButton.setOnClickListener((v) -> hide());
 
         mButtonClickHandler = new ButtonClickHandler();
-
-        mNormalSelected = new ArrayList<>();
-//        mDeleteSelected = new ArrayList<>();
+        mSelectedItems = new ArrayList<>();
         refreshButtons();
     }
-
-//    protected void loadSelectedItems() {
-//    	final GLContext ctx = ((GLActivity)getActivity()).getGLContext();
-//    	final GLWorld world = ctx.getGLView().getScene().getWorld();
-//        ctx.getGLView().setVisibility(View.VISIBLE);
-//        ctx.getGLView().setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
-//
-//    	for (GalleryItemView item : mNormalSelected) {
-//            Bitmap bmp = BitmapFactory.decodeFile(item.getResourceString());
-//            ctx.queueEvent(() -> {
-//                world.addModel(SignModel2.fromBitmap(ctx, bmp, world.getWidth(), world.getHeight()));
-//            });
-//        }
-//        hide();
-//    }
 
     public void hide() {
         getFragmentManager()
@@ -221,14 +179,14 @@ public class GalleryFragment extends DialogFragment {
     }
 
     public List<GalleryItemView> getSelectedItems() {
-        return mNormalSelected;
+        return mSelectedItems;
     }
 
     public void clearSelectedItems() {
-        for (GalleryItemView item : mNormalSelected) {
+        for (GalleryItemView item : mSelectedItems) {
             item.clear();
         }
-        mNormalSelected.clear();
+        mSelectedItems.clear();
     }
 
     public void delete(View view) {
@@ -238,7 +196,6 @@ public class GalleryFragment extends DialogFragment {
 
         layout.animate().alpha(0).setDuration(500).withEndAction(() -> {
             adapter.remove(item.getResourceString());
-//            adapter.notifyDataSetChanged();
             adapter.notifyChange();
             view.setVisibility(GONE);
         }).start();
@@ -306,8 +263,7 @@ public class GalleryFragment extends DialogFragment {
     }
 
     protected void refreshButtons() {
-        mLoadSelectedButton.setEnabled(!mNormalSelected.isEmpty());
-//        mDeleteSelectedButton.setEnabled(!mDeleteSelected.isEmpty());
+        mLoadSelectedButton.setEnabled(!mSelectedItems.isEmpty());
     }
 
 
@@ -319,11 +275,10 @@ public class GalleryFragment extends DialogFragment {
             GalleryItemView itemView = (GalleryItemView)view;
             itemView.onClick(view);
             if (itemView.isNormalSelected()) {
-                mNormalSelected.add(itemView);
-//                mDeleteSelected.remove(itemView);
+                mSelectedItems.add(itemView);
                 // enable load button if not already
             } else {
-                mNormalSelected.remove(itemView);
+                mSelectedItems.remove(itemView);
             }
             refreshButtons();
         }
@@ -333,11 +288,8 @@ public class GalleryFragment extends DialogFragment {
             GalleryItemView itemView = (GalleryItemView)view;
             itemView.onLongClick(view);
             if (itemView.isDeleteSelected()) {
-                mNormalSelected.remove(itemView);
-//                mDeleteSelected.add(itemView);
+                mSelectedItems.remove(itemView);
                 // enable delete button if not already
-            } else {
-//                mDeleteSelected.remove(itemView);
             }
             refreshButtons();
             return true;

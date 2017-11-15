@@ -18,15 +18,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".VisualizationActivity2"
-                  android:theme="@style/FullscreenTheme"
-                  android:configChanges="orientation|screenSize"/>
         <activity android:name=".VisualizationActivity"
                   android:theme="@style/FullscreenTheme"
                   android:configChanges="orientation|screenSize"/>
         <activity android:name=".DebugVisualizationActivity"
-            android:theme="@style/FullscreenTheme"
-            android:configChanges="orientation|screenSize"/>
+                  android:theme="@style/FullscreenTheme"
+                  android:configChanges="orientation|screenSize"/>
         <activity android:name="edu.neumont.dkramer.spoze3.ImportBitmapActivity" />
         <activity android:name=".SettingsActivity"/>
     </application>

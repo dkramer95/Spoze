@@ -10,10 +10,8 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import edu.neumont.dkramer.spoze3.gesture.DeviceShake;
-import edu.neumont.dkramer.spoze3.gl.GLActivity;
 import edu.neumont.dkramer.spoze3.util.Preferences;
 
-import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Type.ACCELEROMETER;
 import static edu.neumont.dkramer.spoze3.util.Preferences.Key.SHAKE_ACTION;
 
 /**
@@ -43,19 +41,19 @@ public class HelpFragment extends DialogFragment implements DeviceShake.OnShakeL
 //
 //			mGotItButton = view.findViewById(R.id.gotItButton);
 //			mGotItButton.setOnClickListener((v) -> {
-//				hide();
+//				hideToolbar();
 //			});
 //
 //			mStopShowButton = view.findViewById(R.id.stopShowButton);
 //			mStopShowButton.setOnClickListener((v) -> {
 //				Preferences.putBoolean(SHAKE_ACTION, false).save();
 //				activity.getGLContext().getDeviceInfo(ACCELEROMETER).removeOnUpdateListener(mDeviceShake);
-//				hide();
-//				Toast.makeText(activity, "Shake for help disabled", Toast.LENGTH_LONG).show();
+//				hideToolbar();
+//				Toast.makeText(activity, "Shake for help disabled", Toast.LENGTH_LONG).showToolbar();
 //			});
 //		}
 
-		VisualizationActivity2 activity = (VisualizationActivity2)getActivity();
+		VisualizationActivity activity = (VisualizationActivity)getActivity();
 
 		mGotItButton = view.findViewById(R.id.gotItButton);
 		mGotItButton.setOnClickListener((v) -> {

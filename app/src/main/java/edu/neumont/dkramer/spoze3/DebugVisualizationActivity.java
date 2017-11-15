@@ -27,7 +27,7 @@ import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Type.ROTATIO
  */
 
 public class DebugVisualizationActivity extends VisualizationActivity {
-    private static final String TAG = "VisualizationActivity";
+    private static final String TAG = "DBGVisualizationActivity";
 
     protected GalleryFragment mGalleryFragment;
     protected HelpFragment mHelpFragment;
@@ -55,12 +55,6 @@ public class DebugVisualizationActivity extends VisualizationActivity {
                     .hide(mHelpFragment)
                     .commit();
         }
-    }
-
-    @Override
-    protected Bitmap loadBitmap() {
-        Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.debug_texture);
-        return bmp;
     }
 
     @Override
@@ -156,7 +150,7 @@ public class DebugVisualizationActivity extends VisualizationActivity {
         foo();
 //        getFragmentManager().beginTransaction()
 //                .setCustomAnimations(R.animator.fade_in, R.animator.fade_out)
-//                .show(mGalleryFragment)
+//                .showToolbar(mGalleryFragment)
 //                .commit();
     }
 }
