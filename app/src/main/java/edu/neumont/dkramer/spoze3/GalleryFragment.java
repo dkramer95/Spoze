@@ -13,6 +13,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -130,11 +131,6 @@ public class GalleryFragment extends DialogFragment {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-    }
-
-    @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         updateLayoutManager(newConfig.orientation);
@@ -196,7 +192,7 @@ public class GalleryFragment extends DialogFragment {
 
         layout.animate().alpha(0).setDuration(500).withEndAction(() -> {
             adapter.remove(item.getResourceString());
-            adapter.notifyChange();
+	        adapter.notifyRemoved(item.getResourceString());
             view.setVisibility(GONE);
         }).start();
     }
@@ -215,6 +211,15 @@ public class GalleryFragment extends DialogFragment {
         public MyAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.cell_layout, parent, false);
             return new ViewHolder(view);
+        }
+
+        public void notifyRemoved(String item) {
+        	super.notifyItemRemoved(indexOf(item));
+        	mGalleryList.remove(item);
+
+        	if (getItemCount() == 0) {
+                Toast.makeText(getActivity(), "You deleted everything", Toast.LENGTH_LONG).show();
+            }
         }
 
         public void notifyChange() {
@@ -248,6 +253,10 @@ public class GalleryFragment extends DialogFragment {
         @Override
         public int getItemCount() {
             return mGalleryList.size();
+        }
+
+        public int indexOf(String resourceString) {
+        	return mGalleryList.indexOf(resourceString);
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {

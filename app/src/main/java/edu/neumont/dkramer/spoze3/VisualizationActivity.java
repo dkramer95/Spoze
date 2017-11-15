@@ -164,7 +164,7 @@ public class VisualizationActivity extends GLCameraActivity {
 				mDeviceShake = new DeviceShake(this, loadHelpFragment());
 				break;
 			case "CLEAR SCENE":
-				mDeviceShake = new DeviceShake(this, () -> getScene().getWorld().removeAllModels());
+				mDeviceShake = new DeviceShake(this, () -> clearScene());
 				break;
 			case "NONE":
 				default:
@@ -181,6 +181,11 @@ public class VisualizationActivity extends GLCameraActivity {
 				.hide(helpFragment)
 				.commit();
 		return helpFragment;
+	}
+
+	protected void clearScene() {
+		getScene().getWorld().removeAllModels();
+		Toast.makeText(this, "Models cleared from shake", Toast.LENGTH_SHORT).show();
 	}
 
 	@Override
