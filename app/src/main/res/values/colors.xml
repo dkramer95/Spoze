@@ -12,4 +12,5 @@
     <color name="overlay_color">#c3000000</color>
     <color name="white">#ffffffff</color>
     <color name="gray">#FFEEEEEE</color>
+    <color name="yellow">#ffee58</color>
 </resources>

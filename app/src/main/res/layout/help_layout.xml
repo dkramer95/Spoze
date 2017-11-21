@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/overlay_color">
@@ -13,6 +14,17 @@
 
         <TextView
             android:id="@+id/helpTitleTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:text="?"
+            android:textAlignment="center"
+            android:textColor="@color/yellow"
+            android:textSize="32sp"/>
+
+        <TextView
+            android:id="@+id/helpTitleTextView2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Help"
@@ -30,13 +42,31 @@
             android:textColor="@color/white"/>
 
         <TextView
+            android:id="@+id/textView5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:text='Tap "Import" to add 1 or more images'
+            android:textAlignment="center"
+            android:textColor="@color/yellow"/>
+
+        <TextView
             android:id="@+id/textView4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
-            android:text="TODO show help here"
+            android:text="Tap anywhere on the screen"
             android:textAlignment="center"
-            android:textColor="@color/white"/>
+            android:textColor="@color/yellow"/>
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:text='If nothing shows up OR if you experience jitters, tap "Calibrate"'
+            android:textAlignment="center"
+            android:textColor="@color/yellow"/>
 
         <Button
             android:id="@+id/gotItButton"
