@@ -24,14 +24,14 @@
         android:text="CW"
         android:textColor="@android:color/background_light" />
 
-    <Button
-        android:id="@+id/mirrorButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:background="@color/overlay_color"
-        android:text="MIRROR"
-        android:textColor="@android:color/background_light" />
+    <!--<Button-->
+        <!--android:id="@+id/mirrorButton"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_weight="1"-->
+        <!--android:background="@color/overlay_color"-->
+        <!--android:text="MIRROR"-->
+        <!--android:textColor="@android:color/background_light" />-->
 
     <Button
         android:id="@+id/deleteButton"

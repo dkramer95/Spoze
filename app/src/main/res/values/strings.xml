@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Spoze</string>
-    <string name="app_title">2.5D Motion Compositor</string>
+    <string name="app_title">Spoze</string>
     <string name="artwork_button">Import Artwork</string>
     <string name="debug_button">Debug Mode</string>
     <string name="test_button">Sandbox</string>
