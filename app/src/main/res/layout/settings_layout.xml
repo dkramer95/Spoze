@@ -26,7 +26,7 @@
             android:padding="8dp"
             android:text="@string/settings_title"
             android:textAlignment="center"
-            android:textColor="@color/white"
+            android:textColor="@android:color/black"
             android:textSize="30sp"/>
 
         <TextView
@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
             android:text="@string/motion_gestures"
-            android:textColor="@color/white"
+            android:textColor="@android:color/black"
             android:textSize="18sp"
             android:textStyle="bold"/>
 
@@ -64,7 +64,7 @@
                         android:layout_marginTop="8dp"
                         android:layout_weight="1"
                         android:text="@string/shake_action"
-                        android:textColor="@color/white"
+                        android:textColor="@android:color/black"
                         android:textSize="18sp"/>
 
                     <Spinner
@@ -89,7 +89,7 @@
                         android:layout_marginTop="8dp"
                         android:layout_weight="1"
                         android:text="@string/shake_sensitivity"
-                        android:textColor="@color/white"
+                        android:textColor="@android:color/black"
                         android:textSize="18sp"/>
 
                     <Spinner
@@ -112,7 +112,7 @@
             android:layout_marginLeft="16dp"
             android:layout_marginTop="16dp"
             android:text="@string/swipe_gestures"
-            android:textColor="@color/white"
+            android:textColor="@android:color/black"
             android:textSize="18sp"
             android:textStyle="bold"/>
 
@@ -129,7 +129,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_weight="1"
                 android:text="@string/swipe_up_action"
-                android:textColor="@color/white"
+                android:textColor="@android:color/black"
                 android:textSize="18sp"/>
 
             <Spinner

@@ -13,6 +13,7 @@ import android.widget.ViewFlipper;
 import java.util.Iterator;
 import java.util.concurrent.ArrayBlockingQueue;
 
+import edu.neumont.dkramer.spoze3.BlendFuncHelper;
 import edu.neumont.dkramer.spoze3.DebugVisualizationActivity;
 import edu.neumont.dkramer.spoze3.GLPixelPicker;
 import edu.neumont.dkramer.spoze3.R;
@@ -159,7 +160,9 @@ public class SignScene extends GLScene {
         glEnable(GL_DEPTH_TEST);
         glBlendFunc(GL_ZERO, GL_SRC_COLOR);
 
-//            glBlendFunc(sBlendFunc[0], sBlendFunc[1]);
+        // uncomment for testing different blend mode combinations
+//        int[] blendFunc = BlendFuncHelper.nextBlendFunc();
+//		glBlendFunc(blendFunc[0], blendFunc[1]);
 
         // ensure that our selector uses the brightest color (not the random unique) color
         // so that selection is more apparent
@@ -171,70 +174,6 @@ public class SignScene extends GLScene {
         glDisable(GL_BLEND);
         glDisable(GL_DEPTH_TEST);
     }
-
-    /** BLENDING FUNCTION VISUALIZATION TESTING **/
-    /** Iterate over every combination on touch events, to determine what looks best **/
-    static final int[] sBlendFuncs =
-    {
-        // src factor, destination factor
-            GL_ZERO, GL_ZERO,
-            GL_ZERO, GL_ONE,
-            GL_ZERO, GL_SRC_COLOR,
-            GL_ZERO, GL_ONE_MINUS_SRC_COLOR,
-            GL_ZERO, GL_SRC_ALPHA,
-            GL_ZERO, GL_ONE_MINUS_SRC_ALPHA,
-
-            GL_ONE, GL_ZERO,
-            GL_ONE, GL_ONE,
-            GL_ONE, GL_SRC_COLOR,
-            GL_ONE, GL_ONE_MINUS_SRC_COLOR,
-            GL_ONE, GL_SRC_ALPHA,
-            GL_ONE, GL_ONE_MINUS_SRC_ALPHA,
-
-            GL_DST_COLOR, GL_ZERO,
-            GL_DST_COLOR, GL_ONE,
-            GL_DST_COLOR, GL_SRC_COLOR,
-            GL_DST_COLOR, GL_ONE_MINUS_SRC_COLOR,
-            GL_DST_COLOR, GL_SRC_ALPHA,
-            GL_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA,
-
-            GL_ONE_MINUS_DST_COLOR, GL_ZERO,
-            GL_ONE_MINUS_DST_COLOR, GL_ONE,
-            GL_ONE_MINUS_DST_COLOR, GL_SRC_COLOR,
-            GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_COLOR,
-            GL_ONE_MINUS_DST_COLOR, GL_SRC_ALPHA,
-            GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA,
-
-            GL_SRC_ALPHA, GL_ZERO,
-            GL_SRC_ALPHA, GL_ONE,
-            GL_SRC_ALPHA, GL_SRC_COLOR,
-            GL_SRC_ALPHA, GL_ONE_MINUS_SRC_COLOR,
-            GL_SRC_ALPHA, GL_SRC_ALPHA,
-            GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA,
-
-            GL_ONE_MINUS_SRC_ALPHA, GL_ZERO,
-            GL_ONE_MINUS_SRC_ALPHA, GL_ONE,
-            GL_ONE_MINUS_SRC_ALPHA, GL_SRC_COLOR,
-            GL_ONE_MINUS_SRC_ALPHA, GL_ONE_MINUS_SRC_COLOR,
-            GL_ONE_MINUS_SRC_ALPHA, GL_SRC_ALPHA,
-            GL_ONE_MINUS_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA,
-    };
-	protected static int sIndex;
-	protected static int[] sBlendFunc = changeBlendFunc();
-
-    protected static int[] changeBlendFunc() {
-		if (sIndex + 2 >= sBlendFuncs.length) {
-			sIndex = 0;
-		}
-		int[] blendFunc = new int[] { sBlendFuncs[sIndex], sBlendFuncs[sIndex + 1] };
-		Log.i(TAG, String.format("Using blend func index => %d => [%d],[%d]\n", sIndex, blendFunc[0], blendFunc[1]));
-		sIndex += 2;
-		sBlendFunc = blendFunc;
-		return blendFunc;
-    }
-    /** END BLENDING FUNCTION VISUALIZATION TESTING **/
-
-
 
     protected void runEventsInQueue() {
         GLEvent e;
@@ -322,7 +261,7 @@ public class SignScene extends GLScene {
                     // deselect
                     if (model == mSelectedModel || model == null) {
                         mSelectedModel = null;
-                        changeBlendFunc();
+                        BlendFuncHelper.nextBlendFunc();
                         setUIToolbar(TOOLBAR_NORMAL);
                     } else {
                         mSelectedModel = model;
