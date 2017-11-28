@@ -16,10 +16,9 @@ import android.widget.Button;
 public class GalleryItemView extends AppCompatImageView implements View.OnClickListener, View.OnLongClickListener {
     private static final String TAG = "GalleryItemView";
 
-    protected boolean normalSelectFlag;
-    protected boolean deleteSelectFlag;
     protected String mResourceString;
     protected Button mDeleteButton;
+    protected GalleryItem mItem;
 
 
 
@@ -35,47 +34,63 @@ public class GalleryItemView extends AppCompatImageView implements View.OnClickL
         super(context, attrs, defStyleAttr);
     }
 
+    public void setGalleryItem(GalleryItem item) {
+        mItem = item;
+    }
+
     /* These click methods will be called from our fragment... */
 
     @Override
     public boolean onLongClick(View view) {
-        if (deleteSelectFlag) {
+        if (mItem.isDeleteSelected()) {
             getBackground().setColorFilter(null);
-            deleteSelectFlag = false;
+            mItem.setDeleteSelected(false);
             mDeleteButton.animate().alpha(0).setDuration(250).withEndAction(() -> mDeleteButton.setVisibility(INVISIBLE));
         } else {
             getBackground().setColorFilter(Color.RED, PorterDuff.Mode.MULTIPLY);
-            deleteSelectFlag = true;
+            mItem.setDeleteSelected(true);
             mDeleteButton.setVisibility(VISIBLE);
             mDeleteButton.animate().alpha(0).start();
             mDeleteButton.animate().alpha(1).setDuration(250).start();
-            normalSelectFlag = false;
+            mItem.setNormalSelected(false);
         }
         return true;
     }
 
+    public void refreshView() {
+    	if (mItem.isDeleteSelected()) {
+            getBackground().setColorFilter(Color.RED, PorterDuff.Mode.MULTIPLY);
+            mDeleteButton.setVisibility(VISIBLE);
+        } else if (mItem.isNormalSelected()) {
+    	    getBackground().setColorFilter(Color.GREEN, PorterDuff.Mode.MULTIPLY);
+        } else {
+    	    getBackground().setColorFilter(null);
+            mDeleteButton.setVisibility(INVISIBLE);
+        }
+    }
+
     @Override
     public void onClick(View view) {
-        if (!deleteSelectFlag) {
-            if (normalSelectFlag) {
+        if (!mItem.isDeleteSelected()) {
+            if (mItem.isNormalSelected()) {
                 getBackground().setColorFilter(null);
-                normalSelectFlag = false;
+                mItem.setNormalSelected(false);
             } else {
                 getBackground().setColorFilter(Color.GREEN, PorterDuff.Mode.MULTIPLY);
-                normalSelectFlag = true;
+                mItem.setNormalSelected(true);
             }
         } else {
             // clear delete
             getBackground().setColorFilter(null);
-            deleteSelectFlag = false;
+            mItem.setDeleteSelected(false);
             mDeleteButton.animate().alpha(0).setDuration(250).withEndAction(() -> mDeleteButton.setVisibility(INVISIBLE));
         }
     }
 
     public void clear() {
         getBackground().setColorFilter(null);
-        normalSelectFlag = false;
-        deleteSelectFlag = false;
+        mItem.setNormalSelected(false);
+        mItem.setDeleteSelected(false);
     }
 
     public void onDelete() {
@@ -92,10 +107,10 @@ public class GalleryItemView extends AppCompatImageView implements View.OnClickL
     }
 
     public boolean isNormalSelected() {
-        return normalSelectFlag;
+    	return mItem.isNormalSelected();
     }
 
     public boolean isDeleteSelected() {
-        return deleteSelectFlag;
+    	return mItem.isDeleteSelected();
     }
 }

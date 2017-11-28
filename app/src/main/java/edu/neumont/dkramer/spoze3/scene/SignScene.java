@@ -313,6 +313,7 @@ public class SignScene extends GLScene {
             mScalingFlag = false;
         }
 
+        /* TODO i think this should be moved elsewhere, if time permits */
         @Override
         public boolean onFling(MotionEvent e, MotionEvent e1, float v, float v1) {
             float deltaX = Math.abs(e1.getX() - e.getX());
@@ -334,7 +335,7 @@ public class SignScene extends GLScene {
 //                    GLActivity activity = getGLContext().getActivity();
                     VisualizationActivity activity = (VisualizationActivity)getGLContext().getActivity();
                     activity.runOnUiThread(() -> {
-                        Toast.makeText(activity, "Swipe up action", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(activity, "Swipe up action", Toast.LENGTH_SHORT).show();
 //                        activity.showModelFragment();
 //                        activity.TEST_LOAD_DATA();
                         activity.showModelFragment();

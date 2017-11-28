@@ -107,7 +107,7 @@ public class GalleryFragment extends DialogFragment {
     }
 
     protected void initGalleryView() {
-        List<String> createLists = prepareData();
+        List<GalleryItem> createLists = prepareData();
         MyAdapter adapter = new MyAdapter(getActivity(), createLists);
         mRecyclerView.setAdapter(adapter);
     }
@@ -164,12 +164,13 @@ public class GalleryFragment extends DialogFragment {
         }
     }
 
-    private List<String> prepareData() {
-        List<String> imageList = new ArrayList<>();
+    private List<GalleryItem> prepareData() {
+        List<GalleryItem> imageList = new ArrayList<>();
         File[] files = getGalleryDir().listFiles();
         for (File f : files) {
-            imageList.add(f.getAbsolutePath());
-            Log.i(TAG, "Added File => " + f);
+            GalleryItem item = new GalleryItem(f.getAbsolutePath());
+            imageList.add(item);
+            Log.i(TAG, "Added File => " + item.getResourceString());
         }
         return imageList;
     }
@@ -200,9 +201,10 @@ public class GalleryFragment extends DialogFragment {
 
     private class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         private Context mContext;
-        private List<String> mGalleryList;
+        private List<GalleryItem> mGalleryList;
+//        private List<String> mGalleryList;
 
-        public MyAdapter(Context ctx, List<String> galleryList) {
+        public MyAdapter(Context ctx, List<GalleryItem> galleryList) {
             mContext = ctx;
             mGalleryList = galleryList;
         }
@@ -232,18 +234,23 @@ public class GalleryFragment extends DialogFragment {
 
         @Override
         public void onBindViewHolder(MyAdapter.ViewHolder holder, int index) {
-            String filePath = mGalleryList.get(index);
-            GalleryItemView galleryItem = holder.mImgView;
+            GalleryItem galleryItem = mGalleryList.get(index);
+            GalleryItemView itemView = holder.mImgView;
+            Log.i(TAG, galleryItem.toString());
 
+            // load image
             Glide.with(getActivity())
-                    .load(filePath)
+                    .load(galleryItem.getResourceString())
                     .placeholder(R.drawable.ic_launcher_background)
                     .fitCenter()
-                    .into(galleryItem);
+                    .into(itemView);
 
-            galleryItem.setOnClickListener(mButtonClickHandler);
-            galleryItem.setOnLongClickListener(mButtonClickHandler);
-            galleryItem.setResourceString(filePath);
+            itemView.setGalleryItem(galleryItem);
+            itemView.setOnClickListener(mButtonClickHandler);
+            itemView.setOnLongClickListener(mButtonClickHandler);
+            itemView.refreshView();
+            // i don't know if i need this anymore
+            itemView.setResourceString(galleryItem.getResourceString());
         }
 
         public boolean remove(String item) {
