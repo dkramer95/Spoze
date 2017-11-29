@@ -63,7 +63,7 @@ public abstract class GLCameraActivity extends GLActivity {
 	protected void init() {
 		mCameraPreview = findViewById(R.id.cameraPreview);
 		mCameraPreview.setCameraType(Camera.CAM_REAR);
-		mCameraPreview.setPreferredSize(getDisplaySize());
+//		mCameraPreview.setPreferredSize(getDisplaySize());
 		mCameraPreview.setPreviewOption(CONTROL_AF_MODE, CONTROL_AF_MODE_CONTINUOUS_PICTURE);
 
 		if (!hasGrantedCameraPermission()) {
