@@ -5,6 +5,7 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -15,18 +16,26 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static android.content.res.Configuration.ORIENTATION_LANDSCAPE;
@@ -47,8 +56,10 @@ public class GalleryFragment extends DialogFragment {
     protected ButtonClickHandler mButtonClickHandler;
     protected Button mLoadSelectedButton;
     protected Button mCloseButton;
+    protected Spinner mDirectorySpinner;
 
     protected List<GalleryItemView> mSelectedItems;
+    protected List<String> mDirectories;
 
 
     @Override
@@ -67,13 +78,25 @@ public class GalleryFragment extends DialogFragment {
         }
 
         if (isExternalStorageWritable()) {
-            File dir = getGalleryDir();
-            dir.mkdirs();
-            if (!dir.exists()) {
-                Toast.makeText(getActivity(), "Spoze Gallery Missing!", Toast.LENGTH_LONG).show();
-            }
+            mDirectories = getGalleryDirectories();
+
+//            File dir = getGalleryDir();
+//            dir.mkdirs();
+//            if (!dir.exists()) {
+//                Toast.makeText(getActivity(), "Spoze Gallery Missing!", Toast.LENGTH_LONG).show();
+//            }
         }
         return true;
+    }
+
+    protected String getPictureDir() {
+        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString();
+    }
+
+    protected List<String> getGalleryDirectories() {
+//        File dirs = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES));
+        File dirs = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        return Arrays.asList(dirs.list());
     }
 
     protected File getGalleryDir() {
@@ -102,6 +125,23 @@ public class GalleryFragment extends DialogFragment {
             initButtons(view);
             initGalleryView();
         }
+
+        mDirectorySpinner = view.findViewById(R.id.directorySpinner);
+        mDirectorySpinner.setAdapter(new DirectoryItemAdapter(getActivity(), getGalleryDirectories()));
+//        ArrayAdapter<String> dirAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, mDirectories);
+//        mDirectorySpinner.setAdapter(dirAdapter);
+//        mDirectorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+//                String dir = getPictureDir() + File.separator + dirAdapter.getItem(i);
+//                Toast.makeText(getActivity(), "Selected: " + dir, Toast.LENGTH_LONG).show();
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> adapterView) {
+//
+//            }
+//        });
 
         return view;
     }
@@ -282,6 +322,41 @@ public class GalleryFragment extends DialogFragment {
         mLoadSelectedButton.setEnabled(!mSelectedItems.isEmpty());
     }
 
+
+    private class DirectoryItemAdapter extends BaseAdapter {
+        private List<String> mData;
+        private TextView mDirectoryTextView;
+        private LayoutInflater mInflater;
+
+
+        public DirectoryItemAdapter(Context context, List<String> data) {
+            mInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            mData = data;
+        }
+
+        @Override
+        public int getCount() {
+            return mData.size();
+        }
+
+        @Override
+        public Object getItem(int i) {
+            return mData.get(i);
+        }
+
+        @Override
+        public long getItemId(int i) {
+            return i;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup viewGroup) {
+            View view = convertView != null ? convertView : mInflater.inflate(R.layout.gallery_list_item, null);
+            mDirectoryTextView = view.findViewById(R.id.directoryTextView);
+            mDirectoryTextView.setText(mData.get(position));
+            return view;
+        }
+    }
 
 
     private class ButtonClickHandler implements View.OnClickListener, View.OnLongClickListener {
