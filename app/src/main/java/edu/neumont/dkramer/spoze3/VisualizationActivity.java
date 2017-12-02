@@ -66,6 +66,10 @@ public class VisualizationActivity extends GLCameraActivity {
 		getToolbarManager().showToolbar(TOOLBAR_NORMAL);
 	}
 
+	public void showDirectorySpinnerButtonClicked(View view) {
+		mGalleryFragment.showDirectorySpinner();
+	}
+
 	public void loadGalleryItemsButtonClicked(View view) {
 		resumeGLRender();
 		getToolbarManager().showToolbar(TOOLBAR_NORMAL);

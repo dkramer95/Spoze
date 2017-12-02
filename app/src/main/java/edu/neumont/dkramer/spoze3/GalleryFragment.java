@@ -5,7 +5,7 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.content.res.Resources;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -14,15 +14,12 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.RelativeLayout;
@@ -35,12 +32,13 @@ import com.bumptech.glide.Glide;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import static android.content.res.Configuration.ORIENTATION_LANDSCAPE;
 import static android.content.res.Configuration.ORIENTATION_PORTRAIT;
 import static android.view.View.GONE;
+import static android.view.View.INVISIBLE;
+import static android.view.View.VISIBLE;
 
 /**
  * Created by dkramer on 11/11/17.
@@ -60,6 +58,7 @@ public class GalleryFragment extends DialogFragment {
 
     protected List<GalleryItemView> mSelectedItems;
     protected List<String> mDirectories;
+    protected String mSelectedDirectory;
 
 
     @Override
@@ -99,9 +98,18 @@ public class GalleryFragment extends DialogFragment {
         return Arrays.asList(dirs.list());
     }
 
+//    protected File getGalleryDir() {
+//        return new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+//                + File.separator + SPOZE_DIRECTORY);
+//    }
+
     protected File getGalleryDir() {
-        return new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-                + File.separator + SPOZE_DIRECTORY);
+        if (mSelectedDirectory != null) {
+            return new File(mSelectedDirectory);
+        } else {
+            return new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+                    + File.separator + SPOZE_DIRECTORY);
+        }
     }
 
     public boolean isExternalStorageWritable() {
@@ -127,21 +135,30 @@ public class GalleryFragment extends DialogFragment {
         }
 
         mDirectorySpinner = view.findViewById(R.id.directorySpinner);
+
+        DirectoryItemAdapter adapter = new DirectoryItemAdapter(getActivity(), getGalleryDirectories());
         mDirectorySpinner.setAdapter(new DirectoryItemAdapter(getActivity(), getGalleryDirectories()));
-//        ArrayAdapter<String> dirAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, mDirectories);
-//        mDirectorySpinner.setAdapter(dirAdapter);
-//        mDirectorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//            @Override
-//            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-//                String dir = getPictureDir() + File.separator + dirAdapter.getItem(i);
-//                Toast.makeText(getActivity(), "Selected: " + dir, Toast.LENGTH_LONG).show();
-//            }
-//
-//            @Override
-//            public void onNothingSelected(AdapterView<?> adapterView) {
-//
-//            }
-//        });
+        mDirectorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                String dir = getPictureDir() + File.separator + adapter.getItem(i);
+
+                // we selected something new
+                if (!dir.equals(mSelectedDirectory)) {
+                    mSelectedDirectory = dir;
+                    Toast.makeText(getActivity(), "Selected: " + dir, Toast.LENGTH_SHORT).show();
+                    initGalleryView();
+                    // update our recycler view
+                }
+//                mDirectorySpinner.setVisibility(INVISIBLE);
+            }
+
+            // unused
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                Toast.makeText(getActivity(), "Nothing Selected", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         return view;
     }
@@ -238,6 +255,11 @@ public class GalleryFragment extends DialogFragment {
         }).start();
     }
 
+    public void showDirectorySpinner() {
+        mDirectorySpinner.setVisibility(VISIBLE);
+        mDirectorySpinner.performClick();
+    }
+
 
     private class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         private Context mContext;
@@ -281,7 +303,7 @@ public class GalleryFragment extends DialogFragment {
             // load image
             Glide.with(getActivity())
                     .load(galleryItem.getResourceString())
-                    .placeholder(R.drawable.ic_launcher_background)
+                    .placeholder(R.drawable.ic_loading)
                     .fitCenter()
                     .into(itemView);
 
@@ -313,7 +335,7 @@ public class GalleryFragment extends DialogFragment {
                 super(view);
                 mImgView = view.findViewById(R.id.img);
                 mImgView.mDeleteButton = view.findViewById(R.id.deleteItemButton);
-                mImgView.mDeleteButton.setVisibility(View.INVISIBLE);
+                mImgView.mDeleteButton.setVisibility(INVISIBLE);
             }
         }
     }
@@ -354,6 +376,14 @@ public class GalleryFragment extends DialogFragment {
             View view = convertView != null ? convertView : mInflater.inflate(R.layout.gallery_list_item, null);
             mDirectoryTextView = view.findViewById(R.id.directoryTextView);
             mDirectoryTextView.setText(mData.get(position));
+            mDirectoryTextView.setTextColor(Color.WHITE);
+            return view;
+        }
+
+
+        public View getDropDownView(int position, View convertView, ViewGroup viewGroup) {
+            View view = getView(position, convertView, viewGroup);
+            mDirectoryTextView.setTextColor(Color.BLACK);
             return view;
         }
     }
