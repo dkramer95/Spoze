@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/overlay_color"
     android:orientation="horizontal">
 
     <Button
@@ -9,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:background="@color/overlay_color"
+        android:background="@drawable/image_ripple"
         android:onClick="rotateCounterClockwiseButtonClicked"
         android:text="CCW"
         android:textColor="@android:color/background_light" />
@@ -19,26 +20,26 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:background="@color/overlay_color"
+        android:background="@drawable/image_ripple"
         android:onClick="rotateClockwiseButtonClicked"
         android:text="CW"
         android:textColor="@android:color/background_light" />
 
     <!--<Button-->
-        <!--android:id="@+id/mirrorButton"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_weight="1"-->
-        <!--android:background="@color/overlay_color"-->
-        <!--android:text="MIRROR"-->
-        <!--android:textColor="@android:color/background_light" />-->
+    <!--android:id="@+id/mirrorButton"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_weight="1"-->
+    <!--android:background="@color/overlay_color"-->
+    <!--android:text="MIRROR"-->
+    <!--android:textColor="@android:color/background_light" />-->
 
     <Button
         android:id="@+id/deleteButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:background="@color/overlay_color"
+        android:background="@drawable/image_ripple"
         android:onClick="deleteModelButtonClicked"
         android:text="x"
         android:textColor="@android:color/background_light" />

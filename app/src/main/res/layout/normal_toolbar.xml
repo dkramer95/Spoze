@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/overlay_color"
     android:orientation="horizontal">
 
     <Button
@@ -9,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:background="@color/overlay_color"
+        android:background="@drawable/image_ripple"
         android:onClick="calibrateButtonClicked"
         android:text="Calibrate"
         android:textColor="@android:color/background_light" />
@@ -19,19 +20,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:background="@color/overlay_color"
+        android:background="@drawable/image_ripple"
         android:onClick="importButtonClicked"
         android:text="IMPORT"
         android:textColor="@android:color/background_light" />
 
     <!--<Button-->
-        <!--android:id="@+id/removeButton"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_weight="1"-->
-        <!--android:background="@color/overlay_color"-->
-        <!--android:onClick="captureButtonClicked"-->
-        <!--android:text="CAP"-->
-        <!--android:textColor="@android:color/background_light" />-->
+    <!--android:id="@+id/removeButton"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_weight="1"-->
+    <!--android:background="@color/overlay_color"-->
+    <!--android:onClick="captureButtonClicked"-->
+    <!--android:text="CAP"-->
+    <!--android:textColor="@android:color/background_light" />-->
 
 </LinearLayout>

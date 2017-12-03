@@ -8,7 +8,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/overlay_color"
         android:backgroundTintMode="screen"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -19,6 +18,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/overlay_color_darker"
             android:elevation="5dp"
             android:orientation="horizontal">
 
@@ -28,7 +28,7 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="fill_vertical"
                 android:layout_weight="1"
-                android:background="@android:color/background_dark"
+                android:background="@drawable/image_ripple"
                 android:gravity="fill_vertical"
                 android:text="TextView" />
 
@@ -37,17 +37,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="@android:color/background_dark"
+                android:background="@drawable/image_ripple"
                 android:onClick="loadGalleryItemsButtonClicked"
                 android:text="Load"
-                android:textColor="@android:color/background_light"/>
+                android:textColor="@color/toolbar_button_color" />
 
             <Button
                 android:id="@+id/closeButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="@android:color/background_dark"
+                android:background="@drawable/image_ripple"
                 android:onClick="closeGalleryButtonClicked"
                 android:text="Close"
                 android:textColor="@android:color/background_light" />
@@ -58,13 +58,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@color/overlay_color"
             android:orientation="vertical">
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/imagegallery"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:scrollbarThumbVertical="@drawable/scrollbar_thumb"
+                android:scrollbarTrackVertical="@drawable/scrollbar_track"
                 android:scrollbars="vertical"
+                android:scrollbarSize="4dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
