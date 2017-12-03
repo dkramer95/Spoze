@@ -1,7 +1,10 @@
 package edu.neumont.dkramer.spoze3;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,6 +12,11 @@ import android.view.View;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
+
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,6 +58,28 @@ public class VisualizationActivity extends GLCameraActivity {
 		loadFromPreferences();
 		loadToolbar();
 		loadFragments();
+
+		// potential incoming image from a "share"
+		checkSharedImage();
+	}
+
+	protected void checkSharedImage() {
+		Intent intent = getIntent();
+
+		if (intent.hasExtra("imageURI")) {
+			Uri imageURI = intent.getParcelableExtra("imageURI");
+			Glide.with(this).load(imageURI).asBitmap().into(new SimpleTarget<Bitmap>() {
+				@Override
+				public void onResourceReady(Bitmap bmp, GlideAnimation animation) {
+					GLWorld world = getGLContext().getGLView().getScene().getWorld();
+
+					getGLContext().queueEvent(() -> {
+						world.addModel(SignModel2.fromBitmap(getGLContext(), bmp, world.getWidth(), world.getHeight()));
+					});
+					calibrate();
+				}
+			});
+		}
 	}
 
 
@@ -92,11 +122,14 @@ public class VisualizationActivity extends GLCameraActivity {
 	}
 
 	public void calibrateButtonClicked(View view) {
+	    calibrate();
+		Toast.makeText(this, "Calibrated!", Toast.LENGTH_SHORT).show();
+	}
+
+	protected void calibrate() {
 		GLRotationVectorInfo rotationVectorInfo
 				= (GLRotationVectorInfo)getGLContext().getDeviceInfo(ROTATION_VECTOR);
 		rotationVectorInfo.calibrate();
-
-		Toast.makeText(this, "Calibrated!", Toast.LENGTH_SHORT).show();
 	}
 
 	public void rotateClockwiseButtonClicked(View view) {

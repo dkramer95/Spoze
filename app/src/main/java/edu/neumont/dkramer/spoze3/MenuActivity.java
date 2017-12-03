@@ -3,12 +3,19 @@ package edu.neumont.dkramer.spoze3;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Toast;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 
 import edu.neumont.dkramer.spoze3.util.Preferences;
 
@@ -28,12 +35,33 @@ public class MenuActivity extends AppCompatActivity {
 		setContentView(R.layout.activity_menu);
 		Preferences.init(this);
 		checkPermissions();
+		checkSharedImage();
 	}
 
 	protected void checkPermissions() {
 	    String[] permissions = { CAMERA, WRITE_EXTERNAL_STORAGE };
 	    if (!hasPermissions(this, permissions)) {
 			ActivityCompat.requestPermissions(this, permissions, PERMISSION_ALL);
+		}
+	}
+
+	protected void checkSharedImage() {
+		Intent intent = getIntent();
+		String action = intent.getAction();
+		String type = intent.getType();
+
+		if (action != null && action.equals(Intent.ACTION_SEND) && type != null) {
+			if (type.startsWith("image/")) {
+				// load image
+				Uri imageURI = intent.getParcelableExtra(Intent.EXTRA_STREAM);
+
+				// create new intent to pass to visualization
+				Intent visualIntent = new Intent(this, VisualizationActivity.class);
+				visualIntent.setAction(action);
+				visualIntent.setType(type);
+				visualIntent.putExtra("imageURI", imageURI);
+				startActivity(visualIntent);
+			}
 		}
 	}
 
