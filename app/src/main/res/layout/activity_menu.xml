@@ -11,7 +11,8 @@
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="24dp"
+        android:clipChildren="false"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -22,7 +23,9 @@
             android:id="@+id/imageView2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="25dp"
+            android:layout_margin="32dp"
+            android:clickable="true"
+            android:foreground="@drawable/image_ripple"
             app:srcCompat="@drawable/ic_spozelogomain" />
 
         <LinearLayout
@@ -36,7 +39,12 @@
                 style="@android:style/Widget.DeviceDefault.Light.Button"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_margin="15dp"
+                android:layout_marginBottom="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="0dp"
                 android:layout_weight="1"
                 android:background="@drawable/ripple_effect"
                 android:fontFamily="sans-serif"
@@ -44,7 +52,7 @@
                 android:padding="25dp"
                 android:text="@string/visualize_button"
                 android:textColor="@android:color/white"
-                android:textSize="22sp"/>
+                android:textSize="22sp" />
 
             <Button
                 android:id="@+id/settingsButton"
@@ -59,7 +67,7 @@
                 android:padding="25dp"
                 android:text="@string/settings_button"
                 android:textColor="@android:color/white"
-                android:textSize="22sp"/>
+                android:textSize="22sp" />
 
         </LinearLayout>
 
@@ -81,31 +89,31 @@
         </LinearLayout>
 
         <!--<Button-->
-            <!--android:id="@+id/debugButton"-->
-            <!--style="@android:style/Widget.DeviceDefault.Light.Button"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="0dp"-->
-            <!--android:layout_margin="15dp"-->
-            <!--android:layout_weight="1"-->
-            <!--android:background="@drawable/ripple_effect"-->
-            <!--android:fontFamily="sans-serif"-->
-            <!--android:onClick="debugButtonClicked"-->
-            <!--android:text="@string/debug_button"-->
-            <!--android:textColor="@android:color/white"-->
-            <!--android:textSize="22sp"/>-->
+        <!--android:id="@+id/debugButton"-->
+        <!--style="@android:style/Widget.DeviceDefault.Light.Button"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="0dp"-->
+        <!--android:layout_margin="15dp"-->
+        <!--android:layout_weight="1"-->
+        <!--android:background="@drawable/ripple_effect"-->
+        <!--android:fontFamily="sans-serif"-->
+        <!--android:onClick="debugButtonClicked"-->
+        <!--android:text="@string/debug_button"-->
+        <!--android:textColor="@android:color/white"-->
+        <!--android:textSize="22sp"/>-->
 
         <!--<Button-->
-            <!--android:id="@+id/helpAboutButton"-->
-            <!--style="@android:style/Widget.DeviceDefault.Light.Button"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="0dp"-->
-            <!--android:layout_margin="15dp"-->
-            <!--android:layout_weight="1"-->
-            <!--android:background="@drawable/ripple_effect"-->
-            <!--android:fontFamily="sans-serif"-->
-            <!--android:text="@string/help_button"-->
-            <!--android:textColor="@android:color/white"-->
-            <!--android:textSize="22sp"/>-->
+        <!--android:id="@+id/helpAboutButton"-->
+        <!--style="@android:style/Widget.DeviceDefault.Light.Button"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="0dp"-->
+        <!--android:layout_margin="15dp"-->
+        <!--android:layout_weight="1"-->
+        <!--android:background="@drawable/ripple_effect"-->
+        <!--android:fontFamily="sans-serif"-->
+        <!--android:text="@string/help_button"-->
+        <!--android:textColor="@android:color/white"-->
+        <!--android:textSize="22sp"/>-->
 
     </LinearLayout>
 
