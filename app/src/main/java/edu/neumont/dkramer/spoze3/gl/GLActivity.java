@@ -43,6 +43,12 @@ public abstract class GLActivity extends AppCompatActivity {
         mGLContext.onStop();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mGLContext.onDestroy();
+    }
+
     /**
      * This method initializes the main content view to be used in this activity.
      */

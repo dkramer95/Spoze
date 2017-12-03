@@ -56,4 +56,8 @@ public class GLView extends GLSurfaceView {
         setRenderMode(RENDERMODE_WHEN_DIRTY);
         getScene().stop();
     }
+
+    public void destroy() {
+        getScene().destroy();
+    }
 }

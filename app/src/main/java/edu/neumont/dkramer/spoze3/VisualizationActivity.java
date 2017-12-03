@@ -1,13 +1,18 @@
+
 package edu.neumont.dkramer.spoze3;
 
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.projection.MediaProjectionManager;
 import android.net.Uri;
 import android.opengl.GLSurfaceView;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
@@ -16,7 +21,11 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 
-import java.net.URI;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +42,7 @@ import edu.neumont.dkramer.spoze3.models.SignModel2;
 import edu.neumont.dkramer.spoze3.scene.SignScene;
 import edu.neumont.dkramer.spoze3.util.Preferences;
 
+import static android.view.View.GONE;
 import static edu.neumont.dkramer.spoze3.VisualizationActivity.ToolbarManager.TOOLBAR_NORMAL;
 import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Type.ACCELEROMETER;
 import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Type.ROTATION_VECTOR;
@@ -44,12 +54,14 @@ import static edu.neumont.dkramer.spoze3.util.Preferences.Key.SHAKE_ACTION;
  */
 
 public class VisualizationActivity extends GLCameraActivity {
+	private static final int REQUEST_MEDIA_PROJECTION = 1;
+
 	private static final String TAG = "VisualizationActivity";
 	protected DeviceShake mDeviceShake;
 	protected GalleryFragment mGalleryFragment;
 	protected ModelFragment mModelFragment;
 	protected ToolbarManager mToolbarManager;
-
+	protected View mScreenshotFlash;
 
 
 	@Override
@@ -82,18 +94,101 @@ public class VisualizationActivity extends GLCameraActivity {
 		}
 	}
 
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN || keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+			takeScreenshot();
+			return true;
+		}
+		return super.onKeyDown(keyCode, event);
+	}
+
+	protected void takeScreenshot() {
+		MediaProjectionManager mediaProjectionManager =
+				(MediaProjectionManager)getSystemService(Context.MEDIA_PROJECTION_SERVICE);
+		startActivityForResult(mediaProjectionManager.createScreenCaptureIntent(), REQUEST_MEDIA_PROJECTION);
+	}
+
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (resultCode == RESULT_OK) {
+			int oldVisibility = getWindow().getDecorView().getSystemUiVisibility();
+
+			// hide soft nav buttons
+			getWindow().getDecorView().setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+
+            mToolbarManager.fadeOutToolbar();
+
+            int width = getWindow().getDecorView().getWidth();
+			int height = getWindow().getDecorView().getHeight();
+
+			Screenshot.getInstance().setSize(width, height).capture(this, resultCode, data, (bmp -> {
+
+				//TODO try to find a fix for this!
+				// temporary work around -- camera preview freezes unless I hide and show again
+				// not perfect because it causes a brief flicker... haven't found a better way yet
+				getCameraPreview().setVisibility(View.INVISIBLE);
+				getCameraPreview().setVisibility(View.VISIBLE);
+
+                mToolbarManager.fadeInToolbar(TOOLBAR_NORMAL);
+				getWindow().getDecorView().setSystemUiVisibility(oldVisibility);
+				saveBitmap(bmp);
+				Toast.makeText(this, "Captured Screenshot", Toast.LENGTH_SHORT).show();
+			}));
+		}
+	}
+
+	protected void saveBitmap(Bitmap bmp) {
+	    sBitmapWorker.doInBackground(bmp);
+	}
+
+	static BitmapWorker sBitmapWorker = new BitmapWorker();
+
+	static class BitmapWorker extends AsyncTask<Bitmap, Void, Void> {
+
+		@Override
+		protected Void doInBackground(Bitmap... bitmaps) {
+		    String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + File.separator + "SpozeCaptures";
+		    File dir = new File(path);
+			dir.mkdirs();
+
+			Bitmap bmp = bitmaps[0];
+			String filename = "Spoze_Capture_" + System.currentTimeMillis() + ".jpeg";
+
+			File file = new File(path, filename);
+
+			try {
+				OutputStream outputStream = new FileOutputStream(file);
+				bmp.compress(Bitmap.CompressFormat.JPEG, 75, outputStream);
+				outputStream.flush();
+				outputStream.close();
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
+	}
+
+
 
 	protected void loadFromPreferences() {
 		initShakeAction();
 	}
 
 	protected void loadToolbar() {
-		mToolbarManager = new ToolbarManager(findViewById(R.id.toolbarFlipper)).showToolbar(TOOLBAR_NORMAL);
+		mToolbarManager = new ToolbarManager(findViewById(R.id.toolbarFlipper)).fadeInToolbar(TOOLBAR_NORMAL);
 	}
 
 	public void closeGalleryButtonClicked(View view) {
 		mGalleryFragment.hide();
-		getToolbarManager().showToolbar(TOOLBAR_NORMAL);
+		getToolbarManager().fadeInToolbar(TOOLBAR_NORMAL);
 	}
 
 	public void showDirectorySpinnerButtonClicked(View view) {
@@ -102,7 +197,7 @@ public class VisualizationActivity extends GLCameraActivity {
 
 	public void loadGalleryItemsButtonClicked(View view) {
 		resumeGLRender();
-		getToolbarManager().showToolbar(TOOLBAR_NORMAL);
+		getToolbarManager().fadeInToolbar(TOOLBAR_NORMAL);
 		importGalleryItems(mGalleryFragment.getSelectedItems());
 
         mGalleryFragment.clearSelectedItems();
@@ -153,7 +248,7 @@ public class VisualizationActivity extends GLCameraActivity {
 			scene.deleteSelectedModel();
 		});
 		Toast.makeText(this, "Deleted Model", Toast.LENGTH_SHORT).show();
-		getToolbarManager().showToolbar(TOOLBAR_NORMAL);
+		getToolbarManager().fadeInToolbar(TOOLBAR_NORMAL);
 		mModelFragment.setModelData(scene.getWorld().getModels());
 	}
 
@@ -163,7 +258,7 @@ public class VisualizationActivity extends GLCameraActivity {
 	}
 
 	protected void pauseGLRender() {
-		getGLContext().getGLView().setVisibility(View.GONE);
+		getGLContext().getGLView().setVisibility(GONE);
 		getGLContext().getGLView().setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
 	}
 
@@ -174,7 +269,7 @@ public class VisualizationActivity extends GLCameraActivity {
 
 	public void importButtonClicked(View view) {
 		pauseGLRender();
-		getToolbarManager().hideToolbar();
+		getToolbarManager().fadeOutToolbar();
 		showGalleryFragment();
 	}
 
@@ -312,13 +407,21 @@ public class VisualizationActivity extends GLCameraActivity {
 			mToolbarFlipper = flipper;
 		}
 
-		public void hideToolbar() {
+		public void fadeOutToolbar() {
 			mToolbarFlipper.animate().alpha(0).setDuration(250)
 					.withEndAction(() -> mToolbarFlipper.setVisibility(View.INVISIBLE))
 					.start();
 		}
 
-		public ToolbarManager showToolbar(int toolbar) {
+		public void hideToolbar() {
+			mToolbarFlipper.setVisibility(View.INVISIBLE);
+		}
+
+		public void showToolbar() {
+			mToolbarFlipper.setVisibility(View.VISIBLE);
+		}
+
+		public ToolbarManager fadeInToolbar(int toolbar) {
 			// quickly make visible, but fade out
 			mToolbarFlipper.setVisibility(View.VISIBLE);
 			mToolbarFlipper.animate().alpha(0).start();

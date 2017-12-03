@@ -150,7 +150,7 @@ public class DebugVisualizationActivity extends VisualizationActivity {
         foo();
 //        getFragmentManager().beginTransaction()
 //                .setCustomAnimations(R.animator.fade_in, R.animator.fade_out)
-//                .showToolbar(mGalleryFragment)
+//                .fadeInToolbar(mGalleryFragment)
 //                .commit();
     }
 }

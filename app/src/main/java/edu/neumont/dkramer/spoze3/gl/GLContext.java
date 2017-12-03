@@ -28,6 +28,7 @@ import android.os.UserHandle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
+import android.util.Log;
 import android.view.Display;
 
 import java.io.File;
@@ -50,6 +51,7 @@ import edu.neumont.dkramer.spoze3.gl.deviceinfo.GLTouchInfo;
  */
 
 public final class GLContext extends Context {
+    private static final String TAG = "GLContext";
     private Map<GLDeviceInfo.Type, GLDeviceInfo> mDeviceInfo;
     private GLActivity mActivity;
     private GLView mGLView;
@@ -85,6 +87,13 @@ public final class GLContext extends Context {
             i.stop();
         }
         getGLView().stop();
+    }
+
+    public void onDestroy() {
+        for (GLDeviceInfo i : mDeviceInfo.values()) {
+            i.stop();
+        }
+        getGLView().destroy();
     }
 
     public void onResume() {

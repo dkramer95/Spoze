@@ -41,15 +41,15 @@ public class HelpFragment extends DialogFragment implements DeviceShake.OnShakeL
 //
 //			mGotItButton = view.findViewById(R.id.gotItButton);
 //			mGotItButton.setOnClickListener((v) -> {
-//				hideToolbar();
+//				fadeOutToolbar();
 //			});
 //
 //			mStopShowButton = view.findViewById(R.id.stopShowButton);
 //			mStopShowButton.setOnClickListener((v) -> {
 //				Preferences.putBoolean(SHAKE_ACTION, false).save();
 //				activity.getGLContext().getDeviceInfo(ACCELEROMETER).removeOnUpdateListener(mDeviceShake);
-//				hideToolbar();
-//				Toast.makeText(activity, "Shake for help disabled", Toast.LENGTH_LONG).showToolbar();
+//				fadeOutToolbar();
+//				Toast.makeText(activity, "Shake for help disabled", Toast.LENGTH_LONG).fadeInToolbar();
 //			});
 //		}
 
