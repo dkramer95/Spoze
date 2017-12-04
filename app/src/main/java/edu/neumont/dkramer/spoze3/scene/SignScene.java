@@ -91,8 +91,8 @@ public class SignScene extends GLScene {
 
     @Override
     public void onResume() {
-        if (getWidth() != 0 && getHeight() != 0) {
-            init(getWidth(), getHeight());
+        if (mTouchHandler != null) {
+            mTouchHandler.refresh();
         }
     }
 
@@ -222,8 +222,8 @@ public class SignScene extends GLScene {
         public TouchHandler() {
             GLTouchInfo touchInfo = (GLTouchInfo)getGLContext().getDeviceInfo(TOUCH_INPUT);
 
-            // clear out any previous
-            touchInfo.removeOnTouchListener(this);
+//            // clear out any previous
+//            touchInfo.removeOnTouchListener(this);
 
             touchInfo.addOnTouchListener(this);
             final TouchHandler touchHandler = this;
@@ -232,6 +232,12 @@ public class SignScene extends GLScene {
                 mScaleGestureDetector = new ScaleGestureDetector(getGLContext().getActivity(), touchHandler);
                 mGestureDetector = new GestureDetector(getGLContext().getActivity(), touchHandler);
             });
+        }
+
+        public void refresh() {
+            GLTouchInfo touchInfo = (GLTouchInfo)getGLContext().getDeviceInfo(TOUCH_INPUT);
+            touchInfo.removeOnTouchListener(this);
+            touchInfo.addOnTouchListener(this);
         }
 
         @Override

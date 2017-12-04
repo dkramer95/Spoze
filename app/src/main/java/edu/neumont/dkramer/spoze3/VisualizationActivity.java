@@ -142,7 +142,8 @@ public class VisualizationActivity extends GLCameraActivity {
 					getCameraPreview().setVisibility(View.VISIBLE);
 
 					mScreenshotView.animate().alpha(0).setDuration(250).withEndAction(() -> {
-						mScreenshotView.setVisibility(View.INVISIBLE);
+						getGLView().getScene().onResume();
+						mScreenshotView.setVisibility(View.GONE);
 					}).start();
 				});
 				mToolbarManager.fadeInToolbar(TOOLBAR_NORMAL);

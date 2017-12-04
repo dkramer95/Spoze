@@ -31,8 +31,9 @@ import com.bumptech.glide.Glide;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static android.content.res.Configuration.ORIENTATION_LANDSCAPE;
 import static android.content.res.Configuration.ORIENTATION_PORTRAIT;
@@ -93,9 +94,19 @@ public class GalleryFragment extends DialogFragment {
     }
 
     protected List<String> getGalleryDirectories() {
-//        File dirs = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES));
-        File dirs = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-        return Arrays.asList(dirs.list());
+        String pictureDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString();
+        String[] directories = new File(pictureDirectory).list();
+        List<String> result = new ArrayList<>();
+
+        for (String dir : directories) {
+            // we don't want to load empty directories
+            File f = new File(pictureDirectory + File.separator + dir);
+
+            if (f.listFiles().length > 0) {
+                result.add(dir);
+            }
+        }
+        return result;
     }
 
 //    protected File getGalleryDir() {
@@ -224,10 +235,20 @@ public class GalleryFragment extends DialogFragment {
     private List<GalleryItem> prepareData() {
         List<GalleryItem> imageList = new ArrayList<>();
         File[] files = getGalleryDir().listFiles();
+
+        // filter out potential non-image files
+        final String IMAGE_EXT_PATTERN = "^[^*&%]*\\.(jpg|jpeg|gif|bmp|png)$";
+        Pattern p = Pattern.compile(IMAGE_EXT_PATTERN);
+
         for (File f : files) {
-            GalleryItem item = new GalleryItem(f.getAbsolutePath());
-            imageList.add(item);
-            Log.i(TAG, "Added File => " + item.getResourceString());
+            String path = f.getAbsolutePath();
+            Matcher m = p.matcher(path);
+
+            if (m.matches()) {
+                GalleryItem item = new GalleryItem(path);
+                imageList.add(item);
+                Log.i(TAG, "Added File => " + item.getResourceString());
+            }
         }
         return imageList;
     }
