@@ -16,6 +16,9 @@
     <string name="swipe_gestures">Swipe Gestures</string>
     <string name="swipe_up_action">Swipe Up Action</string>
     <string name="motion_gestures">Motion Gestures</string>
+    <string name="screenshots">Screen Capture</string>
+    <string name="screenshot_format">Format</string>
+    <string name="screenshot_quality">Quality</string>
 
     <string-array name="shake_actions_array">
         <item>None</item>
@@ -32,5 +35,10 @@
     <string-array name="swipe_actions_array">
         <item>Show Listing</item>
         <item>Open Gallery</item>
+    </string-array>
+
+    <string-array name="screenshot_formats_array">
+        <item>JPEG</item>
+        <item>PNG</item>
     </string-array>
 </resources>

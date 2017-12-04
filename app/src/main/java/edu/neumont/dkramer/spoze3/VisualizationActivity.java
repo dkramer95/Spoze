@@ -47,6 +47,8 @@ import static edu.neumont.dkramer.spoze3.VisualizationActivity.ToolbarManager.TO
 import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Type.ACCELEROMETER;
 import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Type.ROTATION_VECTOR;
 import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Type.TOUCH_INPUT;
+import static edu.neumont.dkramer.spoze3.util.Preferences.Key.SCREENSHOT_FORMAT;
+import static edu.neumont.dkramer.spoze3.util.Preferences.Key.SCREENSHOT_QUALITY;
 import static edu.neumont.dkramer.spoze3.util.Preferences.Key.SHAKE_ACTION;
 
 /**
@@ -167,13 +169,20 @@ public class VisualizationActivity extends GLCameraActivity {
 			dir.mkdirs();
 
 			Bitmap bmp = bitmaps[0];
-			String filename = "Spoze_Capture_" + System.currentTimeMillis() + ".jpeg";
+			String ext = Preferences.getString(SCREENSHOT_FORMAT, "jpeg").toLowerCase();
+
+			String filename = String.format("Spoze_Capture_%d.%s", System.currentTimeMillis(), ext);
 
 			File file = new File(path, filename);
 
 			try {
 				OutputStream outputStream = new FileOutputStream(file);
-				bmp.compress(Bitmap.CompressFormat.JPEG, 75, outputStream);
+
+				int quality = Preferences.getInt(SCREENSHOT_QUALITY, 75);
+				Bitmap.CompressFormat format = ext.equalsIgnoreCase("jpeg") ?
+						Bitmap.CompressFormat.JPEG : Bitmap.CompressFormat.PNG;
+
+				bmp.compress(format, quality, outputStream);
 				outputStream.flush();
 				outputStream.close();
 			} catch (FileNotFoundException e) {
