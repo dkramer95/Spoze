@@ -32,6 +32,12 @@
                 android:gravity="fill_vertical"
                 android:text="TextView" />
 
+            <TextView
+                android:id="@+id/textView8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5" />
+
             <Button
                 android:id="@+id/loadSelectedButton"
                 android:layout_width="32dp"

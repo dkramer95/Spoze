@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -14,6 +15,7 @@ import static edu.neumont.dkramer.spoze3.util.Preferences.Key.SCREENSHOT_FORMAT;
 import static edu.neumont.dkramer.spoze3.util.Preferences.Key.SCREENSHOT_QUALITY;
 import static edu.neumont.dkramer.spoze3.util.Preferences.Key.SHAKE_ACTION;
 import static edu.neumont.dkramer.spoze3.util.Preferences.Key.SHAKE_SENSITIVITY;
+import static edu.neumont.dkramer.spoze3.util.Preferences.Key.SHUTTER_SOUND_ENABLED;
 import static edu.neumont.dkramer.spoze3.util.Preferences.Key.SWIPE_ACTION;
 
 /**
@@ -27,6 +29,7 @@ public class SettingsActivity extends AppCompatActivity {
 	private Spinner mFormatSpinner;
 	private SeekBar mQualitySlider;
 	private TextView mQualityTextView;
+	private CheckBox mShutterCheckBox;
 
 
 
@@ -74,6 +77,7 @@ public class SettingsActivity extends AppCompatActivity {
 		mFormatSpinner = findViewById(R.id.formatSpinner);
 		mQualitySlider = findViewById(R.id.qualitySlider);
 		mQualityTextView = findViewById(R.id.qualityTextView);
+		mShutterCheckBox = findViewById(R.id.shutterCheckBox);
 	}
 
 	protected void createDropdowns() {
@@ -85,6 +89,7 @@ public class SettingsActivity extends AppCompatActivity {
 
 	protected void populate() {
 		populateDropdowns();
+		mShutterCheckBox.setChecked(Preferences.getBoolean(SHUTTER_SOUND_ENABLED, true));
 	}
 
 	protected void populateDropdowns() {
@@ -118,6 +123,7 @@ public class SettingsActivity extends AppCompatActivity {
 		Preferences.putString(SWIPE_ACTION, mSwipeSpinner.getSelectedItem().toString());
 		Preferences.putString(SCREENSHOT_FORMAT, mFormatSpinner.getSelectedItem().toString());
 		Preferences.putInt(SCREENSHOT_QUALITY, mQualitySlider.getProgress());
+		Preferences.putBoolean(SHUTTER_SOUND_ENABLED, mShutterCheckBox.isChecked());
 		Preferences.save();
 	}
 }

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaPlayer;
 import android.media.projection.MediaProjectionManager;
 import android.net.Uri;
 import android.opengl.GLSurfaceView;
@@ -50,6 +51,7 @@ import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Type.TOUCH_I
 import static edu.neumont.dkramer.spoze3.util.Preferences.Key.SCREENSHOT_FORMAT;
 import static edu.neumont.dkramer.spoze3.util.Preferences.Key.SCREENSHOT_QUALITY;
 import static edu.neumont.dkramer.spoze3.util.Preferences.Key.SHAKE_ACTION;
+import static edu.neumont.dkramer.spoze3.util.Preferences.Key.SHUTTER_SOUND_ENABLED;
 
 /**
  * Created by dkramer on 11/14/17.
@@ -140,6 +142,10 @@ public class VisualizationActivity extends GLCameraActivity {
 				mScreenshotView.setAlpha(0f);
 				mScreenshotView.invalidate();
 				mScreenshotView.animate().alpha(1f).setDuration(250).withEndAction(() -> {
+					if (Preferences.getBoolean(SHUTTER_SOUND_ENABLED, true)) {
+						MediaPlayer mp = MediaPlayer.create(this, R.raw.shutter);
+						mp.start();
+					}
 					getCameraPreview().setVisibility(View.INVISIBLE);
 					getCameraPreview().setVisibility(View.VISIBLE);
 
