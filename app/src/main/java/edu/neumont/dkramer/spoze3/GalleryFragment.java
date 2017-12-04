@@ -245,13 +245,20 @@ public class GalleryFragment extends DialogFragment {
 
     public void delete(View view) {
         RelativeLayout layout = (RelativeLayout)view.getParent();
+        GalleryItemView itemView = (GalleryItemView)layout.getChildAt(0);
         MyAdapter adapter = (MyAdapter)mRecyclerView.getAdapter();
-        GalleryItemView item = (GalleryItemView) layout.getChildAt(0);
+        String resourceStr = itemView.getResourceString();
+
+        File f = new File(resourceStr);
+        if (!f.delete()) {
+            Log.i(TAG, "Failed to delete file!");
+        }
 
         layout.animate().alpha(0).setDuration(500).withEndAction(() -> {
-            adapter.remove(item.getResourceString());
-	        adapter.notifyRemoved(item.getResourceString());
+            itemView.clear();
+            itemView.setVisibility(GONE);
             view.setVisibility(GONE);
+            adapter.notifyRemoved(itemView.getItem());
         }).start();
     }
 
@@ -277,16 +284,18 @@ public class GalleryFragment extends DialogFragment {
             return new ViewHolder(view);
         }
 
-        public void notifyRemoved(String item) {
-        	super.notifyItemRemoved(indexOf(item));
-        	mGalleryList.remove(item);
+        public void notifyRemoved(GalleryItem item) {
+            int index = mGalleryList.indexOf(item);
+            super.notifyItemRemoved(index);
+            mGalleryList.remove(index);
 
         	if (getItemCount() == 0) {
                 Toast.makeText(getActivity(), "You deleted everything", Toast.LENGTH_LONG).show();
             }
         }
 
-        public void notifyChange() {
+        public void notifyChange(String item) {
+            mGalleryList.remove(item);
             notifyDataSetChanged();
 
             if (getItemCount() == 0) {

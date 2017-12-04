@@ -223,10 +223,13 @@ public class VisualizationActivity extends GLCameraActivity {
 		GLWorld world = getGLContext().getGLView().getScene().getWorld();
 
 		for (GalleryItemView item : galleryItems) {
-			Bitmap bmp = BitmapFactory.decodeFile(item.getResourceString());
-			getGLContext().queueEvent(() -> {
-				world.addModel(SignModel2.fromBitmap(getGLContext(), bmp, world.getWidth(), world.getHeight()));
-			});
+            Bitmap bmp = BitmapFactory.decodeFile(item.getResourceString());
+
+            if (bmp != null) {
+				getGLContext().queueEvent(() -> {
+					world.addModel(SignModel2.fromBitmap(getGLContext(), bmp, world.getWidth(), world.getHeight()));
+				});
+			}
 		}
 		mModelFragment.setModelData(world.getModels());
 	}

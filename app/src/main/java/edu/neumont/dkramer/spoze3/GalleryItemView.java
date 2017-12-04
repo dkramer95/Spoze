@@ -38,6 +38,10 @@ public class GalleryItemView extends AppCompatImageView implements View.OnClickL
         mItem = item;
     }
 
+    public GalleryItem getItem() {
+        return mItem;
+    }
+
     /* These click methods will be called from our fragment... */
 
     @Override
