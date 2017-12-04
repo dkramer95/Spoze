@@ -113,4 +113,8 @@ public abstract class GLScene extends GLObject {
     public void destroy() {
         getWorld().removeAllModels();
     }
+
+    public void onResume() {
+
+    }
 }

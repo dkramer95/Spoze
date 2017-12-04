@@ -1,9 +1,13 @@
 package edu.neumont.dkramer.spoze3.gl;
 
+import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 
 import edu.neumont.dkramer.spoze3.util.Preferences;
+
+import static android.view.View.GONE;
 
 /**
  * Created by dkramer on 10/20/17.
@@ -35,6 +39,7 @@ public abstract class GLActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         mGLContext.onResume();
+        resumeGLRender();
     }
 
     @Override
@@ -99,6 +104,7 @@ public abstract class GLActivity extends AppCompatActivity {
         return new GLView(getGLContext());
     }
 
+
     /**
      * Method that should be overwritten by subclasses if they wish to use a layout as defined
      * in R.layout.xxx, rather than simply using a single GLView that they create. The default
@@ -107,6 +113,16 @@ public abstract class GLActivity extends AppCompatActivity {
      */
     protected int getLayoutId() {
         return NULL_LAYOUT;
+    }
+
+    protected void pauseGLRender() {
+        getGLContext().getGLView().setVisibility(View.GONE);
+        getGLContext().getGLView().setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
+    }
+
+    protected void resumeGLRender() {
+        getGLContext().getGLView().setVisibility(View.VISIBLE);
+        getGLContext().getGLView().setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
     }
 
     public GLContext getGLContext() {

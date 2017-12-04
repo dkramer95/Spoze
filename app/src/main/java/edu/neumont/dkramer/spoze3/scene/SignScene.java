@@ -1,20 +1,16 @@
 package edu.neumont.dkramer.spoze3.scene;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
-import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import java.util.Iterator;
 import java.util.concurrent.ArrayBlockingQueue;
 
 import edu.neumont.dkramer.spoze3.BlendFuncHelper;
-import edu.neumont.dkramer.spoze3.DebugVisualizationActivity;
 import edu.neumont.dkramer.spoze3.GLPixelPicker;
 import edu.neumont.dkramer.spoze3.R;
 import edu.neumont.dkramer.spoze3.VisualizationActivity;
@@ -32,15 +28,9 @@ import edu.neumont.dkramer.spoze3.gl.deviceinfo.GLTouchInfo;
 import edu.neumont.dkramer.spoze3.models.GLPickerModel;
 import edu.neumont.dkramer.spoze3.models.SignModel2;
 
-import static android.opengl.GLES10.GL_ONE_MINUS_DST_COLOR;
-import static android.opengl.GLES10.GL_SRC_ALPHA;
 import static android.opengl.GLES10.GL_ZERO;
 import static android.opengl.GLES20.GL_BLEND;
 import static android.opengl.GLES20.GL_DEPTH_TEST;
-import static android.opengl.GLES20.GL_DST_COLOR;
-import static android.opengl.GLES20.GL_ONE;
-import static android.opengl.GLES20.GL_ONE_MINUS_SRC_ALPHA;
-import static android.opengl.GLES20.GL_ONE_MINUS_SRC_COLOR;
 import static android.opengl.GLES20.GL_SRC_COLOR;
 import static android.opengl.GLES20.glBlendFunc;
 import static android.opengl.GLES20.glDisable;
@@ -76,7 +66,6 @@ public class SignScene extends GLScene {
 
 
 
-
     public SignScene(GLContext ctx) {
         super(ctx);
     }
@@ -98,6 +87,13 @@ public class SignScene extends GLScene {
 //                addModel(SignModel2.fromBitmap(getGLContext(), bmp1, getWidth(), getHeight()));
             }
         };
+    }
+
+    @Override
+    public void onResume() {
+        if (getWidth() != 0 && getHeight() != 0) {
+            init(getWidth(), getHeight());
+        }
     }
 
     public void deleteSelectedModel() {
@@ -225,8 +221,11 @@ public class SignScene extends GLScene {
 
         public TouchHandler() {
             GLTouchInfo touchInfo = (GLTouchInfo)getGLContext().getDeviceInfo(TOUCH_INPUT);
-            touchInfo.addOnTouchListener(this);
 
+            // clear out any previous
+            touchInfo.removeOnTouchListener(this);
+
+            touchInfo.addOnTouchListener(this);
             final TouchHandler touchHandler = this;
 
             getGLContext().runOnUiThread(() -> {

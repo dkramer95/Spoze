@@ -63,7 +63,6 @@ public class VisualizationActivity extends GLCameraActivity {
 	protected ToolbarManager mToolbarManager;
 	protected ScreenshotView mScreenshotView;
 
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -277,16 +276,6 @@ public class VisualizationActivity extends GLCameraActivity {
 	public void deleteItemButtonClicked(View view) {
 		mGalleryFragment.delete(view);
 		Log.i(TAG, "Should delete item");
-	}
-
-	protected void pauseGLRender() {
-		getGLContext().getGLView().setVisibility(GONE);
-		getGLContext().getGLView().setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
-	}
-
-	protected void resumeGLRender() {
-		getGLContext().getGLView().setVisibility(View.VISIBLE);
-		getGLContext().getGLView().setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
 	}
 
 	public void importButtonClicked(View view) {

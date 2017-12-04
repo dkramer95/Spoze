@@ -63,6 +63,10 @@ public class GLTouchInfo extends GLDeviceInfo implements View.OnTouchListener {
         mTouchListeners.add(listener);
     }
 
+    public void removeOnTouchListener(View.OnTouchListener listener) {
+        mTouchListeners.remove(listener);
+    }
+
     protected void notifyTouchListeners(View v, MotionEvent e) {
         for (View.OnTouchListener listener : mTouchListeners) {
             listener.onTouch(v, e);

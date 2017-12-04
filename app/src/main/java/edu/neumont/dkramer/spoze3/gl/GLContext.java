@@ -98,6 +98,7 @@ public final class GLContext extends Context {
 
     public void onResume() {
     	onStart();
+    	mGLView.onResume();
     }
 
     public void runOnUiThread(Runnable r) {

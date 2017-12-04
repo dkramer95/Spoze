@@ -51,6 +51,10 @@ public class GLView extends GLSurfaceView {
         mScene = scene;
     }
 
+    public void onResume() {
+        getScene().onResume();
+    }
+
     public void stop() {
         // stop continuous rendering!
         setRenderMode(RENDERMODE_WHEN_DIRTY);
