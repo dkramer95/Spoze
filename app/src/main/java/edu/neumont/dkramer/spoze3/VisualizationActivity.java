@@ -61,6 +61,7 @@ public class VisualizationActivity extends GLCameraActivity {
 	protected GalleryFragment mGalleryFragment;
 	protected ModelFragment mModelFragment;
 	protected ToolbarManager mToolbarManager;
+	protected ScreenshotView mScreenshotView;
 
 
 	@Override
@@ -69,6 +70,8 @@ public class VisualizationActivity extends GLCameraActivity {
 		loadFromPreferences();
 		loadToolbar();
 		loadFragments();
+
+		mScreenshotView = findViewById(R.id.screenshotView);
 
 		// potential incoming image from a "share"
 		checkSharedImage();
@@ -127,17 +130,24 @@ public class VisualizationActivity extends GLCameraActivity {
 			int height = getWindow().getDecorView().getHeight();
 
 			Screenshot.getInstance().setSize(width, height).capture(this, resultCode, data, (bmp -> {
-
-				//TODO try to find a fix for this!
-				// temporary work around -- camera preview freezes unless I hide and show again
-				// not perfect because it causes a brief flicker... haven't found a better way yet
-				getCameraPreview().setVisibility(View.INVISIBLE);
-				getCameraPreview().setVisibility(View.VISIBLE);
-
-                mToolbarManager.fadeInToolbar(TOOLBAR_NORMAL);
-				getWindow().getDecorView().setSystemUiVisibility(oldVisibility);
 				saveBitmap(bmp);
 				Toast.makeText(this, "Captured Screenshot", Toast.LENGTH_SHORT).show();
+
+
+				// screenshot flash animation
+				mScreenshotView.setVisibility(View.VISIBLE);
+				mScreenshotView.setAlpha(0f);
+				mScreenshotView.invalidate();
+				mScreenshotView.animate().alpha(1f).setDuration(250).withEndAction(() -> {
+					getCameraPreview().setVisibility(View.INVISIBLE);
+					getCameraPreview().setVisibility(View.VISIBLE);
+
+					mScreenshotView.animate().alpha(0).setDuration(250).withEndAction(() -> {
+						mScreenshotView.setVisibility(View.INVISIBLE);
+					}).start();
+				});
+				mToolbarManager.fadeInToolbar(TOOLBAR_NORMAL);
+				getWindow().getDecorView().setSystemUiVisibility(oldVisibility);
 			}));
 		}
 	}
