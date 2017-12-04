@@ -55,9 +55,15 @@ public class SettingsActivity extends AppCompatActivity {
 	}
 
 	protected void loadSlider() {
+		final int MIN_PROGRESS = 1;
 		mQualitySlider.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 			@Override
 			public void onProgressChanged(SeekBar seekBar, int progress, boolean b) {
+			    //
+				if (progress < MIN_PROGRESS) {
+					progress = MIN_PROGRESS;
+					mQualitySlider.setProgress(MIN_PROGRESS);
+				}
 				mQualityTextView.setText("" + progress);
 			}
 

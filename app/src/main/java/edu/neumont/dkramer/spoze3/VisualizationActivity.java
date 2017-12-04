@@ -161,10 +161,8 @@ public class VisualizationActivity extends GLCameraActivity {
 	}
 
 	protected void saveBitmap(Bitmap bmp) {
-	    sBitmapWorker.doInBackground(bmp);
+	    new BitmapWorker().execute(bmp);
 	}
-
-	static BitmapWorker sBitmapWorker = new BitmapWorker();
 
 	static class BitmapWorker extends AsyncTask<Bitmap, Void, Void> {
 
