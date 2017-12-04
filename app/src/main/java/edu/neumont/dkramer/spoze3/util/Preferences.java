@@ -85,5 +85,7 @@ public class Preferences {
 		SHAKE_ACTION,
 		SHAKE_SENSITIVITY,
 		SWIPE_ACTION,
+
+		GALLERY_DIR,
 	}
 }

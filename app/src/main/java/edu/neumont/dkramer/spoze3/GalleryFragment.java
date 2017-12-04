@@ -35,6 +35,9 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import edu.neumont.dkramer.spoze3.util.Preferences;
+import edu.neumont.dkramer.spoze3.util.Preferences.Key;
+
 import static android.content.res.Configuration.ORIENTATION_LANDSCAPE;
 import static android.content.res.Configuration.ORIENTATION_PORTRAIT;
 import static android.view.View.GONE;
@@ -152,16 +155,18 @@ public class GalleryFragment extends DialogFragment {
         mDirectorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                String dir = getPictureDir() + File.separator + adapter.getItem(i);
+                String item = adapter.getItem(i).toString();
+                String dir = getPictureDir() + File.separator + item;
 
                 // we selected something new
                 if (!dir.equals(mSelectedDirectory)) {
                     mSelectedDirectory = dir;
-                    Toast.makeText(getActivity(), "Selected: " + dir, Toast.LENGTH_SHORT).show();
-                    initGalleryView();
                     // update our recycler view
+                    initGalleryView();
+
+                    // save selected dir as the one to use next time
+                    Preferences.putString(Key.GALLERY_DIR, item).save();
                 }
-//                mDirectorySpinner.setVisibility(INVISIBLE);
             }
 
             // unused
@@ -170,6 +175,15 @@ public class GalleryFragment extends DialogFragment {
                 Toast.makeText(getActivity(), "Nothing Selected", Toast.LENGTH_SHORT).show();
             }
         });
+
+        // load last used directory if exists
+        String startDir = Preferences.getString(Key.GALLERY_DIR, "");
+        if (!startDir.equals("")) {
+            int index = adapter.indexOf(startDir);
+            if (index != -1) {
+                mDirectorySpinner.setSelection(index);
+            }
+        }
 
         return view;
     }
@@ -399,6 +413,10 @@ public class GalleryFragment extends DialogFragment {
         @Override
         public long getItemId(int i) {
             return i;
+        }
+
+        public int indexOf(String item) {
+            return mData.indexOf(item);
         }
 
         @Override
