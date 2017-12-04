@@ -34,22 +34,31 @@
 
             <Button
                 android:id="@+id/loadSelectedButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="8dp"
                 android:background="@drawable/image_ripple"
+                android:foregroundTint="@color/check_button_selector"
+                android:foreground="@drawable/ic_check"
                 android:onClick="loadGalleryItemsButtonClicked"
-                android:text="Load"
                 android:textColor="@color/toolbar_button_color" />
 
             <Button
                 android:id="@+id/closeButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_weight="0"
                 android:background="@drawable/image_ripple"
+                android:foreground="@drawable/ic_x"
+                android:foregroundTint="@color/button_selector"
                 android:onClick="closeGalleryButtonClicked"
-                android:text="Close"
                 android:textColor="@android:color/background_light" />
 
         </LinearLayout>

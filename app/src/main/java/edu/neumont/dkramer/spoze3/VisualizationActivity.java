@@ -61,7 +61,6 @@ public class VisualizationActivity extends GLCameraActivity {
 	protected GalleryFragment mGalleryFragment;
 	protected ModelFragment mModelFragment;
 	protected ToolbarManager mToolbarManager;
-	protected View mScreenshotFlash;
 
 
 	@Override
@@ -195,8 +194,14 @@ public class VisualizationActivity extends GLCameraActivity {
 		mGalleryFragment.showDirectorySpinner();
 	}
 
+	public void blankAreaClicked(View view) {
+	    // unused... this is a workaround for clicking around in toolbar blank area
+        // to consume touch event so that selection doesn't cancel inadvertently
+	}
+
 	public void loadGalleryItemsButtonClicked(View view) {
 		resumeGLRender();
+		view.setEnabled(false);
 		getToolbarManager().fadeInToolbar(TOOLBAR_NORMAL);
 		importGalleryItems(mGalleryFragment.getSelectedItems());
 
@@ -219,6 +224,10 @@ public class VisualizationActivity extends GLCameraActivity {
 	public void calibrateButtonClicked(View view) {
 	    calibrate();
 		Toast.makeText(this, "Calibrated!", Toast.LENGTH_SHORT).show();
+	}
+
+	public void screenshotButtonClicked(View view) {
+		takeScreenshot();
 	}
 
 	protected void calibrate() {
@@ -296,39 +305,6 @@ public class VisualizationActivity extends GLCameraActivity {
 					.commit();
 			// testing -- should load from world
 		}
-	}
-
-	public void TEST_LOAD_DATA() {
-		// testing -- should load from world
-		List<GLModel> modelTest = new ArrayList<>();
-
-		for (int j = 0; j < 100; ++j) {
-			modelTest.add(new GLModel(getGLContext(), new float[] { 1.0f, 1.0f, 1.0f }) {
-				@Override
-				protected GLProgram createGLProgram() {
-					return null;
-				}
-
-				@Override
-				protected void draw(GLCamera camera) {
-
-				}
-
-				@Override
-				protected void bindHandles() {
-
-				}
-
-				@Override
-				protected void enableAttributes() {
-
-				}
-			});
-		}
-
-		mModelFragment.setModelData(modelTest);
-		mModelFragment.show();
-//		showModelFragment();
 	}
 
 	public void initShakeAction() {

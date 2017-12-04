@@ -7,22 +7,51 @@
 
     <Button
         android:id="@+id/calibrateButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="8dp"
         android:background="@drawable/image_ripple"
+        android:foregroundTint="@color/button_selector"
+        android:foreground="@drawable/ic_calibrate"
         android:onClick="calibrateButtonClicked"
-        android:text="Calibrate"
         android:textColor="@android:color/background_light" />
 
     <Button
         android:id="@+id/importButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="8dp"
         android:background="@drawable/image_ripple"
+        android:foregroundTint="@color/button_selector"
+        android:foreground="@drawable/ic_import"
         android:onClick="importButtonClicked"
-        android:text="IMPORT"
+        android:textColor="@android:color/background_light" />
+
+    <android.support.v4.widget.Space
+        android:id="@+id/space"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:clickable="true" />
+
+    <Button
+        android:id="@+id/shutterButton"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/image_ripple"
+        android:foreground="@drawable/ic_shutter"
+        android:foregroundTint="@color/button_selector"
+        android:onClick="screenshotButtonClicked"
         android:textColor="@android:color/background_light" />
 
     <!--<Button-->
