@@ -85,10 +85,11 @@
 
             </FrameLayout>
 
-            <edu.neumont.dkramer.spoze3.ScreenshotView
+            <View
                 android:id="@+id/screenshotView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@drawable/main_background"
                 android:clickable="false"
                 android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"

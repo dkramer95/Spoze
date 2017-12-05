@@ -60,7 +60,7 @@ public class VisualizationActivity extends GLCameraActivity implements Screensho
 	protected GalleryFragment mGalleryFragment;
 	protected ModelFragment mModelFragment;
 	protected ToolbarManager mToolbarManager;
-	protected ScreenshotView mScreenshotView;
+	protected View mScreenshotView;
 	protected static boolean sCanTakeScreenshot = true;
 
 
@@ -139,7 +139,6 @@ public class VisualizationActivity extends GLCameraActivity implements Screensho
 				// fade in screenshot flash
 				mScreenshotView.setVisibility(View.VISIBLE);
 				mScreenshotView.setAlpha(0f);
-				mScreenshotView.invalidate();
 				mScreenshotView.animate().alpha(1f).setDuration(250).withEndAction(() -> {
 					if (Preferences.getBoolean(SHUTTER_SOUND_ENABLED, true)) {
 						// play shutter sound

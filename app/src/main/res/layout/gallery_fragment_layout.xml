@@ -25,12 +25,11 @@
             <Spinner
                 android:id="@+id/directorySpinner"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="fill_vertical"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
                 android:layout_weight="1"
                 android:background="@drawable/image_ripple"
-                android:gravity="fill_vertical"
-                android:text="TextView" />
+                android:gravity="center_vertical" />
 
             <TextView
                 android:id="@+id/textView8"
@@ -38,34 +37,36 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5" />
 
-            <Button
-                android:id="@+id/loadSelectedButton"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_marginBottom="8dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginTop="8dp"
-                android:background="@drawable/image_ripple"
-                android:foregroundTint="@color/check_button_selector"
-                android:foreground="@drawable/ic_check"
-                android:onClick="loadGalleryItemsButtonClicked"
-                android:textColor="@color/toolbar_button_color" />
 
-            <Button
+            <ImageButton
+                android:id="@+id/loadSelectedButton"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:adjustViewBounds="true"
+                android:background="@drawable/check_ripple"
+                android:onClick="loadGalleryItemsButtonClicked"
+                android:tint="@color/check_button_selector"
+                android:padding="6dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_check"/>
+
+            <ImageButton
                 android:id="@+id/closeButton"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_marginBottom="8dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginTop="8dp"
-                android:layout_weight="0"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:adjustViewBounds="true"
                 android:background="@drawable/image_ripple"
-                android:foreground="@drawable/ic_x"
-                android:foregroundTint="@color/button_selector"
                 android:onClick="closeGalleryButtonClicked"
-                android:textColor="@android:color/background_light" />
+                android:tint="@color/button_selector"
+                android:padding="6dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_x"/>
 
         </LinearLayout>
 

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.media.ImageReader;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -22,6 +23,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -57,8 +59,8 @@ public class GalleryFragment extends DialogFragment {
 
     protected RecyclerView mRecyclerView;
     protected ButtonClickHandler mButtonClickHandler;
-    protected Button mLoadSelectedButton;
-    protected Button mCloseButton;
+    protected ImageButton mLoadSelectedButton;
+    protected ImageButton mCloseButton;
     protected Spinner mDirectorySpinner;
 
     protected List<GalleryItemView> mSelectedItems;
