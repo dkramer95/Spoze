@@ -15,6 +15,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
@@ -61,7 +62,7 @@ public class VisualizationActivity extends GLCameraActivity implements Screensho
 	protected ToolbarManager mToolbarManager;
 	protected View mScreenshotView;
 	protected static boolean sCanTakeScreenshot = true;
-	protected static boolean sMotionEnabled = true;
+	protected static boolean sMotionEnabled;
 
 
 	@Override
@@ -71,9 +72,16 @@ public class VisualizationActivity extends GLCameraActivity implements Screensho
 		loadToolbar();
 		loadFragments();
 		initScreenshot();
+		initMotion();
 
 		// potential incoming image from a "share"
 		checkSharedImage();
+	}
+
+	protected void initMotion() {
+		ImageButton button = findViewById(R.id.motionButton);
+		sMotionEnabled = true;
+		button.setColorFilter(getResources().getColor(R.color.yellow));
 	}
 
 	@Override
@@ -141,10 +149,14 @@ public class VisualizationActivity extends GLCameraActivity implements Screensho
 
 		// preserve old visibility of nav to restore after screenshot
 	    int oldVisibility = getWindow().getDecorView().getSystemUiVisibility();
+
+		// preserve state of motion
+		boolean oldMotion = sMotionEnabled;
 	    hideSoftNavButtons();
 
 	    mToolbarManager.fadeOutToolbar(() -> {
 			sCanTakeScreenshot = false;
+			setMotionEnabled(false);
 			Screenshot.getInstance().capture(this);
 
 			new Handler().postDelayed(() -> {
@@ -168,6 +180,7 @@ public class VisualizationActivity extends GLCameraActivity implements Screensho
 
 						// ensure we allow future screenshots since we're done
 						sCanTakeScreenshot = true;
+						setMotionEnabled(oldMotion);
 					});
 				}).start();
 			}, 500);
@@ -333,14 +346,18 @@ public class VisualizationActivity extends GLCameraActivity implements Screensho
 		if (sMotionEnabled) {
 			sMotionEnabled = false;
 			button.setColorFilter(getResources().getColor(R.color.disabled_gray));
-			Toast.makeText(this, "Gyro disabled!", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "Motion disabled!", Toast.LENGTH_SHORT).show();
 		} else {
 			sMotionEnabled = true;
-			button.setColorFilter(getResources().getColor(R.color.green));
-			Toast.makeText(this, "Gyro enabled!", Toast.LENGTH_SHORT).show();
+			button.setColorFilter(getResources().getColor(R.color.yellow));
+			Toast.makeText(this, "Motion enabled!", Toast.LENGTH_SHORT).show();
 		}
+		setMotionEnabled(sMotionEnabled);
+	}
+
+	public void setMotionEnabled(boolean value) {
+		sMotionEnabled = value;
 		GLMotionCamera camera = (GLMotionCamera)getGLView().getScene().getCamera();
-		findViewById(R.id.calibrateButton).setEnabled(sMotionEnabled);
 		camera.setUpdateMotion(sMotionEnabled);
 	}
 

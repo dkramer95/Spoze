@@ -32,8 +32,7 @@
         android:onClick="motionButtonClicked"
         android:padding="6dp"
         android:scaleType="fitCenter"
-        android:src="@drawable/ic_motion"
-        android:tint="@color/button_selector"/>
+        android:src="@drawable/ic_motion"/>
 
     <ImageButton
         android:id="@+id/importButton"
