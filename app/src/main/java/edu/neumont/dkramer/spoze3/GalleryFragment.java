@@ -31,6 +31,7 @@ import com.bumptech.glide.Glide;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -92,10 +93,6 @@ public class GalleryFragment extends DialogFragment {
         return true;
     }
 
-    protected String getPictureDir() {
-        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString();
-    }
-
     protected List<String> getGalleryDirectories() {
         String pictureDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString();
         String[] directories = new File(pictureDirectory).list();
@@ -126,6 +123,10 @@ public class GalleryFragment extends DialogFragment {
         }
     }
 
+    protected String getPictureDir() {
+        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString();
+    }
+
     public boolean isExternalStorageWritable() {
         String state = Environment.getExternalStorageState();
         return state.equals(Environment.MEDIA_MOUNTED);
@@ -146,12 +147,19 @@ public class GalleryFragment extends DialogFragment {
         if (ensureCanWriteToExternalStorage()) {
             initButtons(view);
             initGalleryView();
+            createDirectorySpinner(view);
         }
+        return view;
+    }
 
+    protected void createDirectorySpinner(View view) {
         mDirectorySpinner = view.findViewById(R.id.directorySpinner);
 
-        DirectoryItemAdapter adapter = new DirectoryItemAdapter(getActivity(), getGalleryDirectories());
-        mDirectorySpinner.setAdapter(new DirectoryItemAdapter(getActivity(), getGalleryDirectories()));
+        List<String> galleryDirectories = getGalleryDirectories();
+        Collections.sort(galleryDirectories);
+
+        DirectoryItemAdapter adapter = new DirectoryItemAdapter(getActivity(), galleryDirectories);
+        mDirectorySpinner.setAdapter(new DirectoryItemAdapter(getActivity(), galleryDirectories));
         mDirectorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -163,9 +171,6 @@ public class GalleryFragment extends DialogFragment {
                     mSelectedDirectory = dir;
                     // update our recycler view
                     initGalleryView();
-
-                    // save selected dir as the one to use next time
-                    Preferences.putString(Key.GALLERY_DIR, item).save();
                 }
             }
 
@@ -184,8 +189,6 @@ public class GalleryFragment extends DialogFragment {
                 mDirectorySpinner.setSelection(index);
             }
         }
-
-        return view;
     }
 
     protected void initGalleryView() {
@@ -251,7 +254,7 @@ public class GalleryFragment extends DialogFragment {
         File[] files = getGalleryDir().listFiles();
 
         // filter out potential non-image files
-        final String IMAGE_EXT_PATTERN = "^[^*&%]*\\.(jpg|jpeg|gif|bmp|png)$";
+        final String IMAGE_EXT_PATTERN = "^[^*&%]*\\.(?i)(jpg|jpeg|gif|bmp|png)$";
         Pattern p = Pattern.compile(IMAGE_EXT_PATTERN);
 
         for (File f : files) {
@@ -302,6 +305,12 @@ public class GalleryFragment extends DialogFragment {
         mDirectorySpinner.performClick();
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        // save selected dir as the one to use next time
+        Preferences.putString(Key.GALLERY_DIR, mDirectorySpinner.getSelectedItem().toString()).save();
+    }
 
     private class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         private Context mContext;
@@ -325,7 +334,15 @@ public class GalleryFragment extends DialogFragment {
             mGalleryList.remove(index);
 
         	if (getItemCount() == 0) {
-                Toast.makeText(getActivity(), "You deleted everything", Toast.LENGTH_LONG).show();
+        		File f = new File(item.getResourceString());
+        		String parent = f.getParent();
+        		String dir = parent.substring(parent.lastIndexOf('/') + 1);
+        		Toast.makeText(getActivity(), String.format("You deleted everything from '%s'!", dir), Toast.LENGTH_SHORT).show();
+		        DirectoryItemAdapter adapter = (DirectoryItemAdapter)mDirectorySpinner.getAdapter();
+		        adapter.removeItem(dir);
+		        adapter.notifyDataSetChanged();
+		        mSelectedDirectory = getPictureDir() + File.separator + mDirectorySpinner.getSelectedItem().toString();
+                initGalleryView();
             }
         }
 
@@ -417,6 +434,10 @@ public class GalleryFragment extends DialogFragment {
 
         public int indexOf(String item) {
             return mData.indexOf(item);
+        }
+
+        public boolean removeItem(String item) {
+            return mData.remove(item);
         }
 
         @Override
