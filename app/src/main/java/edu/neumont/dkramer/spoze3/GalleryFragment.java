@@ -174,6 +174,8 @@ public class GalleryFragment extends DialogFragment {
                     // update our recycler view
                     initGalleryView();
                 }
+//                mSelectedDirectory = dir;
+//                initGalleryView();
             }
 
             // unused

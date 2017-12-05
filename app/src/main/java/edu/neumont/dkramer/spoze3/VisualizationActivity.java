@@ -15,6 +15,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
@@ -28,6 +29,7 @@ import java.util.List;
 import edu.neumont.dkramer.spoze3.gesture.DeviceShake;
 import edu.neumont.dkramer.spoze3.gl.GLCameraActivity;
 import edu.neumont.dkramer.spoze3.gl.GLContext;
+import edu.neumont.dkramer.spoze3.gl.GLMotionCamera;
 import edu.neumont.dkramer.spoze3.gl.GLScene;
 import edu.neumont.dkramer.spoze3.gl.GLWorld;
 import edu.neumont.dkramer.spoze3.gl.deviceinfo.GLRotationVectorInfo;
@@ -59,6 +61,7 @@ public class VisualizationActivity extends GLCameraActivity implements Screensho
 	protected ToolbarManager mToolbarManager;
 	protected View mScreenshotView;
 	protected static boolean sCanTakeScreenshot = true;
+	protected static boolean sMotionEnabled = true;
 
 
 	@Override
@@ -324,6 +327,23 @@ public class VisualizationActivity extends GLCameraActivity implements Screensho
 		Toast.makeText(this, "Calibrated!", Toast.LENGTH_SHORT).show();
 	}
 
+	public void motionButtonClicked(View view) {
+		ImageButton button = (ImageButton)view;
+		// toggle
+		if (sMotionEnabled) {
+			sMotionEnabled = false;
+			button.setColorFilter(getResources().getColor(R.color.disabled_gray));
+			Toast.makeText(this, "Gyro disabled!", Toast.LENGTH_SHORT).show();
+		} else {
+			sMotionEnabled = true;
+			button.setColorFilter(getResources().getColor(R.color.green));
+			Toast.makeText(this, "Gyro enabled!", Toast.LENGTH_SHORT).show();
+		}
+		GLMotionCamera camera = (GLMotionCamera)getGLView().getScene().getCamera();
+		findViewById(R.id.calibrateButton).setEnabled(sMotionEnabled);
+		camera.setUpdateMotion(sMotionEnabled);
+	}
+
 	public void screenshotButtonClicked(View view) {
 		takeScreenshot();
 	}
@@ -375,6 +395,7 @@ public class VisualizationActivity extends GLCameraActivity implements Screensho
 				.setCustomAnimations(R.animator.fade_in, R.animator.fade_out)
 				.show(mGalleryFragment)
 				.commit();
+		mGalleryFragment.initGalleryView();
 	}
 
 	protected void loadFragments() {
