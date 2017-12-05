@@ -83,7 +83,6 @@ public class VisualizationActivity extends GLCameraActivity implements Screensho
 	}
 
 	protected void initScreenshot() {
-		mScreenshotView = findViewById(R.id.screenshotView);
 
 		MediaProjectionManager mediaProjectionManager =
 				(MediaProjectionManager)getSystemService(Context.MEDIA_PROJECTION_SERVICE);
@@ -122,6 +121,12 @@ public class VisualizationActivity extends GLCameraActivity implements Screensho
 	}
 
 	protected void takeScreenshot() {
+		// ensure user has granted permission so we can capture screen
+		if (!Screenshot.isInitialized()) {
+			initScreenshot();
+			return;
+		}
+
 		// preserve old visibility of nav to restore after screenshot
 	    int oldVisibility = getWindow().getDecorView().getSystemUiVisibility();
 	    hideSoftNavButtons();
@@ -130,29 +135,31 @@ public class VisualizationActivity extends GLCameraActivity implements Screensho
 			sCanTakeScreenshot = false;
 			Screenshot.getInstance().capture(this);
 
-			// fade in screenshot flash
-            mScreenshotView.setVisibility(View.VISIBLE);
-            mScreenshotView.setAlpha(0f);
-            mScreenshotView.invalidate();
-            mScreenshotView.animate().alpha(1f).setDuration(250).withEndAction(() -> {
-            	if (Preferences.getBoolean(SHUTTER_SOUND_ENABLED, true)) {
-            	    // play shutter sound
-            		MediaPlayer player = MediaPlayer.create(this, R.raw.shutter);
-            		player.start();
-				}
+			new Handler().postDelayed(() -> {
+				// fade in screenshot flash
+				mScreenshotView.setVisibility(View.VISIBLE);
+				mScreenshotView.setAlpha(0f);
+				mScreenshotView.invalidate();
+				mScreenshotView.animate().alpha(1f).setDuration(250).withEndAction(() -> {
+					if (Preferences.getBoolean(SHUTTER_SOUND_ENABLED, true)) {
+						// play shutter sound
+						MediaPlayer player = MediaPlayer.create(this, R.raw.shutter);
+						player.start();
+					}
 
-				// fade out flash
-				mScreenshotView.animate().alpha(0).setDuration(250).withEndAction(() -> {
-            		mScreenshotView.setVisibility(View.GONE);
+					// fade out flash
+					mScreenshotView.animate().alpha(0).setDuration(250).withEndAction(() -> {
+						mScreenshotView.setVisibility(View.GONE);
 
-            		// fade in rest of UI after slight delay
-            		new Handler().postDelayed(() -> {
-            			mToolbarManager.fadeInToolbar(TOOLBAR_NORMAL);
-            			getWindow().getDecorView().setSystemUiVisibility(oldVisibility);
+						// fade in rest of UI
+						mToolbarManager.fadeInToolbar(TOOLBAR_NORMAL);
+						getWindow().getDecorView().setSystemUiVisibility(oldVisibility);
+
+						// ensure we allow future screenshots since we're done
 						sCanTakeScreenshot = true;
-					}, 500);
-				});
-			}).start();
+					});
+				}).start();
+			}, 500);
 		});
 	}
 
@@ -167,58 +174,17 @@ public class VisualizationActivity extends GLCameraActivity implements Screensho
 	}
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == REQUEST_MEDIA_PROJECTION && resultCode == RESULT_OK) {
-            int width = getWindow().getDecorView().getWidth();
-			int height = getWindow().getDecorView().getHeight();
+		if (requestCode == REQUEST_MEDIA_PROJECTION) {
+			if (resultCode == RESULT_OK) {
+				int width = getWindow().getDecorView().getWidth();
+				int height = getWindow().getDecorView().getHeight();
+				Screenshot.getInstance().setSize(width, height).init(this, resultCode, data, this);
+				mScreenshotView = findViewById(R.id.screenshotView);
 
-			Screenshot.getInstance()
-					.setSize(width, height)
-                    .init(this, resultCode, data, this);
+			} else if (resultCode == RESULT_CANCELED) {
+				Toast.makeText(this, "Please grant permission to enable screenshot capturing", Toast.LENGTH_LONG).show();
+			}
 		}
-
-//		if (resultCode == RESULT_OK) {
-//			int oldVisibility = getWindow().getDecorView().getSystemUiVisibility();
-//
-//			// hide soft nav buttons
-//			getWindow().getDecorView().setSystemUiVisibility(
-//                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-//                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-//                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-//                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-//                        | View.SYSTEM_UI_FLAG_FULLSCREEN
-//                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
-//
-//            mToolbarManager.fadeOutToolbar();
-//
-//            int width = getWindow().getDecorView().getWidth();
-//			int height = getWindow().getDecorView().getHeight();
-//
-//			Screenshot.getInstance().setSize(width, height).capture(this, resultCode, data, (bmp -> {
-//				saveBitmap(bmp);
-//				Toast.makeText(this, "Captured Screenshot", Toast.LENGTH_SHORT).show();
-//
-//
-//				// screenshot flash animation
-//				mScreenshotView.setVisibility(View.VISIBLE);
-//				mScreenshotView.setAlpha(0f);
-//				mScreenshotView.invalidate();
-//				mScreenshotView.animate().alpha(1f).setDuration(250).withEndAction(() -> {
-//					if (Preferences.getBoolean(SHUTTER_SOUND_ENABLED, true)) {
-//						MediaPlayer mp = MediaPlayer.create(this, R.raw.shutter);
-//						mp.start();
-//					}
-//					getCameraPreview().setVisibility(View.INVISIBLE);
-//					getCameraPreview().setVisibility(View.VISIBLE);
-//
-//					mScreenshotView.animate().alpha(0).setDuration(250).withEndAction(() -> {
-//						getGLView().getScene().onResume();
-//						mScreenshotView.setVisibility(View.GONE);
-//					}).start();
-//				});
-//				mToolbarManager.fadeInToolbar(TOOLBAR_NORMAL);
-//				getWindow().getDecorView().setSystemUiVisibility(oldVisibility);
-//			}));
-//		}
 	}
 
 	protected void saveBitmap(Bitmap bmp) {

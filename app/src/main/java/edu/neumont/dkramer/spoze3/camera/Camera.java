@@ -248,8 +248,10 @@ public class Camera {
         @Override
         public void onDisconnected(@NonNull CameraDevice camera) {
             try {
-                mOpenFlag = false;
-                close();
+                if (mCapturingFlag) {
+                    mOpenFlag = false;
+                    close();
+                }
             } catch (CameraAccessException e) {
                 e.printStackTrace();
             }
@@ -274,7 +276,7 @@ public class Camera {
         @Override
         public void onConfigured(@NonNull CameraCaptureSession session) {
             mCaptureSession = session;
-            mCapturingFlag = true;
+//            mCapturingFlag = true;
             try {
                 buildCaptureRequest();
             } catch (CameraAccessException e) {

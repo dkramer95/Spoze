@@ -18,7 +18,7 @@ import java.nio.Buffer;
  */
 
 public class Screenshot implements ImageReader.OnImageAvailableListener {
-    protected static final int WAIT_FRAMES = 8;
+    protected static final int WAIT_FRAMES = 16;
 
     protected static Screenshot sInstance;
     protected static boolean sInitialized = false;
@@ -126,6 +126,10 @@ public class Screenshot implements ImageReader.OnImageAvailableListener {
             mImageReader = null;
         }
         sInitialized = false;
+    }
+
+    public static boolean isInitialized() {
+        return sInitialized;
     }
 
 

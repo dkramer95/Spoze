@@ -146,9 +146,9 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     // unused
     @Override
     public void surfaceChanged(SurfaceHolder holder, int i, int i1, int i2) {
-        if (!mCamera.isOpen()) {
-            loadCamera(holder);
-        }
+//        if (!mCamera.isOpen()) {
+//            loadCamera(holder);
+//        }
     }
 
     @Override
