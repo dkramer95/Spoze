@@ -8,10 +8,10 @@ import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.media.projection.MediaProjectionManager;
 import android.net.Uri;
-import android.opengl.GLSurfaceView;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -27,15 +27,11 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.List;
 
 import edu.neumont.dkramer.spoze3.gesture.DeviceShake;
-import edu.neumont.dkramer.spoze3.gl.GLCamera;
 import edu.neumont.dkramer.spoze3.gl.GLCameraActivity;
 import edu.neumont.dkramer.spoze3.gl.GLContext;
-import edu.neumont.dkramer.spoze3.gl.GLModel;
-import edu.neumont.dkramer.spoze3.gl.GLProgram;
 import edu.neumont.dkramer.spoze3.gl.GLScene;
 import edu.neumont.dkramer.spoze3.gl.GLWorld;
 import edu.neumont.dkramer.spoze3.gl.deviceinfo.GLRotationVectorInfo;
@@ -43,7 +39,6 @@ import edu.neumont.dkramer.spoze3.models.SignModel2;
 import edu.neumont.dkramer.spoze3.scene.SignScene;
 import edu.neumont.dkramer.spoze3.util.Preferences;
 
-import static android.view.View.GONE;
 import static edu.neumont.dkramer.spoze3.VisualizationActivity.ToolbarManager.TOOLBAR_NORMAL;
 import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Type.ACCELEROMETER;
 import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Type.ROTATION_VECTOR;
@@ -57,7 +52,7 @@ import static edu.neumont.dkramer.spoze3.util.Preferences.Key.SHUTTER_SOUND_ENAB
  * Created by dkramer on 11/14/17.
  */
 
-public class VisualizationActivity extends GLCameraActivity {
+public class VisualizationActivity extends GLCameraActivity implements Screenshot.ScreenshotCallback {
 	private static final int REQUEST_MEDIA_PROJECTION = 1;
 
 	private static final String TAG = "VisualizationActivity";
@@ -66,6 +61,8 @@ public class VisualizationActivity extends GLCameraActivity {
 	protected ModelFragment mModelFragment;
 	protected ToolbarManager mToolbarManager;
 	protected ScreenshotView mScreenshotView;
+	protected static boolean sCanTakeScreenshot = true;
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -73,11 +70,24 @@ public class VisualizationActivity extends GLCameraActivity {
 		loadFromPreferences();
 		loadToolbar();
 		loadFragments();
-
-		mScreenshotView = findViewById(R.id.screenshotView);
+		initScreenshot();
 
 		// potential incoming image from a "share"
 		checkSharedImage();
+	}
+
+	@Override
+	protected void onDestroy() {
+	    super.onDestroy();
+		Screenshot.getInstance().destroy();
+	}
+
+	protected void initScreenshot() {
+		mScreenshotView = findViewById(R.id.screenshotView);
+
+		MediaProjectionManager mediaProjectionManager =
+				(MediaProjectionManager)getSystemService(Context.MEDIA_PROJECTION_SERVICE);
+		startActivityForResult(mediaProjectionManager.createScreenCaptureIntent(), REQUEST_MEDIA_PROJECTION);
 	}
 
 	protected void checkSharedImage() {
@@ -102,66 +112,122 @@ public class VisualizationActivity extends GLCameraActivity {
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN || keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
-			takeScreenshot();
+			// prevent spamming screenshots if we're busy already
+			if (sCanTakeScreenshot) {
+				takeScreenshot();
+			}
 			return true;
 		}
 		return super.onKeyDown(keyCode, event);
 	}
 
 	protected void takeScreenshot() {
-		MediaProjectionManager mediaProjectionManager =
-				(MediaProjectionManager)getSystemService(Context.MEDIA_PROJECTION_SERVICE);
-		startActivityForResult(mediaProjectionManager.createScreenCaptureIntent(), REQUEST_MEDIA_PROJECTION);
+		// preserve old visibility of nav to restore after screenshot
+	    int oldVisibility = getWindow().getDecorView().getSystemUiVisibility();
+	    hideSoftNavButtons();
+
+	    mToolbarManager.fadeOutToolbar(() -> {
+			sCanTakeScreenshot = false;
+			Screenshot.getInstance().capture(this);
+
+			// fade in screenshot flash
+            mScreenshotView.setVisibility(View.VISIBLE);
+            mScreenshotView.setAlpha(0f);
+            mScreenshotView.invalidate();
+            mScreenshotView.animate().alpha(1f).setDuration(250).withEndAction(() -> {
+            	if (Preferences.getBoolean(SHUTTER_SOUND_ENABLED, true)) {
+            	    // play shutter sound
+            		MediaPlayer player = MediaPlayer.create(this, R.raw.shutter);
+            		player.start();
+				}
+
+				// fade out flash
+				mScreenshotView.animate().alpha(0).setDuration(250).withEndAction(() -> {
+            		mScreenshotView.setVisibility(View.GONE);
+
+            		// fade in rest of UI after slight delay
+            		new Handler().postDelayed(() -> {
+            			mToolbarManager.fadeInToolbar(TOOLBAR_NORMAL);
+            			getWindow().getDecorView().setSystemUiVisibility(oldVisibility);
+						sCanTakeScreenshot = true;
+					}, 500);
+				});
+			}).start();
+		});
+	}
+
+	protected void hideSoftNavButtons() {
+        getWindow().getDecorView().setSystemUiVisibility(
+            View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
 	}
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (resultCode == RESULT_OK) {
-			int oldVisibility = getWindow().getDecorView().getSystemUiVisibility();
-
-			// hide soft nav buttons
-			getWindow().getDecorView().setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
-
-            mToolbarManager.fadeOutToolbar();
-
+		if (requestCode == REQUEST_MEDIA_PROJECTION && resultCode == RESULT_OK) {
             int width = getWindow().getDecorView().getWidth();
 			int height = getWindow().getDecorView().getHeight();
 
-			Screenshot.getInstance().setSize(width, height).capture(this, resultCode, data, (bmp -> {
-				saveBitmap(bmp);
-				Toast.makeText(this, "Captured Screenshot", Toast.LENGTH_SHORT).show();
-
-
-				// screenshot flash animation
-				mScreenshotView.setVisibility(View.VISIBLE);
-				mScreenshotView.setAlpha(0f);
-				mScreenshotView.invalidate();
-				mScreenshotView.animate().alpha(1f).setDuration(250).withEndAction(() -> {
-					if (Preferences.getBoolean(SHUTTER_SOUND_ENABLED, true)) {
-						MediaPlayer mp = MediaPlayer.create(this, R.raw.shutter);
-						mp.start();
-					}
-					getCameraPreview().setVisibility(View.INVISIBLE);
-					getCameraPreview().setVisibility(View.VISIBLE);
-
-					mScreenshotView.animate().alpha(0).setDuration(250).withEndAction(() -> {
-						getGLView().getScene().onResume();
-						mScreenshotView.setVisibility(View.GONE);
-					}).start();
-				});
-				mToolbarManager.fadeInToolbar(TOOLBAR_NORMAL);
-				getWindow().getDecorView().setSystemUiVisibility(oldVisibility);
-			}));
+			Screenshot.getInstance()
+					.setSize(width, height)
+                    .init(this, resultCode, data, this);
 		}
+
+//		if (resultCode == RESULT_OK) {
+//			int oldVisibility = getWindow().getDecorView().getSystemUiVisibility();
+//
+//			// hide soft nav buttons
+//			getWindow().getDecorView().setSystemUiVisibility(
+//                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+//                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+//                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+//                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+//                        | View.SYSTEM_UI_FLAG_FULLSCREEN
+//                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+//
+//            mToolbarManager.fadeOutToolbar();
+//
+//            int width = getWindow().getDecorView().getWidth();
+//			int height = getWindow().getDecorView().getHeight();
+//
+//			Screenshot.getInstance().setSize(width, height).capture(this, resultCode, data, (bmp -> {
+//				saveBitmap(bmp);
+//				Toast.makeText(this, "Captured Screenshot", Toast.LENGTH_SHORT).show();
+//
+//
+//				// screenshot flash animation
+//				mScreenshotView.setVisibility(View.VISIBLE);
+//				mScreenshotView.setAlpha(0f);
+//				mScreenshotView.invalidate();
+//				mScreenshotView.animate().alpha(1f).setDuration(250).withEndAction(() -> {
+//					if (Preferences.getBoolean(SHUTTER_SOUND_ENABLED, true)) {
+//						MediaPlayer mp = MediaPlayer.create(this, R.raw.shutter);
+//						mp.start();
+//					}
+//					getCameraPreview().setVisibility(View.INVISIBLE);
+//					getCameraPreview().setVisibility(View.VISIBLE);
+//
+//					mScreenshotView.animate().alpha(0).setDuration(250).withEndAction(() -> {
+//						getGLView().getScene().onResume();
+//						mScreenshotView.setVisibility(View.GONE);
+//					}).start();
+//				});
+//				mToolbarManager.fadeInToolbar(TOOLBAR_NORMAL);
+//				getWindow().getDecorView().setSystemUiVisibility(oldVisibility);
+//			}));
+//		}
 	}
 
 	protected void saveBitmap(Bitmap bmp) {
 	    new BitmapWorker().execute(bmp);
+	}
+
+	@Override
+	public void onScreenshot(Bitmap bmp) {
+	    saveBitmap(bmp);
 	}
 
 	static class BitmapWorker extends AsyncTask<Bitmap, Void, Void> {
@@ -189,6 +255,7 @@ public class VisualizationActivity extends GLCameraActivity {
 				bmp.compress(format, quality, outputStream);
 				outputStream.flush();
 				outputStream.close();
+				bmp.recycle();
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
@@ -400,9 +467,17 @@ public class VisualizationActivity extends GLCameraActivity {
 		}
 
 		public void fadeOutToolbar() {
+		    fadeOutToolbar(null);
+		}
+
+		public void fadeOutToolbar(Runnable endAction) {
 			mToolbarFlipper.animate().alpha(0).setDuration(250)
-					.withEndAction(() -> mToolbarFlipper.setVisibility(View.INVISIBLE))
-					.start();
+					.withEndAction(() -> {
+                        mToolbarFlipper.setVisibility(View.INVISIBLE);
+                        if (endAction != null) {
+                            endAction.run();
+                        }
+					}).start();
 		}
 
 		public void hideToolbar() {

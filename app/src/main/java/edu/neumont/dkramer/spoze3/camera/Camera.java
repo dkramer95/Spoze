@@ -132,6 +132,7 @@ public class Camera {
                 mOpenFlag = false;
             }
             mOutputTargets.clear();
+            mOpenFlag = false;
         }
     }
 
@@ -224,6 +225,10 @@ public class Camera {
         return cameraId;
     }
 
+    public boolean isOpen() {
+        return mOpenFlag;
+    }
+
 
     /* Interface that allows us to modify our CaptureRequest that we are configuring */
     public interface OnCaptureRequestConfigure {
@@ -243,6 +248,7 @@ public class Camera {
         @Override
         public void onDisconnected(@NonNull CameraDevice camera) {
             try {
+                mOpenFlag = false;
                 close();
             } catch (CameraAccessException e) {
                 e.printStackTrace();
@@ -253,6 +259,7 @@ public class Camera {
         public void onError(@NonNull CameraDevice camera, int error) {
             mErrorFlag = true;
             try {
+                mOpenFlag = false;
                 close();
             } catch (CameraAccessException e) {
                 e.printStackTrace();

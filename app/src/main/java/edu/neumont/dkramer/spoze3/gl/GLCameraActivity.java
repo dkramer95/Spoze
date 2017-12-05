@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Size;
+import android.view.View;
 import android.widget.Toast;
 
 import edu.neumont.dkramer.spoze3.R;
@@ -41,6 +42,7 @@ public abstract class GLCameraActivity extends GLActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		mCameraPreview.setVisibility(View.VISIBLE);
 		mCameraPreview.startPreviewing();
 	}
 

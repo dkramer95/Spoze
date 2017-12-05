@@ -9,6 +9,7 @@ import android.util.AttributeSet;
 import android.util.Size;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.widget.Toast;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -86,6 +87,15 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         return Camera.getOptimalPreviewSize(getPreviewWidth(), getPreviewHeight(), sizes);
     }
 
+    protected void loadCamera(SurfaceHolder holder) {
+        try {
+            attachCamera(holder);
+            openCamera();
+        } catch (CameraAccessException e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * Set a specific CaptureRequest option
      * @param key
@@ -117,12 +127,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        try {
-            attachCamera(holder);
-            openCamera();
-        } catch (CameraAccessException e) {
-            e.printStackTrace();
-        }
+        loadCamera(holder);
     }
 
     protected void attachCamera(SurfaceHolder holder) throws CameraAccessException {
@@ -140,7 +145,11 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 
     // unused
     @Override
-    public void surfaceChanged(SurfaceHolder holder, int i, int i1, int i2) { }
+    public void surfaceChanged(SurfaceHolder holder, int i, int i1, int i2) {
+        if (!mCamera.isOpen()) {
+            loadCamera(holder);
+        }
+    }
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) { }
