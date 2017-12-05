@@ -105,22 +105,16 @@ public class VisualizationActivity extends GLCameraActivity implements Screensho
 			new Handler().postDelayed(() -> {
 				getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out).show(mImportFragment).commit();
 			}, 1000);
-
-
-//			Glide.with(this).load(imageURI).asBitmap().into(mImportFragment.getImportPreview());
-
-//			Glide.with(this).load(imageURI).asBitmap().into(new SimpleTarget<Bitmap>() {
-//				@Override
-//				public void onResourceReady(Bitmap bmp, GlideAnimation animation) {
-//					GLWorld world = getGLContext().getGLView().getScene().getWorld();
-//
-//					getGLContext().queueEvent(() -> {
-//						world.addModel(SignModel2.fromBitmap(getGLContext(), bmp, world.getWidth(), world.getHeight()));
-//					});
-//					calibrate();
-//				}
-//			});
 		}
+	}
+
+	public void importBitmap(Bitmap bmp) {
+		GLWorld world = getGLContext().getGLView().getScene().getWorld();
+
+		getGLContext().queueEvent(() -> {
+			world.addModel(SignModel2.fromBitmap(getGLContext(), bmp, world.getWidth(), world.getHeight()));
+		});
+		calibrate();
 	}
 
 	@Override
@@ -201,38 +195,69 @@ public class VisualizationActivity extends GLCameraActivity implements Screensho
 		}
 	}
 
-	protected void saveBitmap(Bitmap bmp) {
-	    new BitmapWorker().execute(bmp);
+	// TODO allow custom save directory
+	public void saveBitmap(Bitmap bmp, String path, String ext, int quality) {
+		ImageSave imgSave = new ImageSave(bmp, path, ext, quality);
+	    new ImageSaver().execute(imgSave);
 	}
+
 
 	@Override
 	public void onScreenshot(Bitmap bmp) {
-	    saveBitmap(bmp);
+        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + File.separator + "SpozeCaptures";
+	    saveBitmap(bmp, path, Preferences.getString(SCREENSHOT_FORMAT, "jpeg"), Preferences.getInt(SCREENSHOT_QUALITY, 75));
 	}
 
-	static class BitmapWorker extends AsyncTask<Bitmap, Void, Void> {
+	public String getSavedImportsDir() {
+		String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + File.separator + "SpozeImported";
+		File f = new File(path);
+		f.mkdirs();
+	    return path;
+	}
+
+
+	// simple pojo for image saving
+	class ImageSave {
+		private Bitmap bitmap;
+		private String path;
+		private String ext;
+		private int quality;
+
+		public ImageSave(Bitmap bmp, String path, String ext, int quality) {
+		    this.bitmap = bmp;
+		    this.path = path;
+		    this.ext = ext;
+		    this.quality = quality;
+		}
+	}
+
+
+	static class ImageSaver extends AsyncTask<ImageSave, Void, Void> {
 
 		@Override
-		protected Void doInBackground(Bitmap... bitmaps) {
-		    String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + File.separator + "SpozeCaptures";
+		protected Void doInBackground(ImageSave... imageSaves) {
+			ImageSave imageSave = imageSaves[0];
+		    String path = imageSave.path;
+
+//		    String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + File.separator + "SpozeCaptures";
 		    File dir = new File(path);
 			dir.mkdirs();
 
-			Bitmap bmp = bitmaps[0];
+			Bitmap bmp = imageSave.bitmap;
 			String ext = Preferences.getString(SCREENSHOT_FORMAT, "jpeg").toLowerCase();
 
-			String filename = String.format("Spoze_Capture_%d.%s", System.currentTimeMillis(), ext);
+			String filename = String.format("%d.%s", System.currentTimeMillis(), ext);
 
 			File file = new File(path, filename);
 
 			try {
 				OutputStream outputStream = new FileOutputStream(file);
 
-				int quality = Preferences.getInt(SCREENSHOT_QUALITY, 75);
-				Bitmap.CompressFormat format = ext.equalsIgnoreCase("jpeg") ?
+//				int quality = Preferences.getInt(SCREENSHOT_QUALITY, imageSave.quality);
+				Bitmap.CompressFormat format = imageSave.ext.equalsIgnoreCase("jpeg") ?
 						Bitmap.CompressFormat.JPEG : Bitmap.CompressFormat.PNG;
 
-				bmp.compress(format, quality, outputStream);
+				bmp.compress(format, imageSave.quality, outputStream);
 				outputStream.flush();
 				outputStream.close();
 				bmp.recycle();

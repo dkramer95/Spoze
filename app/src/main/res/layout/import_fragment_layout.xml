@@ -13,21 +13,54 @@
         android:gravity="center_vertical"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/textView9"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:text="Import Image"
-            android:textAlignment="center"
-            android:textColor="@color/white"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <Space
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="8dp"
+                android:adjustViewBounds="true"
+                android:padding="6dp" />
+
+            <TextView
+                android:id="@+id/textView9"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:text="Import Image"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <ImageButton
+                android:id="@+id/closeImportButton"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="2dp"
+                android:layout_marginStart="8dp"
+                android:adjustViewBounds="true"
+                android:background="@drawable/delete_ripple"
+                android:onClick="closeImportButtonClicked"
+                android:padding="6dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_x"
+                android:textColor="@android:color/background_light"
+                android:tint="@color/delete_button_selector" />
+        </LinearLayout>
 
         <edu.neumont.dkramer.spoze3.GalleryItemView
             android:id="@+id/importPreview"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
+            android:layout_width="250dp"
+            android:layout_height="250dp"
             android:layout_gravity="center_horizontal"
             android:layout_margin="16dp"
             android:background="@drawable/ripple_effect"
@@ -48,6 +81,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
                 android:background="@drawable/ripple_effect"
+                android:onClick="importAndSaveButtonClicked"
                 android:text="Import and Save"
                 android:textColor="@color/white" />
 
@@ -58,6 +92,7 @@
                 android:layout_margin="16dp"
                 android:layout_weight="1"
                 android:background="@drawable/ripple_effect"
+                android:onClick="justImportButtonClicked"
                 android:text="Just Import"
                 android:textColor="@color/white" />
         </LinearLayout>

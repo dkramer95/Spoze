@@ -30,8 +30,8 @@ public class GLMotionCamera extends GLCamera {
 //		mEye.x = (mLook.x + (getf(CURRENT_ACCEL_Z) * -1f));
 
         //TODO check orientation to determine offset value... instead of magic 5
-		mEye.x = (mLook.x + (getf(CALIBRATED_YAW) - getf(CURRENT_YAW)) * -5f);
-		mEye.y = (mLook.y + (getf(CALIBRATED_PITCH) - getf(CURRENT_PITCH)) * 5f);
+		mEye.x = (mLook.x + (getf(CALIBRATED_YAW) - getf(CURRENT_YAW)) * -3f);
+		mEye.y = (mLook.y + (getf(CALIBRATED_PITCH) - getf(CURRENT_PITCH)) * 3f);
 
 		Log.i("GL_MOTION", String.format("EyeX: %f, EyeY: %f, EyeZ: %f\n", mEye.x, mEye.y, mEye.z));
 

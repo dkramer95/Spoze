@@ -345,6 +345,7 @@ public class GalleryFragment extends DialogFragment {
 		        DirectoryItemAdapter adapter = (DirectoryItemAdapter)mDirectorySpinner.getAdapter();
 		        adapter.removeItem(dir);
 		        adapter.notifyDataSetChanged();
+		        mDirectorySpinner.setSelection(0, true);
 		        mSelectedDirectory = getPictureDir() + File.separator + mDirectorySpinner.getSelectedItem().toString();
                 initGalleryView();
             }
