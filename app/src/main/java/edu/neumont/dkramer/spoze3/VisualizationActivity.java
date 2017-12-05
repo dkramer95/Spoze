@@ -82,6 +82,11 @@ public class VisualizationActivity extends GLCameraActivity implements Screensho
 		Screenshot.getInstance().destroy();
 	}
 
+	protected void onNewIntent(Intent intent) {
+		setIntent(intent);
+		checkSharedImage();
+	}
+
 	protected void initScreenshot() {
 
 		MediaProjectionManager mediaProjectionManager =
