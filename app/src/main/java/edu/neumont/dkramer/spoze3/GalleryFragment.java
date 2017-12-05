@@ -309,7 +309,9 @@ public class GalleryFragment extends DialogFragment {
     public void onStop() {
         super.onStop();
         // save selected dir as the one to use next time
-        Preferences.putString(Key.GALLERY_DIR, mDirectorySpinner.getSelectedItem().toString()).save();
+        if (mDirectorySpinner != null) {
+            Preferences.putString(Key.GALLERY_DIR, mDirectorySpinner.getSelectedItem().toString()).save();
+        }
     }
 
     private class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
