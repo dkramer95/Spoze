@@ -18,10 +18,6 @@ import android.view.View;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -59,6 +55,7 @@ public class VisualizationActivity extends GLCameraActivity implements Screensho
 	protected DeviceShake mDeviceShake;
 	protected GalleryFragment mGalleryFragment;
 	protected ModelFragment mModelFragment;
+	protected ImportFragment mImportFragment;
 	protected ToolbarManager mToolbarManager;
 	protected View mScreenshotView;
 	protected static boolean sCanTakeScreenshot = true;
@@ -84,6 +81,10 @@ public class VisualizationActivity extends GLCameraActivity implements Screensho
 
 	protected void onNewIntent(Intent intent) {
 		setIntent(intent);
+	}
+
+	protected void onResume() {
+		super.onResume();
 		checkSharedImage();
 	}
 
@@ -99,17 +100,26 @@ public class VisualizationActivity extends GLCameraActivity implements Screensho
 
 		if (intent.hasExtra("imageURI")) {
 			Uri imageURI = intent.getParcelableExtra("imageURI");
-			Glide.with(this).load(imageURI).asBitmap().into(new SimpleTarget<Bitmap>() {
-				@Override
-				public void onResourceReady(Bitmap bmp, GlideAnimation animation) {
-					GLWorld world = getGLContext().getGLView().getScene().getWorld();
+			mImportFragment.setResource(imageURI);
 
-					getGLContext().queueEvent(() -> {
-						world.addModel(SignModel2.fromBitmap(getGLContext(), bmp, world.getWidth(), world.getHeight()));
-					});
-					calibrate();
-				}
-			});
+			new Handler().postDelayed(() -> {
+				getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out).show(mImportFragment).commit();
+			}, 1000);
+
+
+//			Glide.with(this).load(imageURI).asBitmap().into(mImportFragment.getImportPreview());
+
+//			Glide.with(this).load(imageURI).asBitmap().into(new SimpleTarget<Bitmap>() {
+//				@Override
+//				public void onResourceReady(Bitmap bmp, GlideAnimation animation) {
+//					GLWorld world = getGLContext().getGLView().getScene().getWorld();
+//
+//					getGLContext().queueEvent(() -> {
+//						world.addModel(SignModel2.fromBitmap(getGLContext(), bmp, world.getWidth(), world.getHeight()));
+//					});
+//					calibrate();
+//				}
+//			});
 		}
 	}
 
@@ -355,6 +365,13 @@ public class VisualizationActivity extends GLCameraActivity implements Screensho
 					.beginTransaction()
 					.add(R.id.fragment_container, mModelFragment)
 					.hide(mModelFragment)
+					.commit();
+
+			mImportFragment = new ImportFragment();
+			getFragmentManager()
+					.beginTransaction()
+					.add(R.id.fragment_container, mImportFragment)
+					.hide(mImportFragment)
 					.commit();
 			// testing -- should load from world
 		}
