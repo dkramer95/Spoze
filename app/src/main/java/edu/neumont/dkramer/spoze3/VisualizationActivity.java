@@ -9,7 +9,6 @@ import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.media.projection.MediaProjectionManager;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -20,10 +19,6 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.List;
 
 import edu.neumont.dkramer.spoze3.fragments.GalleryFragment;
@@ -33,6 +28,7 @@ import edu.neumont.dkramer.spoze3.fragments.OverlayManager;
 import edu.neumont.dkramer.spoze3.gesture.DeviceShake;
 import edu.neumont.dkramer.spoze3.gl.GLCameraActivity;
 import edu.neumont.dkramer.spoze3.gl.GLContext;
+import edu.neumont.dkramer.spoze3.gl.GLModel;
 import edu.neumont.dkramer.spoze3.gl.GLMotionCamera;
 import edu.neumont.dkramer.spoze3.gl.GLScene;
 import edu.neumont.dkramer.spoze3.gl.GLWorld;
@@ -73,6 +69,7 @@ public class VisualizationActivity extends GLCameraActivity implements Screensho
 	protected View mScreenshotView;
 	protected static boolean sCanTakeScreenshot = true;
 	protected static boolean sMotionEnabled;
+	protected static boolean sPerformedAutoCalibration;
 
 
 
@@ -81,6 +78,23 @@ public class VisualizationActivity extends GLCameraActivity implements Screensho
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		// potential incoming image from a "share"
+		checkSharedImage();
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		Screenshot.getInstance().destroy();
+	}
+
+	@Override
+	protected void onNewIntent(Intent intent) {
+		setIntent(intent);
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
 		checkSharedImage();
 	}
 
@@ -97,21 +111,6 @@ public class VisualizationActivity extends GLCameraActivity implements Screensho
 		ImageButton button = findViewById(R.id.motionButton);
 		sMotionEnabled = true;
 		button.setColorFilter(getResources().getColor(R.color.yellow));
-	}
-
-	@Override
-	protected void onDestroy() {
-	    super.onDestroy();
-		Screenshot.getInstance().destroy();
-	}
-
-	protected void onNewIntent(Intent intent) {
-		setIntent(intent);
-	}
-
-	protected void onResume() {
-		super.onResume();
-		checkSharedImage();
 	}
 
 	protected void initScreenshot() {
@@ -204,7 +203,6 @@ public class VisualizationActivity extends GLCameraActivity implements Screensho
 		});
 	}
 
-
 	protected boolean canTakeScreenshot() {
 		return sCanTakeScreenshot && !OverlayManager.isOverlayShowing();
 	}
@@ -219,6 +217,7 @@ public class VisualizationActivity extends GLCameraActivity implements Screensho
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
 	}
 
+	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == REQUEST_MEDIA_PROJECTION) {
 			if (resultCode == RESULT_OK) {
@@ -282,6 +281,16 @@ public class VisualizationActivity extends GLCameraActivity implements Screensho
 
         mGalleryFragment.clearSelectedItems();
         mGalleryFragment.hide();
+
+        performCalibrationIfNeeded();
+	}
+
+	protected void performCalibrationIfNeeded() {
+		if (!sPerformedAutoCalibration) {
+			calibrate();
+			sPerformedAutoCalibration = true;
+		}
+		getGLView().performClick();
 	}
 
 	protected void importGalleryItems(List<GalleryItemView> galleryItems) {
@@ -357,7 +366,14 @@ public class VisualizationActivity extends GLCameraActivity implements Screensho
 		});
 		Toast.makeText(this, "Deleted Model", Toast.LENGTH_SHORT).show();
 		getToolbarManager().setToolbar(VisualizeToolbar.NORMAL);
-		mModelFragment.setModelData(scene.getWorld().getModels());
+
+		List<GLModel> models = scene.getWorld().getModels();
+		mModelFragment.setModelData(models);
+
+		// allow auto calibration if all models are gone
+		if (models.isEmpty()) {
+			sPerformedAutoCalibration = false;
+		}
 	}
 
 	public void deleteItemButtonClicked(View view) {

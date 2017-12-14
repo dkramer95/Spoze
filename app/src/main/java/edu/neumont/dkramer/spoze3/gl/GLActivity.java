@@ -36,10 +36,17 @@ public abstract class GLActivity extends AppCompatActivity {
         mGLContext.onStart();
     }
 
+    @Override
     protected void onResume() {
         super.onResume();
         mGLContext.onResume();
         resumeGLRender();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mGLContext.onStop();
     }
 
     @Override
