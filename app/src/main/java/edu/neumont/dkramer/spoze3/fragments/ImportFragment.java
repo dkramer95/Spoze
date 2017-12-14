@@ -1,6 +1,5 @@
-package edu.neumont.dkramer.spoze3;
+package edu.neumont.dkramer.spoze3.fragments;
 
-import android.app.DialogFragment;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,11 +16,15 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 
+import edu.neumont.dkramer.spoze3.GalleryItemView;
+import edu.neumont.dkramer.spoze3.R;
+import edu.neumont.dkramer.spoze3.VisualizationActivity;
+
 /**
  * Created by dkramer on 12/5/17.
  */
 
-public class ImportFragment extends DialogFragment {
+public class ImportFragment extends OverlayFragment {
     protected Button mJustImportButton;
     protected Button mImportAndSaveButton;
     protected ImageButton mCloseButton;
@@ -73,14 +76,6 @@ public class ImportFragment extends DialogFragment {
                 }
             }
         });
-    }
-
-    public void hide() {
-        getFragmentManager()
-                .beginTransaction()
-                .setCustomAnimations(R.animator.fade_in, R.animator.fade_out)
-                .hide(this)
-                .commit();
     }
 
     public void onResume() {

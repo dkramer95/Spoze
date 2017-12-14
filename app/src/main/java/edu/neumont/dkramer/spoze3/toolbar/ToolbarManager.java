@@ -1,7 +1,6 @@
 package edu.neumont.dkramer.spoze3.toolbar;
 
 import android.content.Context;
-import android.transition.Scene;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,7 +20,6 @@ import edu.neumont.dkramer.spoze3.R;
 
 public class ToolbarManager extends ViewFlipper {
     private Map<IToolbar, Integer> mToolbars;
-    private Scene mScene;
 
 
     public ToolbarManager(Context context) {

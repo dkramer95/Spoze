@@ -1,12 +1,10 @@
-package edu.neumont.dkramer.spoze3;
+package edu.neumont.dkramer.spoze3.fragments;
 
 import android.Manifest;
-import android.app.DialogFragment;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Color;
-import android.media.ImageReader;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -22,7 +20,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
@@ -38,20 +35,22 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import edu.neumont.dkramer.spoze3.GalleryItem;
+import edu.neumont.dkramer.spoze3.GalleryItemView;
+import edu.neumont.dkramer.spoze3.R;
 import edu.neumont.dkramer.spoze3.util.Preferences;
 import edu.neumont.dkramer.spoze3.util.Preferences.Key;
 
 import static android.content.res.Configuration.ORIENTATION_LANDSCAPE;
 import static android.content.res.Configuration.ORIENTATION_PORTRAIT;
 import static android.view.View.GONE;
-import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 
 /**
  * Created by dkramer on 11/11/17.
  */
 
-public class GalleryFragment extends DialogFragment {
+public class GalleryFragment extends OverlayFragment {
     private static final int PERMISSION_CODE = 5813;
 
     private static final String TAG = "Gallery Fragment";
@@ -195,7 +194,7 @@ public class GalleryFragment extends DialogFragment {
         }
     }
 
-    protected void initGalleryView() {
+    public void initGalleryView() {
         List<GalleryItem> createLists = prepareData();
         MyAdapter adapter = new MyAdapter(getActivity(), createLists);
         mRecyclerView.setAdapter(adapter);
@@ -209,14 +208,6 @@ public class GalleryFragment extends DialogFragment {
         mButtonClickHandler = new ButtonClickHandler();
         mSelectedItems = new ArrayList<>();
         refreshButtons();
-    }
-
-    public void hide() {
-        getFragmentManager()
-			.beginTransaction()
-			.setCustomAnimations(R.animator.fade_in, R.animator.fade_out)
-			.hide(this)
-			.commit();
     }
 
     @Override
@@ -402,8 +393,10 @@ public class GalleryFragment extends DialogFragment {
             public ViewHolder(View view) {
                 super(view);
                 mImgView = view.findViewById(R.id.img);
-                mImgView.mDeleteButton = view.findViewById(R.id.deleteItemButton);
-                mImgView.mDeleteButton.setVisibility(INVISIBLE);
+                mImgView.setDeleteButton(view.findViewById(R.id.deleteItemButton));
+//                mImgView.mDeleteButton = view.findViewById(R.id.deleteItemButton);
+                mImgView.getDeleteButton().setVisibility(View.INVISIBLE);
+//                mImgView.mDeleteButton.setVisibility(INVISIBLE);
             }
         }
     }

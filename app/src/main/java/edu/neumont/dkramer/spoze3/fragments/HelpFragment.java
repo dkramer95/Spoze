@@ -1,6 +1,5 @@
-package edu.neumont.dkramer.spoze3;
+package edu.neumont.dkramer.spoze3.fragments;
 
-import android.app.DialogFragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -9,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import edu.neumont.dkramer.spoze3.R;
+import edu.neumont.dkramer.spoze3.VisualizationActivity;
 import edu.neumont.dkramer.spoze3.gesture.DeviceShake;
 import edu.neumont.dkramer.spoze3.util.Preferences;
 
@@ -18,7 +19,7 @@ import static edu.neumont.dkramer.spoze3.util.Preferences.Key.SHAKE_ACTION;
  * Created by dkramer on 11/14/17.
  */
 
-public class HelpFragment extends DialogFragment implements DeviceShake.OnShakeListener {
+public class HelpFragment extends OverlayFragment implements DeviceShake.OnShakeListener {
 	private Button mGotItButton;
 	private Button mStopShowButton;
 	private DeviceShake mDeviceShake;
@@ -67,22 +68,6 @@ public class HelpFragment extends DialogFragment implements DeviceShake.OnShakeL
 			hide();
 			Toast.makeText(activity, "Shake for help disabled", Toast.LENGTH_LONG).show();
 		});
-	}
-
-	public void hide() {
-		getFragmentManager()
-			.beginTransaction()
-			.setCustomAnimations(R.animator.fade_in, R.animator.fade_out)
-			.hide(this)
-			.commit();
-	}
-
-	public void show() {
-		getFragmentManager()
-			.beginTransaction()
-			.setCustomAnimations(R.animator.fade_in, R.animator.fade_out)
-			.show(this)
-			.commit();
 	}
 
 	@Override

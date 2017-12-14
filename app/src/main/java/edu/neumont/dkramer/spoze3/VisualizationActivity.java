@@ -1,6 +1,7 @@
 
 package edu.neumont.dkramer.spoze3;
 
+import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -25,6 +26,10 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
 
+import edu.neumont.dkramer.spoze3.fragments.GalleryFragment;
+import edu.neumont.dkramer.spoze3.fragments.HelpFragment;
+import edu.neumont.dkramer.spoze3.fragments.ImportFragment;
+import edu.neumont.dkramer.spoze3.fragments.OverlayManager;
 import edu.neumont.dkramer.spoze3.gesture.DeviceShake;
 import edu.neumont.dkramer.spoze3.gl.GLCameraActivity;
 import edu.neumont.dkramer.spoze3.gl.GLContext;
@@ -55,9 +60,13 @@ public class VisualizationActivity extends GLCameraActivity implements Screensho
 
 	private static final String TAG = "VisualizationActivity";
 	protected DeviceShake mDeviceShake;
+
+	// fragments
 	protected GalleryFragment mGalleryFragment;
 	protected ModelFragment mModelFragment;
+	protected HelpFragment mHelpFragment;
 	protected ImportFragment mImportFragment;
+
 	protected ToolbarManager mToolbarManager;
 	protected View mScreenshotView;
 	protected static boolean sCanTakeScreenshot = true;
@@ -69,14 +78,17 @@ public class VisualizationActivity extends GLCameraActivity implements Screensho
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		loadFromPreferences();
-		initToolbar();
-		loadFragments();
-		initScreenshot();
-		initMotion();
-
 		// potential incoming image from a "share"
 		checkSharedImage();
+	}
+
+	protected void init() {
+		super.init();
+		initToolbar();
+		loadFragments();
+		loadFromPreferences();
+		initScreenshot();
+		initMotion();
 	}
 
 	protected void initMotion() {
@@ -101,7 +113,6 @@ public class VisualizationActivity extends GLCameraActivity implements Screensho
 	}
 
 	protected void initScreenshot() {
-
 		MediaProjectionManager mediaProjectionManager =
 				(MediaProjectionManager)getSystemService(Context.MEDIA_PROJECTION_SERVICE);
 		startActivityForResult(mediaProjectionManager.createScreenCaptureIntent(), REQUEST_MEDIA_PROJECTION);
@@ -115,7 +126,7 @@ public class VisualizationActivity extends GLCameraActivity implements Screensho
 			mImportFragment.setResource(imageURI);
 
 			new Handler().postDelayed(() -> {
-				getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out).show(mImportFragment).commit();
+			    mImportFragment.fadeIn();
 			}, 1000);
 		}
 	}
@@ -132,16 +143,19 @@ public class VisualizationActivity extends GLCameraActivity implements Screensho
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN || keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
-			// prevent spamming screenshots if we're busy already
-			if (sCanTakeScreenshot) {
-				takeScreenshot();
-			}
+            takeScreenshot();
 			return true;
 		}
 		return super.onKeyDown(keyCode, event);
 	}
 
 	protected void takeScreenshot() {
+		if (canTakeScreenshot()) {
+			captureScreenshot();
+		}
+	}
+
+	protected void captureScreenshot() {
 		// ensure user has granted permission so we can capture screen
 		if (!Screenshot.isInitialized()) {
 			initScreenshot();
@@ -149,13 +163,13 @@ public class VisualizationActivity extends GLCameraActivity implements Screensho
 		}
 
 		// preserve old visibility of nav to restore after screenshot
-	    int oldVisibility = getWindow().getDecorView().getSystemUiVisibility();
+		int oldVisibility = getWindow().getDecorView().getSystemUiVisibility();
 
 		// preserve state of motion
 		boolean oldMotion = sMotionEnabled;
-	    hideSoftNavButtons();
+		hideSoftNavButtons();
 
-	    getToolbarManager().fadeOutToolbar(() -> {
+		getToolbarManager().fadeOutToolbar(() -> {
 			sCanTakeScreenshot = false;
 			setMotionEnabled(false);
 			Screenshot.getInstance().capture(this);
@@ -186,6 +200,11 @@ public class VisualizationActivity extends GLCameraActivity implements Screensho
 				}).start();
 			}, 500);
 		});
+	}
+
+
+	protected boolean canTakeScreenshot() {
+		return sCanTakeScreenshot && !OverlayManager.isOverlayShowing();
 	}
 
 	protected void hideSoftNavButtons() {
@@ -407,36 +426,32 @@ public class VisualizationActivity extends GLCameraActivity implements Screensho
 	}
 
 	protected void showGalleryFragment() {
-		getFragmentManager().beginTransaction()
-				.setCustomAnimations(R.animator.fade_in, R.animator.fade_out)
-				.show(mGalleryFragment)
-				.commit();
+	    mGalleryFragment.fadeIn();
 		mGalleryFragment.initGalleryView();
 	}
 
 	protected void loadFragments() {
 		if (findViewById(R.id.fragment_container) != null) {
 			mGalleryFragment = new GalleryFragment();
-			getFragmentManager()
-					.beginTransaction()
-                    .add(R.id.fragment_container, mGalleryFragment)
-					.hide(mGalleryFragment)
-					.commit();
+			addFragment(mGalleryFragment);
 
 			mModelFragment = new ModelFragment();
-			getFragmentManager()
-					.beginTransaction()
-					.add(R.id.fragment_container, mModelFragment)
-					.hide(mModelFragment)
-					.commit();
+			addFragment(mModelFragment);
 
 			mImportFragment = new ImportFragment();
-			getFragmentManager()
-					.beginTransaction()
-					.add(R.id.fragment_container, mImportFragment)
-					.hide(mImportFragment)
-					.commit();
+			addFragment(mImportFragment);
+
+			mHelpFragment = new HelpFragment();
+			addFragment(mHelpFragment);
 		}
+	}
+
+	protected void addFragment(Fragment fragment) {
+		getFragmentManager()
+				.beginTransaction()
+				.add(R.id.fragment_container, fragment)
+				.hide(fragment)
+				.commit();
 	}
 
 	public void initShakeAction() {
@@ -444,30 +459,20 @@ public class VisualizationActivity extends GLCameraActivity implements Screensho
 		if (mDeviceShake != null) {
 			mDeviceShake.stopListening();
 		}
+		mDeviceShake = getShakeAction();
+	}
 
+	protected DeviceShake getShakeAction() {
 		String shakeAction = Preferences.getString(SHAKE_ACTION, "Show Help").toUpperCase();
 		switch (shakeAction) {
 			case "SHOW HELP":
-				mDeviceShake = new DeviceShake(this, loadHelpFragment());
-				break;
+				return new DeviceShake(this, mHelpFragment);
 			case "CLEAR SCENE":
-				mDeviceShake = new DeviceShake(this, () -> clearScene());
-				break;
+				return new DeviceShake(this, () -> clearScene());
 			case "NONE":
-				default:
-				mDeviceShake = new DeviceShake(this, () -> { });
-				break;
+			default:
+				return new DeviceShake(this, () -> { });
 		}
-	}
-
-	protected HelpFragment loadHelpFragment() {
-		HelpFragment helpFragment = new HelpFragment();
-		getFragmentManager()
-				.beginTransaction()
-				.add(R.id.fragment_container, helpFragment)
-				.hide(helpFragment)
-				.commit();
-		return helpFragment;
 	}
 
 	protected void clearScene() {

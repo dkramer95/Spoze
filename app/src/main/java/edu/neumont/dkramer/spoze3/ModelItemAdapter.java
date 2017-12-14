@@ -1,7 +1,6 @@
 package edu.neumont.dkramer.spoze3;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

@@ -117,4 +117,12 @@ public class GalleryItemView extends AppCompatImageView implements View.OnClickL
     public boolean isDeleteSelected() {
     	return mItem.isDeleteSelected();
     }
+
+    public Button getDeleteButton() {
+        return mDeleteButton;
+    }
+
+    public void setDeleteButton(Button button) {
+        mDeleteButton = button;
+    }
 }
