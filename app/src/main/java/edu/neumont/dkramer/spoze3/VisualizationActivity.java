@@ -41,6 +41,8 @@ import edu.neumont.dkramer.spoze3.models.SignModel2;
 import edu.neumont.dkramer.spoze3.scene.SignScene;
 import edu.neumont.dkramer.spoze3.toolbar.ToolbarManager;
 import edu.neumont.dkramer.spoze3.toolbar.VisualizeToolbar;
+import edu.neumont.dkramer.spoze3.util.AsyncImageSaver;
+import edu.neumont.dkramer.spoze3.util.ImageSave;
 import edu.neumont.dkramer.spoze3.util.Preferences;
 
 import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Type.ACCELEROMETER;
@@ -233,8 +235,9 @@ public class VisualizationActivity extends GLCameraActivity implements Screensho
 
 	// TODO allow custom save directory
 	public void saveBitmap(Bitmap bmp, String path, String ext, int quality) {
-		ImageSave imgSave = new ImageSave(bmp, path, ext, quality);
-	    new ImageSaver().execute(imgSave);
+        String filename = String.format("%d.%s", System.currentTimeMillis(), ext);
+		ImageSave imgSave = new ImageSave(bmp, path, filename, ext, quality);
+	    new AsyncImageSaver().execute(imgSave);
 	}
 
 
@@ -250,63 +253,6 @@ public class VisualizationActivity extends GLCameraActivity implements Screensho
 		f.mkdirs();
 	    return path;
 	}
-
-
-	// simple pojo for image saving
-	class ImageSave {
-		private Bitmap bitmap;
-		private String path;
-		private String ext;
-		private int quality;
-
-		public ImageSave(Bitmap bmp, String path, String ext, int quality) {
-		    this.bitmap = bmp;
-		    this.path = path;
-		    this.ext = ext;
-		    this.quality = quality;
-		}
-	}
-
-
-	static class ImageSaver extends AsyncTask<ImageSave, Void, Void> {
-
-		@Override
-		protected Void doInBackground(ImageSave... imageSaves) {
-			ImageSave imageSave = imageSaves[0];
-		    String path = imageSave.path;
-
-//		    String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + File.separator + "SpozeCaptures";
-		    File dir = new File(path);
-			dir.mkdirs();
-
-			Bitmap bmp = imageSave.bitmap;
-			String ext = Preferences.getString(SCREENSHOT_FORMAT, "jpeg").toLowerCase();
-
-			String filename = String.format("%d.%s", System.currentTimeMillis(), ext);
-
-			File file = new File(path, filename);
-
-			try {
-				OutputStream outputStream = new FileOutputStream(file);
-
-//				int quality = Preferences.getInt(SCREENSHOT_QUALITY, imageSave.quality);
-				Bitmap.CompressFormat format = imageSave.ext.equalsIgnoreCase("jpeg") ?
-						Bitmap.CompressFormat.JPEG : Bitmap.CompressFormat.PNG;
-
-				bmp.compress(format, imageSave.quality, outputStream);
-				outputStream.flush();
-				outputStream.close();
-				bmp.recycle();
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			return null;
-		}
-	}
-
-
 
 	protected void loadFromPreferences() {
 		initShakeAction();
