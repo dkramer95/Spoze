@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/gallery_toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:elevation="5dp"
+    android:orientation="horizontal">
+
+    <Spinner
+        android:id="@+id/directorySpinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:background="@drawable/image_ripple"
+        android:gravity="center_vertical" />
+
+    <TextView
+        android:id="@+id/textView8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.5" />
+
+
+    <ImageButton
+        android:id="@+id/loadSelectedButton"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:adjustViewBounds="true"
+        android:background="@drawable/check_ripple"
+        android:onClick="loadGalleryItemsButtonClicked"
+        android:padding="6dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_check"
+        android:tint="@color/check_button_selector" />
+
+    <ImageButton
+        android:id="@+id/closeButton"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:adjustViewBounds="true"
+        android:background="@drawable/image_ripple"
+        android:onClick="closeGalleryButtonClicked"
+        android:padding="6dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_x"
+        android:tint="@color/button_selector" />
+
+</LinearLayout>

@@ -8,7 +8,8 @@ import edu.neumont.dkramer.spoze3.R;
 
 public enum VisualizeToolbar implements IToolbar {
     NORMAL(R.layout.normal_toolbar),
-    OBJECT(R.layout.sign_toolbar);
+    OBJECT(R.layout.sign_toolbar),
+    GALLERY(R.layout.gallery_toolbar);
 
     private int mId;
 

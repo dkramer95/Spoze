@@ -27,6 +27,9 @@ import edu.neumont.dkramer.spoze3.gl.GLWorld;
 import edu.neumont.dkramer.spoze3.gl.deviceinfo.GLTouchInfo;
 import edu.neumont.dkramer.spoze3.models.GLPickerModel;
 import edu.neumont.dkramer.spoze3.models.SignModel2;
+import edu.neumont.dkramer.spoze3.toolbar.IToolbar;
+import edu.neumont.dkramer.spoze3.toolbar.ToolbarManager;
+import edu.neumont.dkramer.spoze3.toolbar.VisualizeToolbar;
 
 import static android.opengl.GLES10.GL_ZERO;
 import static android.opengl.GLES20.GL_BLEND;
@@ -178,11 +181,13 @@ public class SignScene extends GLScene {
         }
     }
 
-    public void setUIToolbar(int type) {
+    public void setUIToolbar(IToolbar toolbar) {
         GLActivity activity = getGLContext().getActivity();
         activity.runOnUiThread(() -> {
-            ViewFlipper flipper = activity.findViewById(R.id.toolbarManager);
-            flipper.setDisplayedChild(type);
+            ToolbarManager toolbarManager = activity.findViewById(R.id.toolbarManager);
+            toolbarManager.setToolbar(toolbar);
+//            ViewFlipper flipper = activity.findViewById(R.id.toolbarManager);
+//            flipper.setDisplayedChild(type);
         });
     }
 
@@ -267,15 +272,15 @@ public class SignScene extends GLScene {
                     if (model == mSelectedModel || model == null) {
                         mSelectedModel = null;
                         BlendFuncHelper.nextBlendFunc();
-                        setUIToolbar(TOOLBAR_NORMAL);
+                        setUIToolbar(VisualizeToolbar.NORMAL);
                     } else {
                         mSelectedModel = model;
-                        setUIToolbar(TOOLBAR_OBJECT);
+                        setUIToolbar(VisualizeToolbar.OBJECT);
                     }
                 } else {
                     if (model != null) {
                         mSelectedModel = model;
-                        setUIToolbar(TOOLBAR_OBJECT);
+                        setUIToolbar(VisualizeToolbar.OBJECT);
                     }
                 }
             });

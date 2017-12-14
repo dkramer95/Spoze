@@ -34,9 +34,9 @@ import edu.neumont.dkramer.spoze3.gl.GLWorld;
 import edu.neumont.dkramer.spoze3.gl.deviceinfo.GLRotationVectorInfo;
 import edu.neumont.dkramer.spoze3.models.SignModel2;
 import edu.neumont.dkramer.spoze3.scene.SignScene;
+import edu.neumont.dkramer.spoze3.toolbar.ToolbarManager;
 import edu.neumont.dkramer.spoze3.toolbar.VisualizeToolbar;
 import edu.neumont.dkramer.spoze3.util.Preferences;
-import edu.neumont.dkramer.spoze3.toolbar.ToolbarManager;
 
 import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Type.ACCELEROMETER;
 import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Type.ROTATION_VECTOR;
@@ -64,8 +64,6 @@ public class VisualizationActivity extends GLCameraActivity implements Screensho
 	protected static boolean sMotionEnabled;
 
 
-	public static final int TOOLBAR_NORMAL = 0;
-	public static final int TOOLBAR_OBJECT = 0;
 
 
 	@Override
@@ -157,7 +155,7 @@ public class VisualizationActivity extends GLCameraActivity implements Screensho
 		boolean oldMotion = sMotionEnabled;
 	    hideSoftNavButtons();
 
-	    mToolbarManager.fadeOutToolbar(() -> {
+	    getToolbarManager().fadeOutToolbar(() -> {
 			sCanTakeScreenshot = false;
 			setMotionEnabled(false);
 			Screenshot.getInstance().capture(this);
@@ -178,7 +176,7 @@ public class VisualizationActivity extends GLCameraActivity implements Screensho
 						mScreenshotView.setVisibility(View.GONE);
 
 						// fade in rest of UI
-						mToolbarManager.fadeInToolbar(TOOLBAR_NORMAL);
+						getToolbarManager().fadeInToolbar();
 						getWindow().getDecorView().setSystemUiVisibility(oldVisibility);
 
 						// ensure we allow future screenshots since we're done
@@ -203,8 +201,8 @@ public class VisualizationActivity extends GLCameraActivity implements Screensho
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == REQUEST_MEDIA_PROJECTION) {
 			if (resultCode == RESULT_OK) {
-				int width = getWindow().getDecorView().getWidth();
-				int height = getWindow().getDecorView().getHeight();
+				int width = getWindow().getDecorView().getRootView().getWidth();
+				int height = getWindow().getDecorView().getRootView().getHeight();
 				Screenshot.getInstance().setSize(width, height).init(this, resultCode, data, this);
 				mScreenshotView = findViewById(R.id.screenshotView);
 
@@ -303,11 +301,7 @@ public class VisualizationActivity extends GLCameraActivity implements Screensho
 
 	public void closeGalleryButtonClicked(View view) {
 		mGalleryFragment.hide();
-		getToolbarManager().fadeInToolbar(TOOLBAR_NORMAL);
-	}
-
-	public void showDirectorySpinnerButtonClicked(View view) {
-		mGalleryFragment.showDirectorySpinner();
+		getToolbarManager().setToolbar(VisualizeToolbar.NORMAL);
 	}
 
 	public void blankAreaClicked(View view) {
@@ -318,7 +312,7 @@ public class VisualizationActivity extends GLCameraActivity implements Screensho
 	public void loadGalleryItemsButtonClicked(View view) {
 		resumeGLRender();
 		view.setEnabled(false);
-		getToolbarManager().fadeInToolbar(TOOLBAR_NORMAL);
+		getToolbarManager().setToolbar(VisualizeToolbar.NORMAL);
 		importGalleryItems(mGalleryFragment.getSelectedItems());
 
         mGalleryFragment.clearSelectedItems();
@@ -397,7 +391,7 @@ public class VisualizationActivity extends GLCameraActivity implements Screensho
 			scene.deleteSelectedModel();
 		});
 		Toast.makeText(this, "Deleted Model", Toast.LENGTH_SHORT).show();
-		getToolbarManager().fadeInToolbar(TOOLBAR_NORMAL);
+		getToolbarManager().setToolbar(VisualizeToolbar.NORMAL);
 		mModelFragment.setModelData(scene.getWorld().getModels());
 	}
 
@@ -408,7 +402,7 @@ public class VisualizationActivity extends GLCameraActivity implements Screensho
 
 	public void importButtonClicked(View view) {
 		pauseGLRender();
-		getToolbarManager().fadeOutToolbar();
+		getToolbarManager().setToolbar(VisualizeToolbar.GALLERY);
 		showGalleryFragment();
 	}
 
@@ -422,9 +416,10 @@ public class VisualizationActivity extends GLCameraActivity implements Screensho
 
 	protected void loadFragments() {
 		if (findViewById(R.id.fragment_container) != null) {
-			mGalleryFragment = (GalleryFragment) getFragmentManager().findFragmentById(R.id.gallery);
+			mGalleryFragment = new GalleryFragment();
 			getFragmentManager()
 					.beginTransaction()
+                    .add(R.id.fragment_container, mGalleryFragment)
 					.hide(mGalleryFragment)
 					.commit();
 
@@ -441,7 +436,6 @@ public class VisualizationActivity extends GLCameraActivity implements Screensho
 					.add(R.id.fragment_container, mImportFragment)
 					.hide(mImportFragment)
 					.commit();
-			// testing -- should load from world
 		}
 	}
 
@@ -507,53 +501,5 @@ public class VisualizationActivity extends GLCameraActivity implements Screensho
 	public void showModelFragment() {
 		mModelFragment.show();
 	}
-
-
-	/* Class that handles switching between different toolbars */
-//	class ToolbarManager {
-//		public static final int TOOLBAR_OBJECT = 0;
-//		public static final int TOOLBAR_NORMAL = 1;
-//
-//
-//		private ViewFlipper mToolbarFlipper;
-//
-//		public ToolbarManager(ViewFlipper flipper) {
-//			mToolbarFlipper = flipper;
-//		}
-//
-//		public void fadeOutToolbar() {
-//		    fadeOutToolbar(null);
-//		}
-//
-//		public void fadeOutToolbar(Runnable endAction) {
-//			mToolbarFlipper.animate().alpha(0).setDuration(250)
-//					.withEndAction(() -> {
-//                        mToolbarFlipper.setVisibility(View.INVISIBLE);
-//                        if (endAction != null) {
-//                            endAction.run();
-//                        }
-//					}).start();
-//		}
-//
-//		public void hideToolbar() {
-//			mToolbarFlipper.setVisibility(View.INVISIBLE);
-//		}
-//
-//		public void showToolbar() {
-//			mToolbarFlipper.setVisibility(View.VISIBLE);
-//		}
-//
-//		public ToolbarManager fadeInToolbar(int toolbar) {
-//			// quickly make visible, but fade out
-//			mToolbarFlipper.setVisibility(View.VISIBLE);
-//			mToolbarFlipper.animate().alpha(0).start();
-//
-//			// fade in
-//			mToolbarFlipper.animate().alpha(1).setDuration(250)
-//					.withEndAction(() -> mToolbarFlipper.setDisplayedChild(toolbar))
-//					.start();
-//			return this;
-//		}
-//	}
 
 }

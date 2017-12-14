@@ -3,7 +3,6 @@
     android:id="@+id/normal_toolbar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/overlay_color"
     android:orientation="horizontal">
 
     <ImageButton
@@ -16,10 +15,10 @@
         android:adjustViewBounds="true"
         android:background="@drawable/image_ripple"
         android:onClick="calibrateButtonClicked"
-        android:tint="@color/button_selector"
         android:padding="6dp"
         android:scaleType="fitCenter"
-        android:src="@drawable/ic_calibrate"/>
+        android:src="@drawable/ic_calibrate"
+        android:tint="@color/button_selector" />
 
     <ImageButton
         android:id="@+id/motionButton"
@@ -33,7 +32,7 @@
         android:onClick="motionButtonClicked"
         android:padding="6dp"
         android:scaleType="fitCenter"
-        android:src="@drawable/ic_motion"/>
+        android:src="@drawable/ic_motion" />
 
     <ImageButton
         android:id="@+id/importButton"
@@ -45,10 +44,10 @@
         android:adjustViewBounds="true"
         android:background="@drawable/image_ripple"
         android:onClick="importButtonClicked"
-        android:tint="@color/button_selector"
         android:padding="6dp"
         android:scaleType="fitCenter"
-        android:src="@drawable/ic_import"/>
+        android:src="@drawable/ic_import"
+        android:tint="@color/button_selector" />
 
 
     <android.support.v4.widget.Space
@@ -68,9 +67,9 @@
         android:adjustViewBounds="true"
         android:background="@drawable/image_ripple"
         android:onClick="screenshotButtonClicked"
-        android:tint="@color/button_selector"
         android:padding="6dp"
         android:scaleType="fitCenter"
-        android:src="@drawable/ic_shutter"/>
+        android:src="@drawable/ic_shutter"
+        android:tint="@color/button_selector" />
 
 </LinearLayout>

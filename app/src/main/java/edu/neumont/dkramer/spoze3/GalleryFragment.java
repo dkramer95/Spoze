@@ -104,7 +104,7 @@ public class GalleryFragment extends DialogFragment {
             // we don't want to load empty directories
             File f = new File(pictureDirectory + File.separator + dir);
 
-            if (f.listFiles().length > 0) {
+            if (f.listFiles() != null) {
                 result.add(dir);
             }
         }
@@ -155,7 +155,7 @@ public class GalleryFragment extends DialogFragment {
     }
 
     protected void createDirectorySpinner(View view) {
-        mDirectorySpinner = view.findViewById(R.id.directorySpinner);
+        mDirectorySpinner = getActivity().findViewById(R.id.directorySpinner);
 
         List<String> galleryDirectories = getGalleryDirectories();
         Collections.sort(galleryDirectories);
@@ -203,8 +203,8 @@ public class GalleryFragment extends DialogFragment {
 
     protected void initButtons(View view) {
         // Button stuff
-        mLoadSelectedButton = view.findViewById(R.id.loadSelectedButton);
-        mCloseButton = view.findViewById(R.id.closeButton);
+        mLoadSelectedButton = getActivity().findViewById(R.id.loadSelectedButton);
+        mCloseButton = getActivity().findViewById(R.id.closeButton);
 
         mButtonClickHandler = new ButtonClickHandler();
         mSelectedItems = new ArrayList<>();
