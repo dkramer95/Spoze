@@ -14,7 +14,7 @@
             android:layout_height="175dp"
             android:layout_margin="16dp"
             android:adjustViewBounds="true"
-            android:background="@drawable/ripple_effect"
+            android:background="@drawable/gallery_item_ripple"
             android:clickable="true"
             android:focusable="true"
             android:padding="16dp"

@@ -63,7 +63,7 @@
             android:layout_height="250dp"
             android:layout_gravity="center_horizontal"
             android:layout_margin="16dp"
-            android:background="@drawable/ripple_effect"
+            android:background="@drawable/gallery_item_ripple"
             android:clickable="true"
             android:focusable="true"
             android:padding="16dp"

@@ -54,9 +54,10 @@
                 android:layout_marginTop="0dp"
                 android:layout_weight="1"
                 android:background="@drawable/ripple_effect"
+                android:drawableStart="@drawable/ic_visualize_icon"
                 android:fontFamily="sans-serif"
                 android:onClick="visualizeButtonClicked"
-                android:padding="25dp"
+                android:padding="8dp"
                 android:text="@string/visualize_button"
                 android:textColor="@android:color/white"
                 android:textSize="28sp" />
@@ -69,9 +70,10 @@
                 android:layout_margin="15dp"
                 android:layout_weight="1"
                 android:background="@drawable/ripple_effect"
+                android:drawableStart="@drawable/ic_settings_icon"
                 android:fontFamily="sans-serif"
                 android:onClick="settingsButtonClicked"
-                android:padding="25dp"
+                android:padding="8dp"
                 android:text="@string/settings_button"
                 android:textColor="@android:color/white"
                 android:textSize="28sp" />
