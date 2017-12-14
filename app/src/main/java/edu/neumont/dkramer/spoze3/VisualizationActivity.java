@@ -144,16 +144,20 @@ public class VisualizationActivity extends GLCameraActivity implements Screensho
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN || keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
-            takeScreenshot();
-			return true;
+            if (takeScreenshot()) {
+                // consume key press event, otherwise perform normal action
+				return true;
+			}
 		}
 		return super.onKeyDown(keyCode, event);
 	}
 
-	protected void takeScreenshot() {
+	protected boolean takeScreenshot() {
 		if (canTakeScreenshot()) {
 			captureScreenshot();
+			return true;
 		}
+		return false;
 	}
 
 	protected void captureScreenshot() {

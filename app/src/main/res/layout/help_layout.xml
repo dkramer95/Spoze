@@ -13,24 +13,14 @@
         android:padding="16dp">
 
         <TextView
-            android:id="@+id/helpTitleTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="10dp"
-            android:text="?"
-            android:textAlignment="center"
-            android:textColor="@color/yellow"
-            android:textSize="32sp"/>
-
-        <TextView
             android:id="@+id/helpTitleTextView2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Help"
             android:textAlignment="center"
-            android:textColor="@color/white"
-            android:textSize="24sp"/>
+            android:textColor="@color/yellow"
+            android:textSize="26sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/helpDescriptionTextView"
@@ -39,34 +29,56 @@
             android:layout_marginBottom="20dp"
             android:text="@string/help_description"
             android:textAlignment="center"
-            android:textColor="@color/white"/>
-
-        <TextView
-            android:id="@+id/textView5"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:text='Tap "Import" to add 1 or more images'
-            android:textAlignment="center"
-            android:textColor="@color/yellow"/>
-
-        <TextView
-            android:id="@+id/textView4"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:text="Tap anywhere on the screen"
-            android:textAlignment="center"
-            android:textColor="@color/yellow"/>
+            android:textColor="@color/yellow"
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/textView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
-            android:text='If nothing shows up OR if you experience jitters, tap "Calibrate"'
-            android:textAlignment="center"
-            android:textColor="@color/yellow"/>
+            android:drawablePadding="8dp"
+            android:drawableStart="@drawable/ic_calibrate"
+            android:gravity="center_vertical"
+            android:text="Calibrate Motion -- Use if you experience jitters / nothing shows up"
+            android:textAlignment="textStart"
+            android:textColor="@color/white" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:drawableStart="@drawable/ic_motion"
+            android:drawablePadding="8dp"
+            android:gravity="center_vertical"
+            android:text="Enable / Disable Motion"
+            android:textAlignment="textStart"
+            android:textColor="@color/white" />
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:drawablePadding="8dp"
+            android:drawableStart="@drawable/ic_import"
+            android:gravity="center_vertical"
+            android:text="Import"
+            android:textAlignment="textStart"
+            android:textColor="@color/white" />
+
+        <TextView
+            android:id="@+id/textView10"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:drawablePadding="8dp"
+            android:drawableStart="@drawable/ic_shutter"
+            android:gravity="center_vertical"
+            android:text="Capture Screenshot -- (Can also use volume buttons)"
+            android:textAlignment="textStart"
+            android:textColor="@color/white" />
 
         <Button
             android:id="@+id/gotItButton"

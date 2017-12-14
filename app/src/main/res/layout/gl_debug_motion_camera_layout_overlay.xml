@@ -55,7 +55,7 @@
                 android:id="@+id/toolbarManager"
                 android:layout_width="match_parent"
                 android:layout_height="44dp"
-                android:background="@color/overlay_color">
+                android:background="@color/toolbar_bg">
             </edu.neumont.dkramer.spoze3.toolbar.ToolbarManager>
 
             <FrameLayout

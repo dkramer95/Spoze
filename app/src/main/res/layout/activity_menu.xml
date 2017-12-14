@@ -60,7 +60,7 @@
                 android:padding="8dp"
                 android:text="@string/visualize_button"
                 android:textColor="@android:color/white"
-                android:textSize="28sp" />
+                android:textSize="32sp" />
 
             <Button
                 android:id="@+id/settingsButton"
@@ -76,7 +76,7 @@
                 android:padding="8dp"
                 android:text="@string/settings_button"
                 android:textColor="@android:color/white"
-                android:textSize="28sp" />
+                android:textSize="32sp" />
 
         </LinearLayout>
 

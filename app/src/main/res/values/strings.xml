@@ -12,7 +12,7 @@
     <string name="shake_action">Shake Action</string>
     <string name="shake_sensitivity">Shake Sensitivity</string>
     <string name="settings_title">Settings</string>
-    <string name="help_description">You have activated help by shaking your device</string>
+    <string name="help_description">You have activated help by shaking your device!</string>
     <string name="swipe_gestures">Swipe Gestures</string>
     <string name="swipe_up_action">Swipe Up Action</string>
     <string name="motion_gestures">Motion Gestures</string>

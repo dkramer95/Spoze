@@ -3,6 +3,7 @@ package edu.neumont.dkramer.spoze3;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Button;
 
 import edu.neumont.dkramer.spoze3.util.Preferences;
 
@@ -27,9 +29,19 @@ public class MenuActivity extends AppCompatActivity {
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_menu);
+		initButtons();
 		Preferences.init(this);
 		checkPermissions();
 		checkSharedImage();
+	}
+
+	protected void initButtons() {
+		Typeface font = Typeface.createFromAsset(getAssets(), "roboto_light.ttf");
+		int[] buttonIds = { R.id.visualizeButton, R.id.settingsButton };
+		for (int id : buttonIds) {
+			Button button = findViewById(id);
+			button.setTypeface(font);
+		}
 	}
 
 	protected void checkPermissions() {
