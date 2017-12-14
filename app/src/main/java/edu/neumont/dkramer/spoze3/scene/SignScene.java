@@ -186,8 +186,6 @@ public class SignScene extends GLScene {
         activity.runOnUiThread(() -> {
             ToolbarManager toolbarManager = activity.findViewById(R.id.toolbarManager);
             toolbarManager.setToolbar(toolbar);
-//            ViewFlipper flipper = activity.findViewById(R.id.toolbarManager);
-//            flipper.setDisplayedChild(type);
         });
     }
 

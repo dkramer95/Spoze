@@ -49,7 +49,11 @@ public class ToolbarManager extends ViewFlipper {
     }
 
     public void setToolbar(IToolbar toolbar) {
-        setDisplayedChild(getViewIndex(toolbar));
+        int index = getViewIndex(toolbar);
+
+        if (index != getDisplayedChild()) {
+            setDisplayedChild(index);
+        }
     }
 
 
