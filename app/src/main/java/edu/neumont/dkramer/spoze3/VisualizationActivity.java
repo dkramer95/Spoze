@@ -15,10 +15,8 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
-import android.widget.ViewFlipper;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -36,9 +34,10 @@ import edu.neumont.dkramer.spoze3.gl.GLWorld;
 import edu.neumont.dkramer.spoze3.gl.deviceinfo.GLRotationVectorInfo;
 import edu.neumont.dkramer.spoze3.models.SignModel2;
 import edu.neumont.dkramer.spoze3.scene.SignScene;
+import edu.neumont.dkramer.spoze3.toolbar.VisualizeToolbar;
 import edu.neumont.dkramer.spoze3.util.Preferences;
+import edu.neumont.dkramer.spoze3.toolbar.ToolbarManager;
 
-import static edu.neumont.dkramer.spoze3.VisualizationActivity.ToolbarManager.TOOLBAR_NORMAL;
 import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Type.ACCELEROMETER;
 import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Type.ROTATION_VECTOR;
 import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Type.TOUCH_INPUT;
@@ -65,11 +64,15 @@ public class VisualizationActivity extends GLCameraActivity implements Screensho
 	protected static boolean sMotionEnabled;
 
 
+	public static final int TOOLBAR_NORMAL = 0;
+	public static final int TOOLBAR_OBJECT = 0;
+
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		loadFromPreferences();
-		loadToolbar();
+		initToolbar();
 		loadFragments();
 		initScreenshot();
 		initMotion();
@@ -292,8 +295,10 @@ public class VisualizationActivity extends GLCameraActivity implements Screensho
 		initShakeAction();
 	}
 
-	protected void loadToolbar() {
-		mToolbarManager = new ToolbarManager(findViewById(R.id.toolbarFlipper)).fadeInToolbar(TOOLBAR_NORMAL);
+	protected void initToolbar() {
+		mToolbarManager = findViewById(R.id.toolbarManager);
+		mToolbarManager.loadToolbars(VisualizeToolbar.values());
+		mToolbarManager.setToolbar(VisualizeToolbar.NORMAL);
 	}
 
 	public void closeGalleryButtonClicked(View view) {
@@ -505,50 +510,50 @@ public class VisualizationActivity extends GLCameraActivity implements Screensho
 
 
 	/* Class that handles switching between different toolbars */
-	class ToolbarManager {
-		public static final int TOOLBAR_OBJECT = 0;
-		public static final int TOOLBAR_NORMAL = 1;
-
-
-		private ViewFlipper mToolbarFlipper;
-
-		public ToolbarManager(ViewFlipper flipper) {
-			mToolbarFlipper = flipper;
-		}
-
-		public void fadeOutToolbar() {
-		    fadeOutToolbar(null);
-		}
-
-		public void fadeOutToolbar(Runnable endAction) {
-			mToolbarFlipper.animate().alpha(0).setDuration(250)
-					.withEndAction(() -> {
-                        mToolbarFlipper.setVisibility(View.INVISIBLE);
-                        if (endAction != null) {
-                            endAction.run();
-                        }
-					}).start();
-		}
-
-		public void hideToolbar() {
-			mToolbarFlipper.setVisibility(View.INVISIBLE);
-		}
-
-		public void showToolbar() {
-			mToolbarFlipper.setVisibility(View.VISIBLE);
-		}
-
-		public ToolbarManager fadeInToolbar(int toolbar) {
-			// quickly make visible, but fade out
-			mToolbarFlipper.setVisibility(View.VISIBLE);
-			mToolbarFlipper.animate().alpha(0).start();
-
-			// fade in
-			mToolbarFlipper.animate().alpha(1).setDuration(250)
-					.withEndAction(() -> mToolbarFlipper.setDisplayedChild(toolbar))
-					.start();
-			return this;
-		}
-	}
+//	class ToolbarManager {
+//		public static final int TOOLBAR_OBJECT = 0;
+//		public static final int TOOLBAR_NORMAL = 1;
+//
+//
+//		private ViewFlipper mToolbarFlipper;
+//
+//		public ToolbarManager(ViewFlipper flipper) {
+//			mToolbarFlipper = flipper;
+//		}
+//
+//		public void fadeOutToolbar() {
+//		    fadeOutToolbar(null);
+//		}
+//
+//		public void fadeOutToolbar(Runnable endAction) {
+//			mToolbarFlipper.animate().alpha(0).setDuration(250)
+//					.withEndAction(() -> {
+//                        mToolbarFlipper.setVisibility(View.INVISIBLE);
+//                        if (endAction != null) {
+//                            endAction.run();
+//                        }
+//					}).start();
+//		}
+//
+//		public void hideToolbar() {
+//			mToolbarFlipper.setVisibility(View.INVISIBLE);
+//		}
+//
+//		public void showToolbar() {
+//			mToolbarFlipper.setVisibility(View.VISIBLE);
+//		}
+//
+//		public ToolbarManager fadeInToolbar(int toolbar) {
+//			// quickly make visible, but fade out
+//			mToolbarFlipper.setVisibility(View.VISIBLE);
+//			mToolbarFlipper.animate().alpha(0).start();
+//
+//			// fade in
+//			mToolbarFlipper.animate().alpha(1).setDuration(250)
+//					.withEndAction(() -> mToolbarFlipper.setDisplayedChild(toolbar))
+//					.start();
+//			return this;
+//		}
+//	}
 
 }

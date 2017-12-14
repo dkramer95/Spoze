@@ -91,9 +91,4 @@ public class MenuActivity extends AppCompatActivity {
 		Intent intent = new Intent(this, SettingsActivity.class);
 		startActivity(intent);
 	}
-
-	public void debugButtonClicked(View view) {
-		Intent intent = new Intent(this, DebugVisualizationActivity.class);
-		startActivity(intent);
-	}
 }

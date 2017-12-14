@@ -181,7 +181,7 @@ public class SignScene extends GLScene {
     public void setUIToolbar(int type) {
         GLActivity activity = getGLContext().getActivity();
         activity.runOnUiThread(() -> {
-            ViewFlipper flipper = activity.findViewById(R.id.toolbarFlipper);
+            ViewFlipper flipper = activity.findViewById(R.id.toolbarManager);
             flipper.setDisplayedChild(type);
         });
     }

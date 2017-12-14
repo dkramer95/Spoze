@@ -62,22 +62,33 @@
 
             </android.support.constraint.ConstraintLayout>
 
-            <ViewFlipper
-                android:id="@+id/toolbarFlipper"
+            <edu.neumont.dkramer.spoze3.toolbar.ToolbarManager
+                android:id="@+id/toolbarManager"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <include layout="@layout/sign_toolbar" />
+                <!-- TODO try to remove these and load toolbars more dynamically -->
+                <!--<include layout="@layout/sign_toolbar" />-->
+                <!--<include layout="@layout/normal_toolbar" />-->
+            </edu.neumont.dkramer.spoze3.toolbar.ToolbarManager>
 
-                <include layout="@layout/normal_toolbar" />
 
-            </ViewFlipper>
+            <!--<ViewFlipper-->
+                <!--android:id="@+id/toolbarFlipper"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content">-->
+
+                <!--<include layout="@layout/sign_toolbar" />-->
+
+                <!--<include layout="@layout/normal_toolbar" />-->
+
+            <!--</ViewFlipper>-->
 
             <FrameLayout
                 android:id="@+id/fragment_container"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@+id/toolbarFlipper"
+                android:layout_below="@+id/toolbarManager"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

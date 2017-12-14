@@ -23,9 +23,6 @@
                 <data android:mimeType="image/*" />
             </intent-filter>
         </activity>
-        <activity android:name=".DebugVisualizationActivity"
-                  android:theme="@style/FullscreenTheme"
-                  android:configChanges="orientation|screenSize"/>
         <activity android:name=".VisualizationActivity"
                   android:theme="@style/FullscreenTheme"
                   android:launchMode="singleTask"
