@@ -40,7 +40,7 @@
             android:drawablePadding="8dp"
             android:drawableStart="@drawable/ic_calibrate"
             android:gravity="center_vertical"
-            android:text="Calibrate Motion -- Use if you experience jitters / nothing shows up"
+            android:text="Calibrate Motion -- (Use if you experience jitters / nothing shows up)"
             android:textAlignment="textStart"
             android:textColor="@color/white" />
 
@@ -64,19 +64,19 @@
             android:drawablePadding="8dp"
             android:drawableStart="@drawable/ic_import"
             android:gravity="center_vertical"
-            android:text="Import"
+            android:text='Import -- (You can also import outside of app via "Share Image" in other apps)'
             android:textAlignment="textStart"
             android:textColor="@color/white" />
 
         <TextView
-            android:id="@+id/textView10"
+            android:id="@+id/textView11"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
             android:drawablePadding="8dp"
             android:drawableStart="@drawable/ic_shutter"
             android:gravity="center_vertical"
-            android:text="Capture Screenshot -- (Can also use volume buttons)"
+            android:text="Capture Screenshot -- (You can also use volume buttons)"
             android:textAlignment="textStart"
             android:textColor="@color/white" />
 
