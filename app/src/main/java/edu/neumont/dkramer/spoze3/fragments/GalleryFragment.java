@@ -55,6 +55,7 @@ public class GalleryFragment extends OverlayFragment {
 
     private static final String TAG = "Gallery Fragment";
     private static final String SPOZE_DIRECTORY = "SpozeGallery";
+    private static final String IMAGE_EXT_PATTERN = "^[^*&%]*\\.(?i)(jpg|jpeg|gif|bmp|png)$";
 
     protected RecyclerView mRecyclerView;
     protected ButtonClickHandler mButtonClickHandler;
@@ -84,12 +85,6 @@ public class GalleryFragment extends OverlayFragment {
 
         if (isExternalStorageWritable()) {
             mDirectories = getGalleryDirectories();
-
-//            File dir = getGalleryDir();
-//            dir.mkdirs();
-//            if (!dir.exists()) {
-//                Toast.makeText(getActivity(), "Spoze Gallery Missing!", Toast.LENGTH_LONG).show();
-//            }
         }
         return true;
     }
@@ -99,21 +94,33 @@ public class GalleryFragment extends OverlayFragment {
         String[] directories = new File(pictureDirectory).list();
         List<String> result = new ArrayList<>();
 
+        Pattern p = Pattern.compile(IMAGE_EXT_PATTERN);
+
         for (String dir : directories) {
             // we don't want to load empty directories
             File f = new File(pictureDirectory + File.separator + dir);
+            File[] files = f.listFiles();
 
-            if (f.listFiles() != null) {
-                result.add(dir);
+            if (files != null && files.length > 0) {
+                if (filesContainImage(files, p)) {
+                    result.add(dir);
+                }
             }
         }
         return result;
     }
 
-//    protected File getGalleryDir() {
-//        return new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-//                + File.separator + SPOZE_DIRECTORY);
-//    }
+    protected boolean filesContainImage(File[] files, Pattern pattern) {
+        for (int j = 0; j < files.length; ++j) {
+            File file = files[j];
+            Matcher m = pattern.matcher(file.getName());
+
+            if (m.matches()) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     protected File getGalleryDir() {
         if (mSelectedDirectory != null) {
@@ -249,7 +256,6 @@ public class GalleryFragment extends OverlayFragment {
         File[] files = getGalleryDir().listFiles();
 
         // filter out potential non-image files
-        final String IMAGE_EXT_PATTERN = "^[^*&%]*\\.(?i)(jpg|jpeg|gif|bmp|png)$";
         Pattern p = Pattern.compile(IMAGE_EXT_PATTERN);
 
         for (File f : files) {
