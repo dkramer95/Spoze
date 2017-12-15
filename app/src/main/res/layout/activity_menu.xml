@@ -114,17 +114,12 @@
                 android:gravity="center_vertical"
                 android:orientation="vertical">
 
-                <com.google.android.gms.ads.AdView
-                    android:id="@+id/bottomAdView"
+                <LinearLayout
+                    android:id="@+id/adView"
+                    android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_alignParentBottom="true"
-                    android:layout_centerHorizontal="true"
-                    android:layout_gravity="center"
-                    app:adSize="MEDIUM_RECTANGLE"
-                    app:adUnitId="ca-app-pub-3940256099942544/6300978111"
-                    tools:layout_editor_absoluteY="64dp" />
-
+                    android:layout_gravity="center"/>
             </LinearLayout>
 
 

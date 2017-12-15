@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -199,6 +200,9 @@ public class GalleryFragment extends OverlayFragment {
                 mDirectorySpinner.setSelection(index);
             }
         }
+
+        ImageView directoryArrow = getActivity().findViewById(R.id.directoryDropdownArrow);
+        directoryArrow.setOnClickListener((v) -> mDirectorySpinner.performClick());
     }
 
     public void initGalleryView() {
