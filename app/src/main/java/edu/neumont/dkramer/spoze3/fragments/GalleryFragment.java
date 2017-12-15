@@ -314,7 +314,7 @@ public class GalleryFragment extends OverlayFragment {
     public void onStop() {
         super.onStop();
         // save selected dir as the one to use next time
-        if (mDirectorySpinner != null) {
+        if (mDirectorySpinner != null && mDirectorySpinner.getCount() > 0) {
             Preferences.putString(Key.GALLERY_DIR, mDirectorySpinner.getSelectedItem().toString()).save();
         }
     }

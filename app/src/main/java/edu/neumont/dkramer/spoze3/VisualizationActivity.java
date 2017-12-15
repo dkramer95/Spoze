@@ -41,6 +41,7 @@ import edu.neumont.dkramer.spoze3.toolbar.VisualizeToolbar;
 import edu.neumont.dkramer.spoze3.util.AsyncImageSaver;
 import edu.neumont.dkramer.spoze3.util.ImageSave;
 import edu.neumont.dkramer.spoze3.util.Preferences;
+import edu.neumont.dkramer.spoze3.util.Screenshot;
 
 import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Type.ACCELEROMETER;
 import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.Type.ROTATION_VECTOR;
@@ -54,7 +55,7 @@ import static edu.neumont.dkramer.spoze3.util.Preferences.Key.SHUTTER_SOUND_ENAB
  * Created by dkramer on 11/14/17.
  */
 
-public class VisualizationActivity extends GLCameraActivity implements Screenshot.ScreenshotCallback {
+public class VisualizationActivity extends GLCameraActivity implements Screenshot.Callback {
 	private static final int REQUEST_MEDIA_PROJECTION = 1;
 
 	private static final String TAG = "VisualizationActivity";
@@ -92,7 +93,7 @@ public class VisualizationActivity extends GLCameraActivity implements Screensho
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		Screenshot.getInstance().destroy();
+		Screenshot.finishSession();
 	}
 
 	@Override
@@ -109,7 +110,12 @@ public class VisualizationActivity extends GLCameraActivity implements Screensho
 	protected void init() {
 		super.init();
 		initToolbar();
+		Screenshot.beginSession(this);
+
+		//TODO slight performance bottleneck when loading fragments... causes skipped frames
+		// see about doing this in background??
 		loadFragments();
+
 		loadFromPreferences();
 		initScreenshot();
 		initMotion();
@@ -171,7 +177,7 @@ public class VisualizationActivity extends GLCameraActivity implements Screensho
 	protected void captureScreenshot() {
 		// ensure user has granted permission so we can capture screen
 		if (!Screenshot.isInitialized()) {
-			initScreenshot();
+			Screenshot.beginSession(this);
 			return;
 		}
 
@@ -185,7 +191,7 @@ public class VisualizationActivity extends GLCameraActivity implements Screensho
 		getToolbarManager().fadeOutToolbar(() -> {
 			sCanTakeScreenshot = false;
 			setMotionEnabled(false);
-			Screenshot.getInstance().capture(this);
+			Screenshot.takeScreenshot();
 
 			new Handler().postDelayed(() -> {
 				// fade in screenshot flash
@@ -211,7 +217,7 @@ public class VisualizationActivity extends GLCameraActivity implements Screensho
 						setMotionEnabled(oldMotion);
 					});
 				}).start();
-			}, 500);
+			}, 150);
 		});
 	}
 
@@ -231,13 +237,10 @@ public class VisualizationActivity extends GLCameraActivity implements Screensho
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == REQUEST_MEDIA_PROJECTION) {
+		if (requestCode == Screenshot.SESSION_REQUEST_CODE) {
 			if (resultCode == RESULT_OK) {
-				int width = getWindow().getDecorView().getRootView().getWidth();
-				int height = getWindow().getDecorView().getRootView().getHeight();
-				Screenshot.getInstance().setSize(width, height).init(this, resultCode, data, this);
+				Screenshot.onResult(resultCode, data, this);
 				mScreenshotView = findViewById(R.id.screenshotView);
-
 			} else if (resultCode == RESULT_CANCELED) {
 				Toast.makeText(this, "Please grant permission to enable screenshot capturing", Toast.LENGTH_LONG).show();
 			}
