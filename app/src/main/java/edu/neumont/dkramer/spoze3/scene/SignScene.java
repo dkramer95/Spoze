@@ -54,9 +54,6 @@ import static edu.neumont.dkramer.spoze3.gl.deviceinfo.GLDeviceInfo.geti;
  */
 
 public class SignScene extends GLScene {
-    private static final int TOOLBAR_OBJECT = 0;
-    private static final int TOOLBAR_NORMAL = 1;
-
     private static final String TAG = "SignScene";
     private static final int EVENT_QUEUE_LIMIT = 8;
 
@@ -64,7 +61,6 @@ public class SignScene extends GLScene {
     // queue of special events that should be executing, aside from normal rendering
     protected ArrayBlockingQueue<GLEvent> mEventQueue;
     protected GLPixelPicker mPicker;
-    protected TouchHandler mTouchHandler;
     protected GLModel mSelectedModel;
 
 
@@ -78,25 +74,6 @@ public class SignScene extends GLScene {
         super.init(viewWidth, viewHeight);
         mPicker = new GLPixelPicker(viewWidth, viewHeight);
         mEventQueue = new ArrayBlockingQueue<>(EVENT_QUEUE_LIMIT);
-        mTouchHandler = new TouchHandler();
-    }
-
-    @Override
-    public GLWorld createWorld() {
-//        Bitmap bmp1 = BitmapFactory.decodeResource(getGLContext().getResources(), R.drawable.vim_texture);
-        return new GLWorld(getGLContext()) {
-            @Override
-            public void create() {
-//                addModel(SignModel2.fromBitmap(getGLContext(), bmp1, getWidth(), getHeight()));
-            }
-        };
-    }
-
-    @Override
-    public void onResume() {
-        if (mTouchHandler != null) {
-            mTouchHandler.refresh();
-        }
     }
 
     public void deleteSelectedModel() {
@@ -106,7 +83,7 @@ public class SignScene extends GLScene {
         }
     }
 
-    protected SignModel2 checkModelSelection() {
+    public SignModel2 checkModelSelection() {
         SignModel2 selectedModel = null;
 
         int pixel = readTouchPixel();
@@ -154,6 +131,10 @@ public class SignScene extends GLScene {
         }
     }
 
+    public void setSelectedModel(GLModel model) {
+        mSelectedModel = model;
+    }
+
     protected void drawSelection() {
         glEnable(GL_BLEND);
         glEnable(GL_DEPTH_TEST);
@@ -181,15 +162,7 @@ public class SignScene extends GLScene {
         }
     }
 
-    public void setUIToolbar(IToolbar toolbar) {
-        GLActivity activity = getGLContext().getActivity();
-        activity.runOnUiThread(() -> {
-            ToolbarManager toolbarManager = activity.findViewById(R.id.toolbarManager);
-            toolbarManager.setToolbar(toolbar);
-        });
-    }
-
-    protected void queueEvent(GLEvent e) {
+    public void queueEvent(GLEvent e) {
         mEventQueue.add(e);
     }
 
@@ -197,165 +170,8 @@ public class SignScene extends GLScene {
         return GLMotionCamera.getDefault(getGLContext());
     }
 
-
     public GLModel getSelectedModel() {
         return mSelectedModel;
     }
 
-
-    /* Touch Handler for our scene */
-
-    class TouchHandler implements View.OnTouchListener, ScaleGestureDetector.OnScaleGestureListener, GestureDetectorAdapter {
-        private static final String TAG = "TouchHandler";
-
-        // number of ACTION_MOVE events that need to be called before we
-        // actually allow movement to occur
-        private static final int ACTION_MOVE_THRESHOLD = 3;
-
-        // help prevent jittery, unintended movements
-        private boolean mReleaseFlag;
-        private int mMoveCount;
-        private boolean mScalingFlag;
-
-        private ScaleGestureDetector mScaleGestureDetector;
-        private GestureDetector mGestureDetector;
-
-
-
-        public TouchHandler() {
-            GLTouchInfo touchInfo = (GLTouchInfo)getGLContext().getDeviceInfo(TOUCH_INPUT);
-
-//            // clear out any previous
-//            touchInfo.removeOnTouchListener(this);
-
-            touchInfo.addOnTouchListener(this);
-            final TouchHandler touchHandler = this;
-
-            getGLContext().runOnUiThread(() -> {
-                mScaleGestureDetector = new ScaleGestureDetector(getGLContext().getActivity(), touchHandler);
-                mGestureDetector = new GestureDetector(getGLContext().getActivity(), touchHandler);
-            });
-        }
-
-        public void refresh() {
-            GLTouchInfo touchInfo = (GLTouchInfo)getGLContext().getDeviceInfo(TOUCH_INPUT);
-            touchInfo.removeOnTouchListener(this);
-            touchInfo.addOnTouchListener(this);
-        }
-
-        @Override
-        public boolean onTouch(View view, MotionEvent e) {
-            final int action = e.getAction();
-
-            switch (action) {
-                case ACTION_DOWN: onTouchDown(); break;
-                case ACTION_MOVE: onTouchMove(); break;
-                case ACTION_UP: onTouchRelease(); break;
-            }
-            mGestureDetector.onTouchEvent(e);
-            mScaleGestureDetector.onTouchEvent(e);
-            return false;
-        }
-
-        protected boolean canMove() {
-            return (!mReleaseFlag && !mScalingFlag && mMoveCount > ACTION_MOVE_THRESHOLD);
-        }
-
-        protected void onTouchDown() {
-            queueEvent(() -> {
-                SignModel2 model = checkModelSelection();
-
-                if (mSelectedModel != null) {
-                    // deselect
-                    if (model == mSelectedModel || model == null) {
-                        mSelectedModel = null;
-                        BlendFuncHelper.nextBlendFunc();
-                        setUIToolbar(VisualizeToolbar.NORMAL);
-                    } else {
-                        mSelectedModel = model;
-                        setUIToolbar(VisualizeToolbar.OBJECT);
-                    }
-                } else {
-                    if (model != null) {
-                        mSelectedModel = model;
-                        setUIToolbar(VisualizeToolbar.OBJECT);
-                    }
-                }
-            });
-            mMoveCount = 0;
-        }
-
-        protected void onTouchMove() {
-            if (mSelectedModel != null && canMove()) {
-                // movement needs to take into account where our eye is looking
-                Point3f eye = getCamera().getEye();
-                mSelectedModel.handleTouchMove(getf(CURRENT_TOUCH_NORMALIZED_X),
-                        getf(CURRENT_TOUCH_NORMALIZED_Y), 0, eye.x, eye.y, eye.z);
-            }
-            ++mMoveCount;
-            mReleaseFlag = false;
-        }
-
-        protected void onTouchRelease() {
-            mReleaseFlag = true;
-        }
-
-        @Override
-        public boolean onScale(ScaleGestureDetector detector) {
-            // pinch to zoom is backwards, so we invert it here
-            float scaleFactor = (1.0f - detector.getScaleFactor()) * -1.25f;
-            if (mSelectedModel != null) {
-                mSelectedModel.scale(scaleFactor);
-            }
-            Log.i(TAG, "OnScale --> Factor => " + scaleFactor);
-            return mScalingFlag = true;
-        }
-
-        @Override
-        public boolean onScaleBegin(ScaleGestureDetector detector) {
-            return mScalingFlag = true;
-        }
-
-        @Override
-        public void onScaleEnd(ScaleGestureDetector detector) {
-            mScalingFlag = false;
-        }
-
-        /* TODO i think this should be moved elsewhere, if time permits */
-        @Override
-        public boolean onFling(MotionEvent e, MotionEvent e1, float v, float v1) {
-            float deltaX = Math.abs(e1.getX() - e.getX());
-
-            Log.i("OnFling", "DeltaX => " + deltaX);
-            Log.i("OnFling", String.format("X1: %f, Y1: %f, X2: %f, Y2: %f\n", e.getX(), e.getY(), e1.getX(), e1.getY()));
-
-            float startY = e.getY();
-
-            if (startY <= getHeight() && startY >= (getHeight() - (getHeight() * .15f)) && deltaX < 75) {
-                float endY = e1.getY();
-                float velocity = v1 - v;
-                Log.i("OnFling", String.format("StartY: %f, EndY: %f, Vel: %f, Height: %d\n", startY, endY, velocity, getHeight()));
-
-                if (Math.abs(velocity) > 3000) {
-//                    Log.i("OnFling", String.format("StartY: %f, EndY: %f, Vel: %f\n", startY, endY, velocity));
-                    Log.i("OnFling", "Swipe up detected");
-
-//                    GLActivity activity = getGLContext().getActivity();
-                    VisualizationActivity activity = (VisualizationActivity)getGLContext().getActivity();
-                    activity.runOnUiThread(() -> {
-//                        Toast.makeText(activity, "Swipe up action", Toast.LENGTH_SHORT).show();
-//                        activity.showModelFragment();
-//                        activity.TEST_LOAD_DATA();
-                        activity.showModelFragment();
-//                        activity.foo();
-//                        activity.getFragmentManager().beginTransaction();
-//                        ViewFlipper flipper = activity.findViewById(R.id.toolbarFlipper);
-//                        flipper.setDisplayedChild(type);
-                    });
-                    return true;
-                }
-            }
-            return false;
-        }
-    }
 }

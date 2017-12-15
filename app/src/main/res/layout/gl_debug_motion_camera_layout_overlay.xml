@@ -38,7 +38,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <edu.neumont.dkramer.spoze3.gl.GLView
+                <edu.neumont.dkramer.spoze3.view.SignVisualizationView
                     android:id="@+id/glView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"

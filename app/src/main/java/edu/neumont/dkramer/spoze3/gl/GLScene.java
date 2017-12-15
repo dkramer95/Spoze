@@ -45,7 +45,9 @@ public abstract class GLScene extends GLObject {
         getWorld().create();
     }
 
-    public abstract GLWorld createWorld();
+    public GLWorld createWorld() {
+        return GLWorld.newDefaultEmptyWorld(getGLContext());
+    }
 
     public void render() {
         clearScreen();

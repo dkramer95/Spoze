@@ -22,6 +22,20 @@ public abstract class GLWorld extends GLObject {
     }
 
     /**
+     * Convenience helper method to return an empty default GLWorld
+     * @param ctx - GLContext
+     * @return default GLWorld w/ no models
+     */
+    public static GLWorld newDefaultEmptyWorld(GLContext ctx) {
+        return new GLWorld(ctx) {
+            @Override
+            public void create() {
+                super.create();
+            }
+        };
+    }
+
+    /**
      * Method to be implemented that creates all necessary models
      * for this world
      */

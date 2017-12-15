@@ -14,6 +14,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -79,6 +80,13 @@ public class VisualizationActivity extends GLCameraActivity implements Screensho
 		super.onCreate(savedInstanceState);
 		// potential incoming image from a "share"
 		checkSharedImage();
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		// clear out for future recalibrations upon return
+		sPerformedAutoCalibration = false;
 	}
 
 	@Override
@@ -291,10 +299,17 @@ public class VisualizationActivity extends GLCameraActivity implements Screensho
 
 	protected void performCalibrationIfNeeded() {
 		if (!sPerformedAutoCalibration) {
-			calibrate();
+		    autoCalibrate();
 			sPerformedAutoCalibration = true;
 		}
-		getGLView().performClick();
+	}
+
+	protected void autoCalibrate() {
+		calibrate();
+
+		// create simulated touch event so that model shows up on screen
+		MotionEvent e = MotionEvent.obtain(0, 0, MotionEvent.ACTION_DOWN, 0, 0, 0);
+		getGLView().dispatchTouchEvent(e);
 	}
 
 	protected void importGalleryItems(List<GalleryItemView> galleryItems) {
