@@ -12,6 +12,11 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
+
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 
 import edu.neumont.dkramer.spoze3.util.Preferences;
 
@@ -29,10 +34,25 @@ public class MenuActivity extends AppCompatActivity {
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_menu);
+		initAd();
 		initButtons();
 		Preferences.init(this);
 		checkPermissions();
 		checkSharedImage();
+	}
+
+	private void initAd() {
+		MobileAds.initialize(this, "ca-app-pub-3940256099942544~3347511713");
+		int[] adViewIds = { R.id.bottomAdView };
+
+		AdRequest request = new AdRequest.Builder()
+				.addTestDevice("33BE2250B43518CCDA7DE426D04EE232")
+				.build();
+
+		for (int adViewId : adViewIds) {
+			AdView adView = findViewById(adViewId);
+			adView.loadAd(request);
+		}
 	}
 
 	protected void initButtons() {

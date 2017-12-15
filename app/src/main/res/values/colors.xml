@@ -21,4 +21,5 @@
     <color name="overlay_color_darker">#de000000</color>
     <color name="green">#FF11FF00</color>
     <color name="red">#FFFF0055</color>
+    <color name="transparent_white">#a0ffffff</color>
 </resources>
