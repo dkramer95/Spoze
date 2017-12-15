@@ -146,7 +146,7 @@ public class VisualizationActivity extends GLCameraActivity implements Screensho
 		getGLContext().queueEvent(() -> {
 			world.addModel(SignModel2.fromBitmap(getGLContext(), bmp, world.getWidth(), world.getHeight()));
 		});
-		calibrate();
+		performCalibrationIfNeeded();
 	}
 
 	@Override
@@ -273,6 +273,14 @@ public class VisualizationActivity extends GLCameraActivity implements Screensho
 		mToolbarManager = findViewById(R.id.toolbarManager);
 		mToolbarManager.loadToolbars(VisualizeToolbar.values());
 		mToolbarManager.setToolbar(VisualizeToolbar.NORMAL);
+	}
+
+	public void browseFoldersButtonClicked(View view) {
+		Intent intent = new Intent(this, ImportBitmapActivity.class);
+		startActivity(intent);
+
+		mGalleryFragment.hide();
+		getToolbarManager().setToolbar(VisualizeToolbar.NORMAL);
 	}
 
 	public void closeGalleryButtonClicked(View view) {

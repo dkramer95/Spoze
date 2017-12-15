@@ -2,6 +2,7 @@ package edu.neumont.dkramer.spoze3;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 
 /**
@@ -26,17 +27,17 @@ public class ImportBitmapActivity extends AppCompatActivity {
 	}
 
 	protected void openImage(int resultCode, Intent data) {
+		Intent intent = new Intent(this, VisualizationActivity.class);
+
 		if (resultCode == AppCompatActivity.RESULT_OK) {
-			Intent intent = new Intent(this, VisualizationActivity.class);
-			// pass URI of image to the activity
-			intent.setData(data.getData());
-			startActivity(intent);
+			intent.putExtra("imageURI", data.getData());
 		}
+		startActivity(intent);
 		finish();
 	}
 
 	protected void openGallery() {
-		Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+		Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 		intent.setType("image/*");
 		startActivityForResult(Intent.createChooser(intent, "Open Image"), OPEN_IMAGE);
 	}

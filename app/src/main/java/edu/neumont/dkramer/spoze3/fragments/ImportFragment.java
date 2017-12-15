@@ -1,9 +1,11 @@
 package edu.neumont.dkramer.spoze3.fragments;
 
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +27,8 @@ import edu.neumont.dkramer.spoze3.VisualizationActivity;
  */
 
 public class ImportFragment extends OverlayFragment {
+    private static final String TAG = "ImportFragment";
+
     protected Button mJustImportButton;
     protected Button mImportAndSaveButton;
     protected ImageButton mCloseButton;
@@ -69,13 +73,30 @@ public class ImportFragment extends OverlayFragment {
         Glide.with(this).load(mImageUri).asBitmap().into(new SimpleTarget<Bitmap>() {
             @Override
             public void onResourceReady(Bitmap bmp, GlideAnimation animation) {
-                activity.importBitmap(bmp);
+            activity.importBitmap(bmp);
                 if (saveImage) {
                     activity.saveBitmap(bmp, activity.getSavedImportsDir(), "png", 100);
                     Toast.makeText(getActivity(), "Saved Image!", Toast.LENGTH_SHORT).show();
                 }
             }
+
+            @Override
+            public void onLoadFailed(Exception e, Drawable errorDrawable) {
+                Toast.makeText(getActivity(), "Import failed!", Toast.LENGTH_LONG).show();
+                Log.e(TAG, "Import failed: " + e.getMessage());
+            }
+
         });
+        clear();
+    }
+
+    protected void clear() {
+        mImageUri = null;
+    }
+
+    public void onPause() {
+        super.onPause();
+        clear();
     }
 
     public void onResume() {
